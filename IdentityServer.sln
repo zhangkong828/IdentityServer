@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Web", "src\IdentityServer.Web\IdentityServer.Web.csproj", "{12DD617D-C35F-4C54-9490-B12BB04ABC6D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Service", "src\IdentityServer.Service\IdentityServer.Service.csproj", "{68EC4AAA-5471-4877-83BB-7832C34ADEC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Repository", "src\IdentityServer.Repository\IdentityServer.Repository.csproj", "{D08F6B67-3244-4D9A-AEFD-99192093807D}"
@@ -15,16 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Model", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Infrastructure", "src\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj", "{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Web", "src\IdentityServer.Web\IdentityServer.Web.csproj", "{F007FC0C-394F-465C-A3AD-5B3959B88161}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{12DD617D-C35F-4C54-9490-B12BB04ABC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{12DD617D-C35F-4C54-9490-B12BB04ABC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{12DD617D-C35F-4C54-9490-B12BB04ABC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{12DD617D-C35F-4C54-9490-B12BB04ABC6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
