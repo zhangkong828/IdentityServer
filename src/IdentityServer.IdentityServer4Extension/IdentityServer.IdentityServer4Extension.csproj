@@ -19,8 +19,4 @@
     <ProjectReference Include="..\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Stores\MySql\" />
-  </ItemGroup>
-
 </Project>

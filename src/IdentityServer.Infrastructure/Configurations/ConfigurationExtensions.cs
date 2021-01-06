@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IdentityServer.Infrastructure.Logging;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace IdentityServer.Infrastructure.Configurations
              .AddJsonFile(path, optional: optional, reloadOnChange: reloadOnChange);
 
             Config.Configuration = configurationBuilder.Build();
+            Config.LoggerOptions = Config.Get<LoggerOptions>("IdentityServer:Logger") ?? new LoggerOptions();
             return builder;
         }
 

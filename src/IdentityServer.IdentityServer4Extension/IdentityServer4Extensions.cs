@@ -1,5 +1,4 @@
-﻿using IdentityServer.IdentityServer4Extension.HostedServices;
-using IdentityServer.IdentityServer4Extension.Validator;
+﻿using IdentityServer.IdentityServer4Extension.Validator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

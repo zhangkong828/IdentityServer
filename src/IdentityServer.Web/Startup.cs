@@ -1,4 +1,5 @@
 using IdentityServer.Web.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,15 @@ namespace IdentityServer.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.IsEssential = true;
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+            });
 
             services.AddIdentityServer4UseMySql(options =>
             {
@@ -58,6 +67,7 @@ namespace IdentityServer.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseAuthentication();
 
             app.UseCors("AllowAllOrigins");
 
@@ -73,7 +83,7 @@ namespace IdentityServer.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
             });
         }
     }

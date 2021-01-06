@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IdentityServer.Infrastructure.Logging;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace IdentityServer
 {
     public class Config
     {
+        public static LoggerOptions LoggerOptions { get; set; } = new LoggerOptions();
 
         public static IConfigurationRoot Configuration { get; set; }
 
