@@ -3,454 +3,61 @@
     Layout = null;
 }
 
+
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>统一认证授权登录入口</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录-认证授权中心</title>
 
-    <link rel="stylesheet" type="text/css" href="//g.alicdn.com/cn/cnwww/1.8.4/user-info-center/login2.css" />
-    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_i0d9gjnja83kgldi.css" />
-    <link rel="stylesheet" type="text/css" href="//g.alicdn.com/cn/cp-account/2.1.1/common/css/pc/login2.css">
-    <script src="//g.alicdn.com/cn/??jquery/1.8.1/jquery.js,seajs/2.3.0/sea.js,seajs/2.3.0/seajs-combo.js"></script>
-    <style>
-        .single-tab {
-            border-bottom: none !important;
-            text-align: left !important;
-            padding: 0 25px !important;
-        }
+    <!-- Styles -->
+    <link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
-        .dingding-wrap {
-            padding-top: 50px;
-        }
+    <!-- Theme Styles -->
+    <link href="~/assets/css/ecaps.min.css" rel="stylesheet">
 
-        .back-cn-link {
-            text-align: center;
-            line-height: 24px;
-            vertical-align: middle;
-        }
-
-            .back-cn-link a {
-                font-size: 12px;
-                color: #06f;
-            }
-
-                .back-cn-link a span {
-                    margin-right: 3px;
-                }
-
-        #J_taobao .login-others {
-            margin-top: 20px;
-        }
-    </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 
-    <div class="login-wrapper">
-        <div class="login-header" data-spm-anchor-id="a314o.8121009.0.i5.2ff37544k1XTC9">
-            <div id="cn_logo" style="width: 90px;height: 32px;color: #fff;font-weight: bolder;font-size: 20px;">
-                统一认证授权中心
-            </div>
+    <div class="page-container" style="justify-content: space-between; background: linear-gradient(to bottom right,#1470cc,#479aed);">
+        <div class="login-ad-content" style="margin: 0 auto; padding: 140px 0;">
+            <a class="login-ad-href" href="#">
+                <img class="login-ad-image" src="~/img/logo-banner.svg" />
+            </a>
         </div>
-        <div class="login-content" data-spm-anchor-id="a314o.8121009.0.i3.2ff37544k1XTC9" style="background: linear-gradient(to right bottom, rgb(20, 112, 204), rgb(71, 154, 237));">
-            <div class="login-part" data-spm-anchor-id="a314o.8121009.0.i2.2ff37544k1XTC9">
-                <div class="login-ad-content" data-spm-anchor-id="a314o.8121009.0.i4.2ff37544k1XTC9">
-                    <a class="login-ad-href" href="#" data-spm-anchor-id="a314o.8121009.0.0">
-                        <img class="login-ad-image" style="width:500px;" src="~/img/logo-banner.svg" data-spm-anchor-id="a314o.8121009.0.i1.2ff37544k1XTC9" />
-                    </a>
-                </div>
-                <div class="login-frames">
-                    <div id="J_login_wrap">
-                        <ul class="login-tab-title" style="display:block">
-                            <li class="login-tab-title-item active" data-key="sms">
-                                <div>账号登录</div>
-                            </li>
-                            <li class="login-tab-title-item" data-key="pw">
-                                <div>密码登录</div>
-                            </li>
-                        </ul>
-                        <ul class="login-tab-items">
-                            <li class="login-frames-cont login-tab-item" data-key="pw">
-                                <div id="J_taobao" class="">
-                                    <iframe border="0" frameborder="0" scrolling="0" width="350" height="320" data-spm-src="https://login.taobao.com/member/login.jhtml?tpl_redirect_url=https%3A%2F%2Fmember.cainiao.com%2Ftag.htm%3Fredirect_url%3Dhttp%253A%252F%252Fcainiaoyizhan.cainiao.com%252Findex.htm%26type%3DML%26meta%3D%26isEnterprise%3Dfalse%26domain%3D&amp;TPL_username=&amp;from=cn_login&amp;css_style=cn_login&amp;style=mini&amp;newMini2=true&amp;enup=true&amp;qrLogin=false&amp;keyLogin=false&amp;disableQuickLogin=true&amp;full_redirect=true" data-spm-act-id="0.0.0.0.0" data-spm-anchor-id="a314o.8121009.0.i0.2ff37544k1XTC9" src="https://login.taobao.com/member/login.jhtml?spm=a314o.8121009.0.i0.2ff37544k1XTC9&amp;tpl_redirect_url=https%3A%2F%2Fmember.cainiao.com%2Ftag.htm%3Fredirect_url%3Dhttp%253A%252F%252Fcainiaoyizhan.cainiao.com%252Findex.htm%26type%3DML%26meta%3D%26isEnterprise%3Dfalse%26domain%3D&amp;TPL_username=&amp;from=cn_login&amp;css_style=cn_login&amp;style=mini&amp;newMini2=true&amp;enup=true&amp;qrLogin=false&amp;keyLogin=false&amp;disableQuickLogin=true&amp;full_redirect=true"></iframe>
-                                    <div class="login-others">
-                                        <div class="other-login-box other-login-taobao-box">
-                                            <ul>
-                                                <li>
-                                                    <a class="login-type-item" href="https://member.cainiao.com/cnlogin.htm?loginMode=cainiao&amp;showreg=false&amp;showae=false&amp;showoa=true&amp;isEnterprise=false&amp;tabReverse=true&amp;returnUrl=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" target="_self">
-                                                        <i class="icon-cainiao iconfont"></i>
-                                                        <!-- <span></span> -->
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="J_cainiao" class="active cainiao-login-box">
-                                    <!-- <h3 class="login-type-title">账户登录</h3> -->
-                                    <!--<div class="user-icon icon-yonghu iconfont"></div>-->
-                                    <!--<div class="pwd-icon  icon-suo iconfont"></div>-->
-                                    <div id="J_cainiaoFrame" data-iframe-url="https://login-openaccount.taobao.com/" data-app-key="12497914" data-success-url="https://login.cainiao.com/autosignon.htm" data-iscnssotb="false" data-isqtb="false" data-meta="" data-pwdurl="https://login.cainiao.com/pwd_reset.htm?from=ML&amp;appKey=12497914&amp;isNewLogin=true&amp;redirectURL=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm"></div>
-                                    <div class="login-others">
-                                        <a href="https://login.cainiao.com/pwd_reset.htm?from=ML&amp;appKey=12497914&amp;isNewLogin=true&amp;redirectURL=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" title="忘记密码" class="href-lost-pwd">忘记密码</a>
-                                        <div class="other-login-box">
-                                            <!-- <p class="login-title">或选择以下账号登录：</p> -->
-                                            <ul>
-                                                <li>
-                                                    <a class="login-type-item" href="https://member.cainiao.com/cnlogin.htm?loginMode=taobao&amp;showreg=false&amp;showae=false&amp;showoa=true&amp;isEnterprise=false&amp;tabReverse=true&amp;returnUrl=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" target="_self">
-                                                        <i class="icon-taobao iconfont"></i>
-                                                        <!-- <span>淘宝</span> -->
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--
-                                <div class="tb-login-tips-box" id="tbLoginTipsBox">
-                                    <span>淘宝账户登录,请点这里哦</span>
-                                    <i class="tips-close" title="关闭" id="tbLoginTipsIcon"></i>
-                                </div>
-                                -->
-                            </li>
-                            <li class="login-frames-cont login-tab-item active" data-key="sms">
-                                <div id="J_message" class="active cainiao-message-box">
-                                    <div id="J_cainiao_mobile_register_frame" data-iframe-url="https://login-openaccount.taobao.com/" data-app-key="12497914" data-success-url="https://login.cainiao.com/autosignon.htm" data-iscnssotb="false" data-isqtb="false" data-pwdurl="https://login.cainiao.com/pwd_reset.htm?from=ML&amp;appKey=12497914&amp;isNewLogin=true&amp;redirectURL=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" data-meta="" class="iframe-show iframe-loaded"><iframe id="alibaba-login-box" src="https://login-openaccount.taobao.com/login/phoneCode.htm?lang=zh_cn&amp;appKey=12497914&amp;sso=&amp;useQrcodeLogin=false&amp;queryStr=&amp;styleType=vertical&amp;bizParams=&amp;notLoadSsoView=false&amp;notKeepLogin=false&amp;loginIdPlaceHolder=cainiao.input.mobile.placeholder&amp;isMobile=false&amp;email=&amp;emailToken=&amp;emailTokenExpiredTime=&amp;hostUrl=&amp;returnUrl=&amp;havanaIdToken=&amp;sidToken=&amp;loginButtonValue=&amp;isEnterprise=&amp;addSwitchUrl=false&amp;addRegisterUrl=false&amp;addResetPwdUrl=false&amp;autotest=false&amp;rnd=0.3255600614962564" width="300" height="187" frameborder="none" scrolling="no" style="border: none; visibility: visible;" data-spm-act-id="0.0.0.0.0"></iframe></div>
-                                </div>
-                                <div class="login-others">
-                                    <a href="https://login.cainiao.com/pwd_reset.htm?from=ML&amp;appKey=12497914&amp;isNewLogin=true&amp;redirectURL=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" title="忘记密码" class="href-lost-pwd">忘记密码</a>
-                                    <div class="other-login-box">
-                                        <ul>
-                                            <li>
-                                                <a class="login-type-item" href="https://member.cainiao.com/cnlogin.htm?loginMode=taobao&amp;showreg=false&amp;showae=false&amp;showoa=true&amp;isEnterprise=false&amp;tabReverse=true&amp;returnUrl=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" target="_self">
-                                                    <i class="icon-taobao iconfont"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="J_dingding" style="display: none;" class="dingding-wrap" data-success-url="" data-app-key="" data-err-msg="" data-if-showdd="false">
-                        <!-- <h3 class="login-type-title">钉钉账户登录</h3> -->
-                        <div id="dingding_login_cont"></div>
-                        <div class="back-cn-link">
-                            <a href="https://member.cainiao.com/cnlogin.htm?loginMode=cainiao&amp;showreg=false&amp;showae=false&amp;showoa=true&amp;isEnterprise=false&amp;tabReverse=true&amp;returnUrl=http%3A%2F%2Fcainiaoyizhan.cainiao.com%2Findex.htm" class="back-cn-link" target="_self"><span>&lt;</span>使用账号登录 </a>
-                        </div>
+        <div class="page-inner login-page1" style="padding: 0;width: 350px;">
+            <div id="main-wrapper" class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 login-box">
+                        <h4 class="login-title">统一登录认证授权中心</h4>
+                        <form method="post" action="/account/login">
+                            <div class="form-group">
+                                <label for="username">用户名</label>
+                                <input type="text" name="userName" class="form-control" id="username" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">密码</label>
+                                <input type="password" name="password" class="form-control" id="password">
+                            </div>
+                            <button type="submit" class="btn btn-primary">登录</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <style>
-            @@font-face {
-                font-family: 'iconfont'; /* project id 34881 */
-                src: url('//at.alicdn.com/t/font_34881_sr8sifes8564j9k9.eot');
-                src: url('//at.alicdn.com/t/font_34881_sr8sifes8564j9k9.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_34881_sr8sifes8564j9k9.woff') format('woff'), url('//at.alicdn.com/t/font_34881_sr8sifes8564j9k9.ttf') format('truetype'), url('//at.alicdn.com/t/font_34881_sr8sifes8564j9k9.svg#iconfont') format('svg');
-            }
-
-            .cn-footer-wrapper .iconfont {
-                font-family: "iconfont";
-                font-size: 14px;
-                font-style: normal;
-                color: #fff;
-            }
-
-            .clearfix:after {
-                display: block;
-                content: '';
-                height: 0;
-                overflow: hidden;
-                clear: both;
-            }
-
-            .cn-footer-wrapper .pc-only {
-                display: none;
-            }
-
-            .cn-footer-wrapper {
-                background: #222C3A;
-                padding: 30px 0;
-                font-family: tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
-                font-size: 14px;
-            }
-
-            .cn-logo-wrapper {
-                float: left;
-            }
-
-            .cn-footer-logo img {
-                width: 135px;
-                margin-bottom: 65px;
-            }
-
-            .cn-contact img {
-                width: 48px;
-                margin-right: 20px;
-                cursor: pointer;
-            }
-
-            .cn-contact .cn-contact-group {
-                display: inline-block;
-                position: relative;
-            }
-
-            .cn-contact img:hover + .hover {
-                visibility: visible;
-                opacity: 1;
-            }
-
-            .cn-footer-wrapper .hover {
-                visibility: hidden;
-                position: absolute;
-                background: #fff;
-                padding: 10px;
-                text-align: center;
-                color: #06f;
-                font-size: 14px;
-                top: -220px;
-                opacity: 0;
-                transition: all 0.5s;
-                -webkit-transition: all 0.5s;
-            }
-
-                .cn-footer-wrapper .hover:after {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    bottom: -10px;
-                    width: 0;
-                    height: 0;
-                    border-left: 6px solid transparent;
-                    border-right: 6px solid transparent;
-                    border-top: 12px solid #fff;
-                }
-
-                .cn-footer-wrapper .hover.a:after {
-                    left: 20px;
-                }
-
-                .cn-footer-wrapper .hover.b {
-                    left: -57px;
-                }
-
-                    .cn-footer-wrapper .hover.b:after {
-                        left: 50%;
-                        margin-left: -6px;
-                    }
-
-                .cn-footer-wrapper .hover img {
-                    width: 140px;
-                    margin: 0;
-                }
-
-            .cn-footer-wrapper .hover-title {
-                margin-bottom: 10px;
-            }
-
-            .cn-subfooter-wrapper {
-                color: #fff;
-                text-align: center;
-            }
-
-            .cn-subfooter {
-                font-size: 12px;
-                font-family: tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
-                -webkit-font-smoothing: antialiased;
-                line-height: 1em;
-                padding-bottom: 10px;
-                color: #fff;
-            }
-
-                .cn-subfooter:after {
-                    content: '';
-                    display: none;
-                    height: 1px;
-                    background: #353C4B;
-                    margin: 20px 0;
-                }
-
-            .cn-subfooter-wrapper a {
-                color: #fff;
-                text-decoration: none !important;
-            }
-
-            .cn-subfooter > li {
-                display: inline-block;
-                margin-left: 5px;
-            }
-
-                .cn-subfooter > li:first-child {
-                    margin-left: 0;
-                }
-
-
-
-            /* common-footer*/
-            .cn-common-footer .ccf-inner-content .ccf-links > li {
-                margin: 0 5px 10px 0;
-                padding: 0;
-                display: inline-block;
-                *display: inline;
-                zoom: 1;
-                color: #727F9B;
-                font-size: 12px;
-            }
-
-                .cn-common-footer .ccf-inner-content .ccf-links > li a, .ccf-info, .ccf-info a {
-                    color: #727F9B;
-                    margin-right: 0.5em;
-                }
-
-            .ccf-info {
-                font-size: 12px;
-                margin: 10px 0 0 0;
-            }
-
-            .ccf-recnum {
-                margin-top: 10px;
-                display: block;
-                font-size: 12px;
-            }
-
-            @@media screen and (min-width: 768px) {
-                .cn-footer-wrapper .pc-only {
-                    display: initial;
-                }
-
-                .cn-footer-wrapper .mobile-only {
-                    display: none;
-                }
-
-
-                .cn-subfooter-wrapper {
-                    margin-left: 200px;
-                    text-align: left;
-                }
-
-                .cn-subfooter {
-                    font-size: 14px;
-                    padding-top: 16px;
-                }
-
-                    .cn-subfooter:after {
-                        display: block;
-                    }
-
-                .ccf-info {
-                    margin: 0;
-                }
-
-                .ccf-recnum {
-                    display: inline;
-                }
-
-                .cn-subfooter > li {
-                    display: inline-block;
-                    margin-left: 15px;
-                }
-            }
-
-            @@media screen and (min-width: 1190px) {
-
-                .cn-footer-wrapper {
-                    width: 100%;
-                }
-
-                .cn-footer {
-                    max-width: 1190px;
-                    margin: 0 auto;
-                }
-
-                .cn-subfooter-wrapper {
-                    margin-left: 300px;
-                }
-            }
-        </style>
-        <div class="cn-footer-wrapper clearfix">
-            <div class="cn-footer">
-                <div class="cn-logo-wrapper pc-only">
-                    <div class="cn-footer-logo">
-                        <img src="https://gw.alicdn.com/tfs/TB1Rf1xRXXXXXaIXFXXXXXXXXXX-270-94.png" alt="logo">
-                    </div>
-                    <div class="cn-contact">
-                        <div class="cn-contact-group">
-                            <img src="https://gw.alicdn.com/tfs/TB1FK5mRXXXXXaPXVXXXXXXXXXX-96-96.png" alt="qrcode">
-                            <div class="hover a">
-                                <div class="hover-title">菜鸟手机版 扫一扫</div>
-                                <img src="https://gw.alicdn.com/tfs/TB1wnGARXXXXXXQaXXXXXXXXXXX-141-141.png">
-                            </div>
-                        </div>
-                        <div class="cn-contact-group">
-                            <img src="https://gw.alicdn.com/tfs/TB1a7aGRXXXXXazXpXXXXXXXXXX-96-96.png" alt="weibo">
-                            <div class="hover b">
-                                <div class="hover-title">关注菜鸟官方微博</div>
-                                <img src="https://gw.alicdn.com/tfs/TB10SOjRXXXXXX2aFXXXXXXXXXX-140-140.png">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="cn-subfooter-wrapper">
-                    <ul class="cn-subfooter">
-                        <li class="sub-f1 sub-f">
-                            <i class="iconfont pc-only"></i>
-                            <a href="//www.cainiao.com/markets/cnwww/aboutus">关于</a>
-                        </li>
-                        <li class="sub-f2 sub-f">
-                            <i class="iconfont pc-only"></i>
-                            <a href="//brand.cainiao.com">品牌</a>
-                        </li>
-                        <li class="sub-f4 sub-f">
-                            <i class="iconfont pc-only"></i>
-                            <a href="//www.cainiao.com/markets/cnwww/cn-media-home">新闻/动态</a>
-                        </li>
-                        <li class="sub-f4 sub-f">
-                            <i class="iconfont pc-only"></i>
-                            <a href="//jubao.alibaba.com/index.html?site=CAINIAO" target="_blank">廉正举报</a>
-                        </li>
-                        <li class="sub-f3 sub-f">
-                            <i class="iconfont pc-only"></i>
-                            <a href="//www.cainiao.com/markets/cnwww/policy/site">法律政策</a>
-                        </li>
-                        <li class="sub-f3 sub-f">
-                            <i class="iconfont pc-only"></i>
-                            <a href="//www.cainiao.com/markets/cnwww/secue">合规</a>
-                        </li>
-                    </ul>
-                    <div id="__cn_common_footer__" class="cn-common-footer clearfix">
-                        <div class="ccf-inner-content">
-                            <ol class="ccf-links pc-only">
-                                <li><a href="http://www.taobao.com" target="_blank">淘宝网</a><span>|</span></li>
-                                <li><a href="http://www.tmall.com" target="_blank">天猫</a><span>|</span></li>
-                                <li><a href="http://ju.taobao.com" target="_blank">聚划算</a><span>|</span></li>
-                                <li><a href="http://www.aliexpress.com" target="_blank">全球速卖通</a><span>|</span></li>
-                                <li><a href="http://www.alibaba.com" target="_blank">阿里巴巴国际交易市场</a><span>|</span></li>
-                                <li><a href="http://www.1688.com" target="_blank">1688</a><span>|</span></li>
-                                <li><a href="http://www.alimama.com" target="_blank">阿里妈妈</a><span>|</span></li>
-                                <li><a href="http://www.aliyun.com" target="_blank">阿里云计算</a><span>|</span></li>
-                                <li><a href="http://www.alios.cn/" target="_blank">AliOS</a><span>|</span></li>
-                                <li><a href="http://www.fliggy.com" target="_blank">飞猪</a><span>|</span></li>
-                                <li><a href="http://www.uc.cn/" target="_blank">UC</a><span>|</span></li>
-                                <li><a href="http://gaode.com/" target="_blank">高德地图</a><span>|</span></li>
-                                <li><a href="http://www.aliqin.cn/" target="_blank">阿里通信</a><span>|</span></li>
-                                <li><a href="http://www.dingtalk.com/" target="_blank">钉钉</a><span>|</span></li>
-                                <li><a href="https://www.umeng.com/" target="_blank">友盟</a><span>|</span></li>
-                            </ol>
-
-                            <div class="ccf-info">
-                                <span>©</span>
-                                <span>2015-2019</span>
-                                <span>111</span>
-                                <span>版权所有</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- Javascripts -->
+    <script src="~/assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
