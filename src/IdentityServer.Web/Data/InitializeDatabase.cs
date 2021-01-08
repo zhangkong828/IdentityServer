@@ -49,6 +49,15 @@ namespace IdentityServer.Web.Data
                     }
                     context.SaveChanges();
                 }
+
+                if (!context.ApiResources.Any())
+                {
+                    foreach (var resource in IdentityServerConfig.ApiResources)
+                    {
+                        context.ApiResources.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
             }
         }
     }

@@ -19,21 +19,20 @@ namespace IdentityServer
                     new IdentityResources.Profile(),
                 };
 
-        public static IEnumerable<ApiResource> GetApiResources()
-        {
-            return new List<ApiResource>
+        public static IEnumerable<ApiResource> ApiResources => new List<ApiResource>
                 {
-                    new ApiResource("api1", "Test API"),
+                    new ApiResource("api", "Some API")
+                    {
+                        Scopes=ApiScopes.Select(x=>x.Name).ToList()
+                    },
                     new ApiResource("GoofyAlgoTraderAPI", "GoofyAlgoTrader API")
                 };
-        }
 
-        public static IEnumerable<ApiScope> ApiScopes =>
-             new List<ApiScope>
-                {
+        public static IEnumerable<ApiScope> ApiScopes => new List<ApiScope>
+        {
                     new ApiScope("api1", "Test API"),
                     new ApiScope("GoofyAlgoTraderAPI", "GoofyAlgoTrader API")
-                };
+        };
 
         public static IEnumerable<Client> Clients =>
             new List<Client>
@@ -57,7 +56,12 @@ namespace IdentityServer
                     ClientId = "Test.ResourceOwnerPassword",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
-                    AllowedScopes = { "api1", "GoofyAlgoTraderAPI" },
+                     AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    },
                     AllowOfflineAccess=true
                 },
 

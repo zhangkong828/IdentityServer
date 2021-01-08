@@ -28,7 +28,7 @@ namespace IdentityServer.Client.ResourceOwnerPassword
 
             var apis = new List<string>
             {
-                "http://oauth2-resources-aspnetcore.test"
+                "http://localhost:26951/api/books/GetAll"
             };
 
             foreach (var api in apis)

@@ -72,7 +72,7 @@ namespace IdentityServer.HttpDiagnostic
                 return;
             }
             var responseContent = httpContent.ReadAsStringAsync().GetAwaiter().GetResult();
-            if (httpContent.Headers.ContentType.MediaType.Contains("json"))
+            if (httpContent.Headers.ContentType != null && httpContent.Headers.ContentType.MediaType.Contains("json"))
             {
                 LogLine(JToken.Parse(responseContent), color);
             }
