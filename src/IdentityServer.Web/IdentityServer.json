@@ -1,5 +1,6 @@
 {
   "ConnectionStrings": {
-    "IdentityServerConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServer"
+    "IdentityServerConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServer",
+    "IdentityUserConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityUser"
   }
 }

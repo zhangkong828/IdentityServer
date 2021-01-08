@@ -47,6 +47,7 @@ namespace IdentityServer
                 operationalStoreOptions.EnableTokenCleanup = options.EnableTokenCleanup;
                 operationalStoreOptions.TokenCleanupInterval = options.TokenCleanupInterval;
             })
+            .AddDeveloperSigningCredential()
             .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
             .AddProfileService<ProfileService>();
 

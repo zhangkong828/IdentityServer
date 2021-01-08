@@ -40,7 +40,7 @@ namespace IdentityServer
             {
                 new Client
                 {
-                    ClientId = "Test",
+                    ClientId = "Test.ClientCredentials",
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
 
@@ -54,8 +54,7 @@ namespace IdentityServer
 
                 new Client
                 {
-                    ClientId = "TestPassword",
-                    ClientSecrets = { new Secret("123456".Sha256()) },
+                    ClientId = "Test.ResourceOwnerPassword",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
                     AllowedScopes = { "api1", "GoofyAlgoTraderAPI" },
@@ -64,7 +63,7 @@ namespace IdentityServer
 
                 new Client
                 {
-                    ClientId = "TestCode",
+                    ClientId = "Test.Code",
                     ClientSecrets = { new Secret("123456".Sha256()) },
 
                     AllowedGrantTypes = GrantTypes.Code,

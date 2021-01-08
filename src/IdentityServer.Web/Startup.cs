@@ -1,7 +1,11 @@
+using IdentityServer.Entity;
+using IdentityServer.Service;
+using IdentityServer.Service.Impl;
 using IdentityServer.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +29,14 @@ namespace IdentityServer.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IUserAccountService, UserAccountService>();
+
+            services.AddDbContextPool<IdentityContext>(options =>
+            {
+                options.UseMySql(Config.GetString("ConnectionStrings:IdentityUserConnection"),sql=>sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
+            });
+
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -37,7 +49,8 @@ namespace IdentityServer.Web
 
             services.AddIdentityServer4UseMySql(options =>
             {
-                options.LoginUrl = Config.GetString("IdentityServer4:LoginUrl");
+                options.LoginUrl = "/login";
+                options.LogoutUrl = "/logout";
                 options.DbConnectionStrings = Config.GetString("ConnectionStrings:IdentityServerConnection");
                 options.EnableTokenCleanup = true;
                 options.TokenCleanupInterval = 600;
