@@ -72,6 +72,12 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OfflineAccess,
                         "scope1"
                     },
+
+                     //RefreshTokenExpiration = TokenExpiration.Absolute,//刷新令牌将在固定时间点到期
+
+                    AbsoluteRefreshTokenLifetime = 2592000,//RefreshToken的最长生命周期,默认30天
+                    RefreshTokenExpiration = TokenExpiration.Sliding,//刷新令牌时，将刷新RefreshToken的生命周期。RefreshToken的总生命周期不会超过AbsoluteRefreshTokenLifetime。
+
                      //刷新refresh_token
                     AllowOfflineAccess=true
                 },

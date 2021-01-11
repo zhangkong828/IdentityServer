@@ -62,7 +62,7 @@ namespace IdentityServer.Client.ResourceOwnerPassword
                 ClientSecret = "123456",
                 UserName = "test",
                 Password = "test123456",
-                Scope = "scope1"
+                Scope = "scope1 offline_access openid profile"
             });
         }
     }
