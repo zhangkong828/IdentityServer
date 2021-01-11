@@ -15,8 +15,9 @@ namespace IdentityServer.Resource.Api1.Controllers
     {
         private static readonly List<Book> Books = new List<Book>
         {
-            new Book{Id=1,Name="SICP"},
-            new Book{Id=2,Name="lnh"}
+            new Book{Id=1,Name="从删库到跑路"},
+            new Book{Id=2,Name="颈椎病康复指南"},
+            new Book{Id=3,Name="活着"}
         };
 
         [HttpGet]

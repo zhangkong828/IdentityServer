@@ -21,17 +21,20 @@ namespace IdentityServer
 
         public static IEnumerable<ApiResource> ApiResources => new List<ApiResource>
                 {
-                    new ApiResource("api", "Some API")
+                    new ApiResource("api1", "Some API")
                     {
                         Scopes=ApiScopes.Select(x=>x.Name).ToList()
                     },
                     new ApiResource("GoofyAlgoTraderAPI", "GoofyAlgoTrader API")
+                    {
+                        Scopes=ApiScopes.Select(x=>x.Name).ToList()
+                    }
                 };
 
         public static IEnumerable<ApiScope> ApiScopes => new List<ApiScope>
         {
-                    new ApiScope("api1", "Test API"),
-                    new ApiScope("GoofyAlgoTraderAPI", "GoofyAlgoTrader API")
+                    new ApiScope("scope1"),
+                    new ApiScope("scope2")
         };
 
         public static IEnumerable<Client> Clients =>
@@ -48,7 +51,7 @@ namespace IdentityServer
                         new Secret("123456".Sha256())
                     },
 
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { "scope1" }
                 },
 
                 new Client
@@ -56,12 +59,20 @@ namespace IdentityServer
                     ClientId = "Test.ResourceOwnerPassword",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
+                    ClientSecrets =
+                    {
+                        new Secret("123456".Sha256())
+                    },
+
+
                      AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "scope1"
                     },
+                     //刷新refresh_token
                     AllowOfflineAccess=true
                 },
 
@@ -82,7 +93,8 @@ namespace IdentityServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "scope1"
                     }
                 }
             };

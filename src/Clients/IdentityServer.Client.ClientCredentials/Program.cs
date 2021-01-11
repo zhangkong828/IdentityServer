@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Client.ResourceOwnerPassword
+namespace IdentityServer.Client.ClientCredentials
 {
     class Program
     {
@@ -55,14 +55,16 @@ namespace IdentityServer.Client.ResourceOwnerPassword
                 }
             });
 
-            return await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+            return await httpClient.RequestTokenAsync(new TokenRequest
             {
                 Address = discoveryResponse.TokenEndpoint,
-                ClientId = "Test.ResourceOwnerPassword",
+                ClientId = "Test.ClientCredentials",
                 ClientSecret = "123456",
-                UserName = "test",
-                Password = "test123456",
-                Scope = "scope1"
+                GrantType = "client_credentials",
+                Parameters =
+                {
+                    ["scope"]="scope1"
+                }
             });
         }
     }

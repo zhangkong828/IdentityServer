@@ -15,7 +15,7 @@ namespace IdentityServer.IdentityServer4Extension.Validator
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             //根据context.UserName和context.Password与数据库的数据做校验，判断是否合法
-            if (context.UserName == "test" && context.Password == "123456")
+            if (context.UserName == "test" && context.Password == "test123456")
             {
                 context.Result = new GrantValidationResult(
                  subject: context.UserName,
