@@ -5,6 +5,7 @@ using IdentityServer.Web.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,11 +30,13 @@ namespace IdentityServer.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureNonBreakingSameSiteCookies();
+
             services.AddScoped<IUserAccountService, UserAccountService>();
 
             services.AddDbContextPool<IdentityContext>(options =>
             {
-                options.UseMySql(Config.GetString("ConnectionStrings:IdentityUserConnection"),sql=>sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
+                options.UseMySql(Config.GetString("ConnectionStrings:IdentityUserConnection"), sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
             });
 
 
@@ -47,14 +50,20 @@ namespace IdentityServer.Web
                 options.LogoutPath = "/Account/Logout";
             });
 
-            services.AddIdentityServer4UseMySql(options =>
+            //services.AddIdentityServer4UseMySql(options =>
+            //{
+            //    options.LoginUrl = "/login";
+            //    options.LogoutUrl = "/logout";
+            //    options.DbConnectionStrings = Config.GetString("ConnectionStrings:IdentityServerConnection");
+            //    options.EnableTokenCleanup = true;
+            //    options.TokenCleanupInterval = 600;
+            //    options.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            //});
+
+            services.AddIdentityServer4UseConfig(options =>
             {
                 options.LoginUrl = "/login";
                 options.LogoutUrl = "/logout";
-                options.DbConnectionStrings = Config.GetString("ConnectionStrings:IdentityServerConnection");
-                options.EnableTokenCleanup = true;
-                options.TokenCleanupInterval = 600;
-                options.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             });
 
             services.AddCors(options =>
@@ -80,6 +89,7 @@ namespace IdentityServer.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseCookiePolicy();
             app.UseAuthentication();
 
             app.UseCors("AllowAllOrigins");

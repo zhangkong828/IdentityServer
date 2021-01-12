@@ -59,22 +59,27 @@ namespace IdentityServer
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddIdentityServer4UseConfig(this IServiceCollection services)
+        public static IServiceCollection AddIdentityServer4UseConfig(this IServiceCollection services, Action<IdentityServer4Options> identityServer4OptionsAction = null)
         {
-            var loginUrl = Config.GetString("IdentityServer4:LoginUrl");
-            services.AddIdentityServer(options =>
+            var options = new IdentityServer4Options();
+            identityServer4OptionsAction?.Invoke(options);
+
+            services.AddIdentityServer(o =>
             {
-                options.UserInteraction = new IdentityServer4.Configuration.UserInteractionOptions()
+                o.UserInteraction = new IdentityServer4.Configuration.UserInteractionOptions()
                 {
-                    LoginUrl = loginUrl,
+                    LoginUrl = options.LoginUrl,
+                    LogoutUrl = options.LogoutUrl
 
                 };
             })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
+                .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
                 .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
                 .AddInMemoryClients(IdentityServerConfig.Clients)
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
+                .AddProfileService<ProfileService>()
             ;
 
             return services;

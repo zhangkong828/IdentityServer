@@ -1,4 +1,6 @@
 ﻿using IdentityServer.Entity;
+using IdentityServer.Infrastructure.Security;
+using IdentityServer.Infrastructure.Utility;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +19,22 @@ namespace IdentityServer.Web.Data
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                serviceScope.ServiceProvider.GetRequiredService<IdentityContext>().Database.Migrate();
+                var identityContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
+                identityContext.Database.Migrate();
+                if (!identityContext.UserAccounts.Any())
+                {
+                    identityContext.UserAccounts.Add(new UserAccount()
+                    {
+                        UserId = ObjectId.Default().NextString(),
+                        Username = "test",
+                        Password = Md5Helper.Md5By32("123456"),
+                        NickName = "测试用户",
+                        Status = 0,
+                        CreateTime = DateTime.Now
+                    });
+                    identityContext.SaveChanges();
+                }
+                return;
 
                 serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 

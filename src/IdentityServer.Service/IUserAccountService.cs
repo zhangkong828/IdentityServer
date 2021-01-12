@@ -9,7 +9,7 @@ namespace IdentityServer.Service
 {
     public interface IUserAccountService
     {
-        public bool ValidateCredentials(string username, string password);
+        public bool ValidateCredentials(string username, string password, string loginIP, out UserAccount user);
 
         public UserAccount QueryUserByUserId(string userId);
 

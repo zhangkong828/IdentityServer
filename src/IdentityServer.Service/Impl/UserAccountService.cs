@@ -1,4 +1,5 @@
 ﻿using IdentityServer.Entity;
+using IdentityServer.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,16 @@ namespace IdentityServer.Service.Impl
             return _identityContext.UserAccounts.AsNoTracking().FirstOrDefault(x => x.Username == username);
         }
 
-        public bool ValidateCredentials(string username, string password)
+        public bool ValidateCredentials(string username, string password, string loginIP, out UserAccount user)
         {
-            return false;
+            user = _identityContext.UserAccounts.FirstOrDefault(x => x.Username == username);
+            if (user == null) return false;
+            if (Md5Helper.Md5By32(password) != user.Password) return false;
+
+            user.LastLoginIp = loginIP;
+            user.LastLoginTime = DateTime.Now;
+            _identityContext.SaveChanges();
+            return true;
         }
     }
 }

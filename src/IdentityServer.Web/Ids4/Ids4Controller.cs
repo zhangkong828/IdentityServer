@@ -11,9 +11,11 @@ using IdentityServer4.Stores;
 using System.Security.Claims;
 using IdentityServer.Service;
 using IdentityModel;
+using IdentityServer.Entity;
 
 namespace IdentityServer.Web.Ids4
 {
+    [TypeFilter(typeof(GlobalExceptionFilter))]
     public class Ids4Controller : Controller
     {
         private readonly IUserAccountService _userAccountService;
@@ -79,9 +81,8 @@ namespace IdentityServer.Web.Ids4
                 });
             }
 
-            if (_userAccountService.ValidateCredentials(form.UserName, form.Password))
+            if (_userAccountService.ValidateCredentials(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserAccount user))
             {
-                var user = _userAccountService.QueryUserByUsername(form.UserName);
                 var properties = new AuthenticationProperties
                 {
                     IsPersistent = true,
