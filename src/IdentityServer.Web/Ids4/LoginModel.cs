@@ -16,6 +16,8 @@ namespace IdentityServer.Web.Ids4
 
         [Required]
         public string ReturnUrl { get; set; }
+
+        public bool Remember { get; set; }
     }
 
     public class LoginViewModel : LoginFormModel

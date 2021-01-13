@@ -83,10 +83,14 @@ namespace IdentityServer.Web.Ids4
 
             if (_userAccountService.ValidateCredentials(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserAccount user))
             {
+                var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
+                if (form.Remember)
+                    expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(7));
+
                 var properties = new AuthenticationProperties
                 {
                     IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
+                    ExpiresUtc = expires
                 };
                 var isuser = new IdentityServerUser(user.UserId)
                 {
@@ -103,7 +107,7 @@ namespace IdentityServer.Web.Ids4
             }
             else
             {
-                ViewBag.Error = "invalid username or password.";
+                ViewBag.Error = "用户名或密码无效";
                 return View(new LoginViewModel(form)
                 {
                     ExternalLoginList = await GetExternalLoginViewModels(form.ReturnUrl)
