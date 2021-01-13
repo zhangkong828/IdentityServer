@@ -2,6 +2,8 @@ using IdentityServer.Entity;
 using IdentityServer.Service;
 using IdentityServer.Service.Impl;
 using IdentityServer.Web.Data;
+using IdentityServer.Web.ExternalLogin.GitHub;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,13 +44,28 @@ namespace IdentityServer.Web
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.Cookie.IsEssential = true;
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
-            });
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //.AddCookie(options =>
+            //{
+            //    options.Cookie.IsEssential = true;
+            //    options.LoginPath = "/Account/Login";
+            //    options.LogoutPath = "/Account/Logout";
+            //});
+
+            services.AddAuthentication()
+                   .AddGoogle("Google", options =>
+                   {
+                       options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                       options.ClientId = Configuration["Secret:GoogleClientId"];
+                       options.ClientSecret = Configuration["Secret:GoogleClientSecret"];
+                   })
+              .AddGitHub("github", "Github", options =>
+              {
+                  options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                  options.ClientId = "03c3f213ec1e4b224c72";
+                  options.ClientSecret = "9e56eae44f59189984aef0fedfea6490af9dc1ee";
+              });
 
             //services.AddIdentityServer4UseMySql(options =>
             //{

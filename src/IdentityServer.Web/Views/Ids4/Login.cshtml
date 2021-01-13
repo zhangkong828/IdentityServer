@@ -107,22 +107,13 @@
                         </div>
                         <div class="row" style="padding: 0 0 0 0;">
                             <div class="form-group col-sm-12">
-                                <a href="/Sso/Login?name=QQ&amp;r=%2fSso%2fAuth2%3fid%3d6755053846646554635">
-                                    <i class="glyphicon glyphicon-menu-right"></i>
-                                    QQ
-                                </a>
-                                <a href="/Sso/Login?name=Baidu&amp;r=%2fSso%2fAuth2%3fid%3d6755053846646554635">
-                                    <i class="glyphicon glyphicon-menu-right"></i>
-                                    百度
-                                </a>
-                                <a href="/Sso/Login?name=Github&amp;r=%2fSso%2fAuth2%3fid%3d6755053846646554635">
-                                    <i class="glyphicon glyphicon-menu-right"></i>
-                                    Github
-                                </a>
-                                <a href="/Sso/Login?name=Ding&amp;r=%2fSso%2fAuth2%3fid%3d6755053846646554635">
-                                    <i class="glyphicon glyphicon-menu-right"></i>
-                                    钉钉
-                                </a>
+                                @if (Model.ExternalLoginList != null)
+                                {
+                                    foreach (var externalLogin in Model.ExternalLoginList)
+                                    {
+                                        <a href="@externalLogin.LoginUrl"><i class="glyphicon glyphicon-menu-right"></i>@externalLogin.DisplayName</a>
+                                    }
+                                }
                             </div>
                         </div>
                     </div>
@@ -138,8 +129,6 @@
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script src="https://sso.newlifex.com/Content/js/md5.js"></script>
-
     <footer>
         <div style="margin-top:20px;" class="text-center">
             <span>&copy; @(DateTime.Now.Year)</span>
@@ -147,31 +136,4 @@
         </div>
     </footer>
 </body>
-@*<body>
-
-        <fieldset>
-            <legend>Login</legend>
-            <form method="post">
-                <h3 style="color:red">@ViewBag.Error</h3>
-                <input type="hidden" name="resumeUrl" value="@Model.ReturnUrl" />
-                <input type="text" name="userName" value="@Model.UserName" />
-                <br />
-                <input type="password" name="password" value="@Model.Password" />
-                <br />
-                <button type="submit">Submit</button>
-            </form>
-        </fieldset>
-
-        <fieldset>
-            <legend>Exernal Login</legend>
-            @if (Model.ExternalLoginList != null)
-            {
-                foreach (var externalLogin in Model.ExternalLoginList)
-                {
-                    <a href="@externalLogin.LoginUrl">@externalLogin.DisplayName</a>
-                    <br />
-                }
-            }
-        </fieldset>
-    </body>*@
 </html>
