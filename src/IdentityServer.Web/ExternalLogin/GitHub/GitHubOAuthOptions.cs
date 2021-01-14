@@ -14,7 +14,7 @@ namespace IdentityServer.Web.ExternalLogin.GitHub
             base.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
             base.TokenEndpoint = "https://github.com/login/oauth/access_token";
             base.UserInformationEndpoint = "https://api.github.com/user";
-            base.CallbackPath = new PathString("/external-login/callback");
+            base.CallbackPath = new PathString("/oauth2/github/callback");
             base.Scope.Add("user");
             base.SaveTokens = false;
             base.ClaimActions.Add(new GitHubClaimsAction());

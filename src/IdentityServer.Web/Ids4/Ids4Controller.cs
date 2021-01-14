@@ -34,10 +34,10 @@ namespace IdentityServer.Web.Ids4
         public async Task<IActionResult> Login(string returnUrl)
         {
             var login = await _idsInteraction.GetAuthorizationContextAsync(returnUrl);
-            //if (string.IsNullOrWhiteSpace(login.IdP) == false)
-            //{
-            //    return ExternalLogin(login.IdP, resumeUrl);
-            //}
+            if (string.IsNullOrWhiteSpace(login.IdP) == false)
+            {
+                return ExternalLogin(login.IdP, returnUrl);
+            }
 
             var model = new LoginViewModel(null)
             {
@@ -144,7 +144,7 @@ namespace IdentityServer.Web.Ids4
 
         [HttpGet]
         [Route("external-login/callback")]
-        public async Task<IActionResult> ExternalLoginCallback(string resumeUrl)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
         {
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
             var claims = GetClaims(externalLogin);
@@ -161,7 +161,7 @@ namespace IdentityServer.Web.Ids4
                     AdditionalClaims = claims
                 };
                 await HttpContext.SignInAsync(isuser);
-                return Redirect(resumeUrl);
+                return Redirect(returnUrl);
             }
 
             ViewBag.NickName = GetUserNickName(claims);
@@ -178,7 +178,7 @@ namespace IdentityServer.Web.Ids4
             var userId = GetUserId(claims);
             var scheme = GetScheme(externalLogin);
 
-            var user = _userAccountService.QueryUserByUserId(userId); //_userStore.AutoProvisionUser(scheme, userId, claims);
+            var user = _userAccountService.QueryUserByUserId("72q15bVlgW"); //_userStore.AutoProvisionUser(scheme, userId, claims);
             user.NickName = viewModel.UserName;
 
             await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
@@ -238,7 +238,7 @@ namespace IdentityServer.Web.Ids4
 
         private static string GetUserNickName(ICollection<Claim> claims)
         {
-            return claims.FirstOrDefault(x => x.Type == JwtClaimTypes.NickName)?.Value;
+            return claims.FirstOrDefault(x => x.Type == "nickname")?.Value;
         }
 
         private static string GetUserAvatar(ICollection<Claim> claims)

@@ -53,13 +53,6 @@ namespace IdentityServer.Web
             //});
 
             services.AddAuthentication()
-                   .AddGoogle("Google", options =>
-                   {
-                       options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                       options.ClientId = Configuration["Secret:GoogleClientId"];
-                       options.ClientSecret = Configuration["Secret:GoogleClientSecret"];
-                   })
               .AddGitHub("github", "Github", options =>
               {
                   options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
