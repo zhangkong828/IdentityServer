@@ -188,18 +188,6 @@ namespace IdentityServer.Web.Ids4
             return Redirect(returnUrl);
         }
 
-        [HttpGet]
-        [Route("js")]
-        public ActionResult IsLogin()
-        {
-
-            var isLogin = base.User?.Identity?.IsAuthenticated ?? false;
-            var javaScript = "var account={"
-                           + "is_login:" + isLogin.ToString().ToLower()
-                           + "};";
-            return Content(javaScript, "application/javascript");
-        }
-
         private static string GetScheme(AuthenticateResult externalLogin)
         {
             return externalLogin.Properties.Items["scheme"];

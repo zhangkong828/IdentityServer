@@ -1,4 +1,6 @@
 ﻿using IdentityModel;
+using IdentityServer.Entity;
+using IdentityServer.Service;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using System;
@@ -12,31 +14,34 @@ namespace IdentityServer.IdentityServer4Extension.Validator
 {
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
-        public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
+        private readonly IUserAccountService _userAccountService;
+        public ResourceOwnerPasswordValidator(IUserAccountService userAccountService)
         {
-            //根据context.UserName和context.Password与数据库的数据做校验，判断是否合法
-            if (context.UserName == "test" && context.Password == "123456")
+            _userAccountService = userAccountService;
+        }
+
+        public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
+        {
+            if (_userAccountService.ValidateUsername(context.UserName, context.Password, null, out UserAccount user))
             {
                 context.Result = new GrantValidationResult(
-                 subject: context.UserName,
+                 subject: user.UserId,
                  authenticationMethod: "custom",
-                 claims: GetUserClaims());
+                 claims: GetUserClaims(user));
             }
             else
             {
-
-                //验证失败
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "invalid custom credential");
             }
+            return Task.CompletedTask;
         }
 
-        //可以根据需要设置相应的Claim
-        private Claim[] GetUserClaims()
+        private Claim[] GetUserClaims(UserAccount user)
         {
             return new Claim[]
             {
-            new Claim("UserId", 1.ToString()),
-            new Claim(JwtClaimTypes.Name,"111"),
+            new Claim("UserId", user.UserId),
+            new Claim(JwtClaimTypes.NickName,user.NickName),
             new Claim(JwtClaimTypes.GivenName, "222"),
             new Claim(JwtClaimTypes.FamilyName, "333"),
             new Claim(JwtClaimTypes.Email, "444"),

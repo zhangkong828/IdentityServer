@@ -81,9 +81,13 @@ namespace IdentityServer.Service.Impl
             if (user == null) return false;
             if (Md5Helper.Md5By32(password) != user.Password) return false;
 
-            user.LastLoginIp = loginIP;
-            user.LastLoginTime = DateTime.Now;
-            _identityContext.SaveChanges();
+            if (!string.IsNullOrWhiteSpace(loginIP))
+            {
+                user.LastLoginIp = loginIP;
+                user.LastLoginTime = DateTime.Now;
+                _identityContext.SaveChanges();
+            }
+
             return true;
         }
     }
