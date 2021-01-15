@@ -15,5 +15,6 @@ namespace IdentityServer.Entity
         }
 
         public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<UserAccountExternal> UserAccountExternals { get; set; }
     }
 }

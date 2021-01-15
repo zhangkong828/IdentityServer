@@ -23,11 +23,11 @@ namespace IdentityServer.Web.ExternalLogin.GitHub
                 identity.AddClaim(new Claim("github." + key, value, ClaimValueTypes.String, issuer));
             }
 
-            var userId = user.GetProperty("id").ToString();
+            var userExternalId = user.GetProperty("id").ToString();
             var userName = user.GetProperty("name").ToString();
             var userAvatar = user.GetProperty("avatar_url").ToString();
 
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId, ClaimValueTypes.String, issuer));
+            identity.AddClaim(new Claim("externalId", userExternalId, ClaimValueTypes.String, issuer));
             identity.AddClaim(new Claim("nickname", userName, ClaimValueTypes.String, issuer));
             identity.AddClaim(new Claim("avatar", userAvatar, ClaimValueTypes.String, issuer));
         }

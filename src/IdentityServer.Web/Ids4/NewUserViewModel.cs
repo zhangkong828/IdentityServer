@@ -7,8 +7,8 @@ namespace IdentityServer.Web.Ids4
 {
     public class NewUserViewModel
     {
-        public string UserName { get; set; }
+        public string NickName { get; set; }
 
-        public string AvatarUrl { get; set; }
+        public string Avatar { get; set; }
     }
 }

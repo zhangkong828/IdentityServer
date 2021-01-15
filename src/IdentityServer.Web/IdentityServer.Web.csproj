@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ExternalLogin\QQ\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 

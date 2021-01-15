@@ -20,7 +20,7 @@ namespace IdentityServer.Web.Data
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var identityContext = serviceScope.ServiceProvider.GetRequiredService<IdentityContext>();
-                identityContext.Database.Migrate();
+                identityContext.Database.EnsureCreated();
                 if (!identityContext.UserAccounts.Any())
                 {
                     identityContext.UserAccounts.Add(new UserAccount()

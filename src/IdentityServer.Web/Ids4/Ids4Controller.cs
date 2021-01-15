@@ -33,18 +33,12 @@ namespace IdentityServer.Web.Ids4
         [Route("/login")]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            var login = await _idsInteraction.GetAuthorizationContextAsync(returnUrl);
-            if (string.IsNullOrWhiteSpace(login.IdP) == false)
-            {
-                return ExternalLogin(login.IdP, returnUrl);
-            }
-
             var model = new LoginViewModel(null)
             {
                 ReturnUrl = returnUrl,
                 //default username and password
-                UserName = "test",
-                Password = "123456",
+                //UserName = "test",
+                //Password = "123456",
                 ExternalLoginList = await GetExternalLoginViewModels(returnUrl)
             };
 
@@ -81,7 +75,7 @@ namespace IdentityServer.Web.Ids4
                 });
             }
 
-            if (_userAccountService.ValidateCredentials(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserAccount user))
+            if (_userAccountService.ValidateUsername(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserAccount user))
             {
                 var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
                 if (form.Remember)
@@ -107,7 +101,7 @@ namespace IdentityServer.Web.Ids4
             }
             else
             {
-                ViewBag.Error = "用户名或密码无效";
+                ViewBag.Error = "账号或密码无效";
                 return View(new LoginViewModel(form)
                 {
                     ExternalLoginList = await GetExternalLoginViewModels(form.ReturnUrl)
@@ -148,9 +142,9 @@ namespace IdentityServer.Web.Ids4
         {
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
             var claims = GetClaims(externalLogin);
-            var userId = GetUserId(claims);
+            var externalId = GetUserExternalId(claims);
             var scheme = GetScheme(externalLogin);
-            var user = _userAccountService.QueryUserByUserId(userId);
+            var user = _userAccountService.QueryUserByExternal(scheme, externalId);
             if (user != null)
             {
                 await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
@@ -163,7 +157,7 @@ namespace IdentityServer.Web.Ids4
                 await HttpContext.SignInAsync(isuser);
                 return Redirect(returnUrl);
             }
-
+            ViewBag.ReturnUrl = returnUrl;
             ViewBag.NickName = GetUserNickName(claims);
             ViewBag.AvatarUrl = GetUserAvatar(claims);
             return View("ExternalLoginNewUser");
@@ -175,11 +169,11 @@ namespace IdentityServer.Web.Ids4
         {
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
             var claims = GetClaims(externalLogin);
-            var userId = GetUserId(claims);
+            var externalId = GetUserExternalId(claims);
             var scheme = GetScheme(externalLogin);
-
-            var user = _userAccountService.QueryUserByUserId("72q15bVlgW"); //_userStore.AutoProvisionUser(scheme, userId, claims);
-            user.NickName = viewModel.UserName;
+            var nickName = viewModel.NickName;
+            var avatar = viewModel.Avatar;
+            var user = _userAccountService.AutoRegisterByExternal(scheme, externalId, HttpContext.GetIpAddress(), nickName, avatar);
 
             await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
@@ -222,16 +216,12 @@ namespace IdentityServer.Web.Ids4
             return tempUser.Claims.ToList();
         }
 
-        private static string GetUserId(ICollection<Claim> claims)
+        private static string GetUserExternalId(ICollection<Claim> claims)
         {
-            var userIdClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject);
+            var userIdClaim = claims.FirstOrDefault(x => x.Type == "externalId");
             if (userIdClaim == null)
             {
-                userIdClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            }
-            if (userIdClaim == null)
-            {
-                throw new Exception("Unknown userid");
+                throw new Exception("Unknown User External Id");
             }
             return userIdClaim.Value;
         }

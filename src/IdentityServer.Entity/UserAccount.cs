@@ -44,5 +44,6 @@ namespace IdentityServer.Entity
         public int Status { get; set; }
 
         public DateTime CreateTime { get; set; }
+
     }
 }

@@ -3,6 +3,7 @@ using IdentityServer.Service;
 using IdentityServer.Service.Impl;
 using IdentityServer.Web.Data;
 using IdentityServer.Web.ExternalLogin.GitHub;
+using IdentityServer.Web.ExternalLogin.QQ;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -53,6 +54,12 @@ namespace IdentityServer.Web
             //});
 
             services.AddAuthentication()
+              .AddQQ("qq", "QQ", options =>
+              {
+                  options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                  options.ClientId = "You App Id";
+                  options.ClientSecret = "You App Secret";
+              })
               .AddGitHub("github", "Github", options =>
               {
                   options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;

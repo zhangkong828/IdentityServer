@@ -31,11 +31,11 @@
                                 @ViewBag.Error
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="测试账号:test" value="@Model.UserName" autocomplete="off">
+                                <input type="text" class="form-control" id="username" name="username" placeholder="账号/邮箱/手机号    测试账号:test" value="@Model.UserName" autocomplete="off">
                                 <i class="glyphicon glyphicon-user"></i>
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="password" name="password" value="@Model.Password" placeholder="测试密码:123456" autocomplete="off">
+                                <input type="password" class="form-control" id="password" name="password" value="@Model.Password" placeholder="密码   测试密码:123456" autocomplete="off">
                                 <i class="glyphicon glyphicon-lock"></i>
                             </div>
                             <div class="form-group clear-fix">
@@ -61,7 +61,7 @@
 
                     <!-- 注册-->
                     <div class="tab-pane fade" id="Register">
-                        <form action="/Admin/User/Register?r=%2FSso%2FAuth2%3Fid%3D6755053846646554635" class="c-login" method="post">
+                        <form  class="c-login" method="post">
                             <div class="validation-summary-valid" data-valmsg-summary="true">
                                 <ul>
                                     <li style="display:none"></li>
@@ -73,7 +73,7 @@
                                 <i class="glyphicon glyphicon-th"></i>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="reg_username" name="username" placeholder="账户" autocomplete="off">
+                                <input type="text" class="form-control" id="reg_username" name="username" placeholder="账号/邮箱" autocomplete="off">
                                 <i class="glyphicon glyphicon-user"></i>
                             </div>
                             <div class="form-group">
