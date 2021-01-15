@@ -143,7 +143,7 @@ namespace IdentityServer
                  new Client
                 {
                     ClientId = "mvc",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
+                    ClientSecrets = { new Secret("123456".Sha256()) },
 
                     AllowedGrantTypes = GrantTypes.Code,
 
@@ -156,7 +156,8 @@ namespace IdentityServer
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "scope1"
                     }
                 }
             };
