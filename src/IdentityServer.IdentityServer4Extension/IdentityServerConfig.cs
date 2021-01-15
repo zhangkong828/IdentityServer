@@ -46,23 +46,13 @@ namespace IdentityServer
 
                     AllowedGrantTypes = GrantTypes.Implicit,
 
-                    RedirectUris =
-                    {
-                        "http://localhost:8621/identityserver-sample.html",
-                        "http://localhost:15000/identityserver-sample-popup-signin.html",
-                        "http://localhost:15000/identityserver-sample-silent.html"
-                    },
-                    PostLogoutRedirectUris = 
-                    { 
-                        "http://localhost:8621/identityserver-sample.html",
-                        "http://localhost:8621/identityserver-sample-popup-signout.html"
-                    },
+                    RedirectUris = {"http://localhost:40080/signin-oidc"},
+                    PostLogoutRedirectUris = {"http://localhost:40080/signout-callback-oidc"},
 
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.Email,
                         "scope1"
                     },
                     AllowAccessTokensViaBrowser = true,
@@ -148,6 +138,25 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
                         "scope1"
+                    }
+                },
+                 new Client
+                {
+                    ClientId = "mvc",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Code,
+
+                    // where to redirect to after login
+                    RedirectUris = { "https://localhost:5002/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
                     }
                 }
             };
