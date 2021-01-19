@@ -51,10 +51,9 @@ namespace IdentityServer.Web
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.MinimumSameSitePolicy = Unspecified;
-                options.OnAppendCookie = cookieContext =>
-                   CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
-                options.OnDeleteCookie = cookieContext =>
-                   CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+
+                //options.OnAppendCookie = cookieContext => CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+                //options.OnDeleteCookie = cookieContext => CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
             });
 
             return services;

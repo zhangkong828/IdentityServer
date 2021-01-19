@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +23,7 @@ namespace IdentityServer.Client.Implicit.MVC1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureNonBreakingSameSiteCookies();
+            //services.ConfigureNonBreakingSameSiteCookies();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
@@ -35,9 +36,9 @@ namespace IdentityServer.Client.Implicit.MVC1
             .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = "http://localhost:40763";
+                options.RequireHttpsMetadata = false;
 
                 options.ClientId = "Test.Implicit";
-                options.RequireHttpsMetadata = false;
                 options.SaveTokens = true;
             });
         }
@@ -53,7 +54,9 @@ namespace IdentityServer.Client.Implicit.MVC1
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
             app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseAuthentication();
 
             app.UseRouting();

@@ -34,6 +34,7 @@ namespace IdentityServer.Resource.Api1
                    options.Authority = $"http://localhost:40763";
                    options.RequireHttpsMetadata = false;
                    options.ApiName = "api1";
+                   options.ApiSecret = "api1Secret";
                });
 
             services.AddCors();

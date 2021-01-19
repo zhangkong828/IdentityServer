@@ -23,11 +23,8 @@ namespace IdentityServer
                 {
                     new ApiResource("api1", "Some API")
                     {
-                        Scopes=ApiScopes.Select(x=>x.Name).ToList()
-                    },
-                    new ApiResource("GoofyAlgoTraderAPI", "GoofyAlgoTrader API")
-                    {
-                        Scopes=ApiScopes.Select(x=>x.Name).ToList()
+                        Scopes=ApiScopes.Select(x=>x.Name).ToList(),
+                        ApiSecrets={ new Secret("api1Secret".Sha256()) }
                     }
                 };
 

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var isLogin = User?.Identity?.IsAuthenticated ?? false;
+    var loginName = User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,6 +31,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Secret">Secret</a>
                         </li>
+                        @if (isLogin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/home/logout">@(loginName) 退出</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

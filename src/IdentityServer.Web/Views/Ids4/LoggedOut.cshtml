@@ -1,4 +1,8 @@
-﻿<iframe width="0" height="0" src="@ViewBag.SignOutIframeUrl"></iframe>
+﻿@{
+    Layout = null;
+}
+
+<iframe width="0" height="0" src="@ViewBag.SignOutIframeUrl"></iframe>
 <script>
     window.addEventListener("load",function() {
         window.location = "@ViewBag.RedirectUri";
