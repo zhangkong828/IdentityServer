@@ -1,9 +1,11 @@
 using IdentityServer.Entity;
 using IdentityServer.Service;
 using IdentityServer.Service.Impl;
+using IdentityServer.Web.Constants;
 using IdentityServer.Web.Data;
 using IdentityServer.Web.ExternalLogin.GitHub;
 using IdentityServer.Web.ExternalLogin.QQ;
+using IdentityServer.Web.Models.Config;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +37,8 @@ namespace IdentityServer.Web
         {
             services.ConfigureNonBreakingSameSiteCookies();
 
+            services.Configure<AdminUserConfig>(Config.GetSection("AdminUserConfig"));
+
             services.AddScoped<IUserAccountService, UserAccountService>();
 
             services.AddDbContextPool<IdentityContext>(options =>
@@ -45,13 +49,14 @@ namespace IdentityServer.Web
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //.AddCookie(options =>
-            //{
-            //    options.Cookie.IsEssential = true;
-            //    options.LoginPath = "/Account/Login";
-            //    options.LogoutPath = "/Account/Logout";
-            //});
+            services.AddAuthentication(AuthorizationConsts.AdministrationScheme)
+            .AddCookie(AuthorizationConsts.AdministrationScheme, options =>
+             {
+                 options.Cookie.Name = AuthorizationConsts.AdministrationScheme;
+                 options.Cookie.IsEssential = true;
+                 options.LoginPath = "/Account/Login";
+                 options.LogoutPath = "/Account/Logout";
+             });
 
             services.AddAuthentication()
               .AddQQ("qq", "QQ", options =>
@@ -123,7 +128,7 @@ namespace IdentityServer.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

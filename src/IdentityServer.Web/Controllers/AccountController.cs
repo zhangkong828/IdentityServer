@@ -1,8 +1,11 @@
-﻿using IdentityServer.Web.Models;
+﻿using IdentityServer.Web.Constants;
+using IdentityServer.Web.Models;
+using IdentityServer.Web.Models.Config;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +16,10 @@ namespace IdentityServer.Web.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController()
+        private readonly AdminUserConfig _userConfig;
+        public AccountController(IOptionsSnapshot<AdminUserConfig> userConfigAccessor)
         {
-
+            _userConfig = userConfigAccessor.Value;
         }
 
 
@@ -23,29 +27,31 @@ namespace IdentityServer.Web.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            if (string.IsNullOrWhiteSpace(returnUrl)) returnUrl = "/";
+            if (string.IsNullOrWhiteSpace(returnUrl)) returnUrl = "/dashboard";
+            ViewData["returnUrl"] = returnUrl;
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> LoginPost(LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new { code = -1, msg = "参数错误" });
             }
 
-            //var user = _userConfig.Users.Where(x => x.UserName.Equals(username, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-            //if (user == null) return Json(new { code = -1, msg = "用户不存在" });
-            //if (user.Password != password) return Json(new { code = -1, msg = "密码错误" });
+            var user = _userConfig.Users.Where(x => x.UserName.Equals(request.UserName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (user == null) return Json(new { code = -1, msg = "用户不存在" });
+            if (user.Password != request.Password) return Json(new { code = -1, msg = "密码错误" });
 
-            var identity = new ClaimsIdentity(new List<Claim>()
+
+            var claims = new List<Claim>
             {
-                new Claim("UserId", "1"),
-                new Claim("UserName", "2"),
-                new Claim("Roles","3")
-            });
+                new Claim(ClaimTypes.Sid, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, AuthorizationConsts.AdministrationRole)
+            };
 
             var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
             if (request.RememberLogin)
@@ -57,14 +63,15 @@ namespace IdentityServer.Web.Controllers
                 ExpiresUtc = expires
             };
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), props);
-
+            var identity = new ClaimsIdentity(claims, AuthorizationConsts.AdministrationScheme);
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(AuthorizationConsts.AdministrationScheme, principal, props);
             return Json(new { code = 0, msg = "登录成功" });
         }
 
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(AuthorizationConsts.AdministrationScheme);
             return Redirect("/Account/Login");
         }
     }

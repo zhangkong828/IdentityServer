@@ -88,7 +88,16 @@ namespace IdentityServer.Web.Ids4
                 };
                 var isuser = new IdentityServerUser(user.UserId)
                 {
-                    DisplayName = user.NickName
+                    DisplayName = user.NickName,
+                    AdditionalClaims = new Claim[]
+                                        {
+                                        new Claim(JwtClaimTypes.Id, user.UserId),
+                                        new Claim(JwtClaimTypes.NickName,user.NickName),
+                                        new Claim(JwtClaimTypes.GivenName, "222"),
+                                        new Claim(JwtClaimTypes.FamilyName, "333"),
+                                        new Claim(JwtClaimTypes.Email, "444"),
+                                        new Claim(JwtClaimTypes.Role,"admin")
+                                        }
                 };
                 await HttpContext.SignInAsync(isuser, properties);
 

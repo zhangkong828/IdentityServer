@@ -23,7 +23,7 @@ namespace IdentityServer.Web
             var queryString = context.HttpContext.Request.QueryString.Value;
             _logger.Error($"\r\n[url]:{path + queryString}\r\n[controller]:{controller}\r\n[action]:{action}", context.Exception);
 
-            context.HttpContext.Response.StatusCode = 500;
+            context.HttpContext.Response.StatusCode = 200;
 
             context.ExceptionHandled = true;
 

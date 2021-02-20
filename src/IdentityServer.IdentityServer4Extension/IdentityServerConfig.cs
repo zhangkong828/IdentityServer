@@ -159,24 +159,5 @@ namespace IdentityServer
                 }
             };
 
-
-        public static List<TestUser> GetUsers()
-        {
-            return new List<TestUser>
-                {
-                    new TestUser
-                    {
-                        SubjectId = "1",
-                        Username = "test",
-                        Password = "123456",
-
-                        Claims = new List<Claim>
-                        {
-                            new Claim("name", "test"),
-                            new Claim("website", "https://izk.cloud")
-                        }
-                    }
-                };
-        }
     }
 }

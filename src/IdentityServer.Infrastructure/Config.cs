@@ -51,6 +51,12 @@ namespace IdentityServer
             return Configuration.GetSection(key).Get<T>();
         }
 
+        public static IConfigurationSection GetSection(string key)
+        {
+            if (Configuration == null) return default;
+            return Configuration.GetSection(key);
+        }
+
         public static bool IsExists(string key)
         {
             if (Configuration == null) return false;
