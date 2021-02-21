@@ -1,0 +1,4 @@
+add-migration InitialIdentityServerConfigurationDbMigration -c IdentityServerConfigurationDbContext -o Migrations/IdentityServer/ConfigurationDb
+add-migration InitialIdentityServerPersistedGrantDbMigration -c IdentityServerPersistedGrantDbContext -o Migrations/IdentityServer/PersistedGrantDb
+
+add-migration InitialIdentityDbMigration -c IdentityDbContext -o Migrations/Identity/IdentityDb

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.IdentityServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Model", "src\IdentityServer.Model\IdentityServer.Model.csproj", "{5FB58358-14CF-4998-9EF0-37CD595B8F5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Infrastructure", "src\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj", "{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Web", "src\IdentityServer.Web\IdentityServer.Web.csproj", "{F007FC0C-394F-465C-A3AD-5B3959B88161}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Entity", "src\IdentityServer.Entity\IdentityServer.Entity.csproj", "{16F4E702-D408-4643-BE00-B39E57599987}"
@@ -29,7 +27,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Client.Clien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Client.AuthorizationCode", "src\Clients\IdentityServer.Client.AuthorizationCode\IdentityServer.Client.AuthorizationCode.csproj", "{E3F78FB8-299E-4064-96DD-15B914214F18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Client.Implicit.MVC1", "src\Clients\IdentityServer.Client.Implicit.MVC1\IdentityServer.Client.Implicit.MVC1.csproj", "{92C04FE6-BBCA-4210-B440-6C40C318A5CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Client.Implicit.MVC1", "src\Clients\IdentityServer.Client.Implicit.MVC1\IdentityServer.Client.Implicit.MVC1.csproj", "{92C04FE6-BBCA-4210-B440-6C40C318A5CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "STS", "STS", "{96C4C365-8797-4D0E-BB08-06DE79B9E565}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.IdentityWeb", "src\STS\IdentityServer.IdentityWeb\IdentityServer.IdentityWeb.csproj", "{D63D9A55-D6EB-40E8-ABC6-879F12CC4643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.Infrastructure", "src\STS\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj", "{1F2DAA41-CD0A-476C-83AB-71768CE344C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.EntityFramework", "src\STS\IdentityServer.EntityFramework\IdentityServer.EntityFramework.csproj", "{607053FD-DF24-4408-BC8C-A1C9B3961980}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.EntityFramework.MySql", "src\STS\IdentityServer.EntityFramework.MySql\IdentityServer.EntityFramework.MySql.csproj", "{2AB2DFF6-F79E-4323-9292-4B87FDA63DE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.IdentityAdminWeb", "src\STS\IdentityServer.IdentityAdminWeb\IdentityServer.IdentityAdminWeb.csproj", "{A7D2D5C5-972C-43AA-AA15-E07CC95FC881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer.EntityFramework.SqlServer", "src\STS\IdentityServer.EntityFramework.SqlServer\IdentityServer.EntityFramework.SqlServer.csproj", "{548CCB63-AD12-4BA6-BC44-629F60054F69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +61,6 @@ Global
 		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34C48E3A-24EE-49F8-BEFF-4AD0F53A66BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +93,30 @@ Global
 		{92C04FE6-BBCA-4210-B440-6C40C318A5CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92C04FE6-BBCA-4210-B440-6C40C318A5CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92C04FE6-BBCA-4210-B440-6C40C318A5CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D63D9A55-D6EB-40E8-ABC6-879F12CC4643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63D9A55-D6EB-40E8-ABC6-879F12CC4643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63D9A55-D6EB-40E8-ABC6-879F12CC4643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63D9A55-D6EB-40E8-ABC6-879F12CC4643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F2DAA41-CD0A-476C-83AB-71768CE344C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2DAA41-CD0A-476C-83AB-71768CE344C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2DAA41-CD0A-476C-83AB-71768CE344C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2DAA41-CD0A-476C-83AB-71768CE344C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{607053FD-DF24-4408-BC8C-A1C9B3961980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{607053FD-DF24-4408-BC8C-A1C9B3961980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{607053FD-DF24-4408-BC8C-A1C9B3961980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{607053FD-DF24-4408-BC8C-A1C9B3961980}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AB2DFF6-F79E-4323-9292-4B87FDA63DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AB2DFF6-F79E-4323-9292-4B87FDA63DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AB2DFF6-F79E-4323-9292-4B87FDA63DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AB2DFF6-F79E-4323-9292-4B87FDA63DE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7D2D5C5-972C-43AA-AA15-E07CC95FC881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7D2D5C5-972C-43AA-AA15-E07CC95FC881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7D2D5C5-972C-43AA-AA15-E07CC95FC881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7D2D5C5-972C-43AA-AA15-E07CC95FC881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548CCB63-AD12-4BA6-BC44-629F60054F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548CCB63-AD12-4BA6-BC44-629F60054F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548CCB63-AD12-4BA6-BC44-629F60054F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548CCB63-AD12-4BA6-BC44-629F60054F69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +128,12 @@ Global
 		{EB8EE317-1FDD-46C6-857D-1D1197E3BAB6} = {7C22ADDF-5F1C-4E0C-AA93-AD413E3AA9B8}
 		{E3F78FB8-299E-4064-96DD-15B914214F18} = {7C22ADDF-5F1C-4E0C-AA93-AD413E3AA9B8}
 		{92C04FE6-BBCA-4210-B440-6C40C318A5CB} = {7C22ADDF-5F1C-4E0C-AA93-AD413E3AA9B8}
+		{D63D9A55-D6EB-40E8-ABC6-879F12CC4643} = {96C4C365-8797-4D0E-BB08-06DE79B9E565}
+		{1F2DAA41-CD0A-476C-83AB-71768CE344C3} = {96C4C365-8797-4D0E-BB08-06DE79B9E565}
+		{607053FD-DF24-4408-BC8C-A1C9B3961980} = {96C4C365-8797-4D0E-BB08-06DE79B9E565}
+		{2AB2DFF6-F79E-4323-9292-4B87FDA63DE6} = {96C4C365-8797-4D0E-BB08-06DE79B9E565}
+		{A7D2D5C5-972C-43AA-AA15-E07CC95FC881} = {96C4C365-8797-4D0E-BB08-06DE79B9E565}
+		{548CCB63-AD12-4BA6-BC44-629F60054F69} = {96C4C365-8797-4D0E-BB08-06DE79B9E565}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D2C69DA-E304-4DCF-BA0F-BEF8CAEE2D6B}

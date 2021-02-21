@@ -1,0 +1,181 @@
+{
+  "DatabaseProviderConfiguration": {
+    "ProviderType": "MySql"
+  },
+  "ConnectionStrings": {
+    //"IdentityServerConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServer",
+    //"AdminIdentityConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServerAdmin"
+
+    "IdentityServerConnection": "Server=192.168.31.101;User Id=root;Password=123456;Database=IdentityServer",
+    "AdminIdentityConnection": "Server=192.168.31.101;User Id=root;Password=123456;Database=IdentityServerAdmin"
+  },
+  "AdminUserConfig": {
+    "Users": [
+      {
+        "Id": "1",
+        "UserName": "admin",
+        "Password": "admin123456"
+      }
+    ]
+  },
+  "IdentityServerData": {
+    "IdentityResources": [
+      {
+        "Name": "roles",
+        "Enabled": true,
+        "DisplayName": "Roles",
+        "UserClaims": [
+          "role"
+        ]
+      },
+      {
+        "Name": "openid",
+        "Enabled": true,
+        "Required": true,
+        "DisplayName": "Your user identifier",
+        "UserClaims": [
+          "sub"
+        ]
+      },
+      {
+        "Name": "profile",
+        "Enabled": true,
+        "DisplayName": "User profile",
+        "Description": "Your user profile information (first name, last name, etc.)",
+        "Emphasize": true,
+        "UserClaims": [
+          "name",
+          "family_name",
+          "given_name",
+          "middle_name",
+          "nickname",
+          "preferred_username",
+          "profile",
+          "picture",
+          "website",
+          "gender",
+          "birthdate",
+          "zoneinfo",
+          "locale",
+          "updated_at"
+        ]
+      },
+      {
+        "Name": "email",
+        "Enabled": true,
+        "DisplayName": "Your email address",
+        "Emphasize": true,
+        "UserClaims": [
+          "email",
+          "email_verified"
+        ]
+      },
+      {
+        "Name": "address",
+        "Enabled": true,
+        "DisplayName": "Your address",
+        "Emphasize": true,
+        "UserClaims": [
+          "address"
+        ]
+      }
+    ],
+    "ApiResources": [
+      {
+        "Name": "test_api1",
+        "Scopes": [
+          "test_scope1"
+        ],
+        "ApiSecrets": [
+          {
+            "Value": "api1Secret"
+          }
+        ]
+      }
+    ],
+    //"ApiScope": [
+    //  {
+    //    "Name": "test_scope1",
+    //    "DisplayName": "test_scope1"
+    //  }
+    //],
+    "Clients": [
+      //客户端凭据
+      {
+        "ClientId": "Test.ClientCredentials",
+        "ClientName": "Test.ClientCredentials",
+        "AllowedGrantTypes": [
+          "client_credentials"
+        ],
+        "ClientSecrets": [
+          {
+            "Value": "123456"
+          }
+        ],
+        "AllowedScopes": [
+          "test_scope1",
+          "openid",
+          "profile",
+          "roles"
+        ]
+      },
+      //资源所有者密码凭据
+      {
+        "ClientId": "Test.ResourceOwnerPassword",
+        "ClientName": "Test.ResourceOwnerPassword",
+        "AllowedGrantTypes": [
+          "password"
+        ],
+        "AllowedScopes": [
+          "test_scope1",
+          "openid",
+          "profile",
+          "offline_access"
+        ],
+        "AllowOfflineAccess": true
+      },
+      //隐式许可
+      {
+        "ClientId": "Test.Implicit",
+        "ClientName": "Test.Implicit",
+        "ClientUri": "http://localhost:40080",
+        "AllowedGrantTypes": [
+          "implicit"
+        ],
+        "RedirectUris": [
+          "http://localhost:40080/signin-oidc"
+        ],
+        "PostLogoutRedirectUris": [
+          "http://localhost:40080/signout-callback-oidc"
+        ],
+        "AllowedScopes": [
+          "openid",
+          "profile",
+          "test_scope1"
+        ]
+      },
+      //授权码
+      {
+        "ClientId": "Test.JsClient",
+        "ClientName": "Test.JsClient",
+        "AllowedGrantTypes": [
+          "authorization_code"
+        ],
+        "RequireClientSecret": false,
+        "RequirePkce": true,
+        "RedirectUris": [
+          "http://localhost:8621/code-identityserver-sample.html"
+        ],
+        "PostLogoutRedirectUris": [
+          "http://localhost:8621/code-identityserver-sample.html"
+        ],
+        "AllowedScopes": [
+          "test_scope1",
+          "openid",
+          "profile",
+          "offline_access"
+        ]
+      }
+    ]
+  }
+}
