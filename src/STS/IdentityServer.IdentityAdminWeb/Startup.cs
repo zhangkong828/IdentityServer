@@ -1,10 +1,10 @@
 using IdentityServer.EntityFramework;
 using IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.EntityFramework.MySql;
+using IdentityServer.EntityFramework.Repositories;
+using IdentityServer.EntityFramework.Repositories.Interfaces;
 using IdentityServer.EntityFramework.SqlServer;
 using IdentityServer.IdentityAdminWeb.Constants;
-using IdentityServer.IdentityAdminWeb.Extensions;
-using IdentityServer.IdentityAdminWeb.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +37,8 @@ namespace IdentityServer.IdentityAdminWeb
             RegisterDbContexts(services);
 
             RegisterAuthentication(services);
+
+            RegisterServices(services);
 
             services.AddControllersWithViews()
             .AddRazorRuntimeCompilation();
@@ -113,32 +115,13 @@ namespace IdentityServer.IdentityAdminWeb
             });
         }
 
-        /// <summary>
-        /// ◊¢≤·MVC°¢∂‡”Ô—‘
-        /// </summary>
-        public void AddMvcWithLocalization(IServiceCollection services)
+        public void RegisterServices(IServiceCollection services)
         {
-            var resourcesPath = "Resources";
+            //Repositories
+            services.AddTransient<IClientRepository, ClientRepository<IdentityServerConfigurationDbContext>>();
 
-            services.AddLocalization(opts => { opts.ResourcesPath = resourcesPath; });
-
-            services.TryAddTransient(typeof(IGenericControllerLocalizer<>), typeof(GenericControllerLocalizer<>));
-
-            services.AddControllersWithViews()
-            .AddRazorRuntimeCompilation()
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = resourcesPath; })
-            .AddDataAnnotationsLocalization();
-
-            var cultureConfiguration = new CultureConfiguration();
-            services.Configure<RequestLocalizationOptions>(opts =>
-            {
-                var supportedCultureCodes = CultureConfiguration.AvailableCultures;
-                var supportedCultures = supportedCultureCodes.Select(c => new CultureInfo(c)).ToList();
-
-                opts.DefaultRequestCulture = new RequestCulture(CultureConfiguration.DefaultRequestCulture);
-                opts.SupportedCultures = supportedCultures;
-                opts.SupportedUICultures = supportedCultures;
-            });
+            //Services
+            //services.AddTransient<IClientService, ClientService>();
         }
     }
 }
