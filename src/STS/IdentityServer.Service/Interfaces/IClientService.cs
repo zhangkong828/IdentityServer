@@ -1,6 +1,9 @@
-﻿using System;
+﻿using IdentityServer.EntityFramework.Entities;
+using IdentityServer.Service.Dtos.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace IdentityServer.Service.Interfaces
 {
@@ -30,15 +33,15 @@ namespace IdentityServer.Service.Interfaces
 
         List<string> GetGrantTypes(string grant, int limit = 0);
 
-        List<SelectItemDto> GetAccessTokenTypes();
+        List<SelectItem> GetAccessTokenTypes();
 
-        List<SelectItemDto> GetTokenExpirations();
+        List<SelectItem> GetTokenExpirations();
 
-        List<SelectItemDto> GetTokenUsage();
+        List<SelectItem> GetTokenUsage();
 
-        List<SelectItemDto> GetHashTypes();
+        List<SelectItem> GetHashTypes();
 
-        List<SelectItemDto> GetSecretTypes();
+        List<SelectItem> GetSecretTypes();
 
         List<string> GetStandardClaims(string claim, int limit = 0);
 
@@ -66,6 +69,6 @@ namespace IdentityServer.Service.Interfaces
 
         Task<int> DeleteClientPropertyAsync(ClientPropertiesDto clientProperty);
 
-        List<SelectItemDto> GetProtocolTypes();
+        List<SelectItem> GetProtocolTypes();
     }
 }
