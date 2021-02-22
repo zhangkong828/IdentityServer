@@ -5,6 +5,8 @@ using IdentityServer.EntityFramework.Repositories;
 using IdentityServer.EntityFramework.Repositories.Interfaces;
 using IdentityServer.EntityFramework.SqlServer;
 using IdentityServer.IdentityAdminWeb.Constants;
+using IdentityServer.Service;
+using IdentityServer.Service.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -121,7 +123,7 @@ namespace IdentityServer.IdentityAdminWeb
             services.AddTransient<IClientRepository, ClientRepository<IdentityServerConfigurationDbContext>>();
 
             //Services
-            //services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IClientService, ClientService>();
         }
     }
 }

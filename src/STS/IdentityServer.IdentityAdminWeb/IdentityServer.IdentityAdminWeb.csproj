@@ -19,6 +19,7 @@
     <ProjectReference Include="..\IdentityServer.EntityFramework.SqlServer\IdentityServer.EntityFramework.SqlServer.csproj" />
     <ProjectReference Include="..\IdentityServer.EntityFramework\IdentityServer.EntityFramework.csproj" />
     <ProjectReference Include="..\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj" />
+    <ProjectReference Include="..\IdentityServer.Service\IdentityServer.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
