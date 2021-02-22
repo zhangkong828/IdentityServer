@@ -25,7 +25,7 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            if (string.IsNullOrWhiteSpace(returnUrl)) returnUrl = "/dashboard";
+            if (string.IsNullOrWhiteSpace(returnUrl)) returnUrl = "/";
             ViewData["returnUrl"] = returnUrl;
             return View();
         }
