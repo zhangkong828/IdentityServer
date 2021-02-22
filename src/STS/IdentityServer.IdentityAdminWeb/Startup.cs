@@ -2,13 +2,22 @@ using IdentityServer.EntityFramework;
 using IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.EntityFramework.MySql;
 using IdentityServer.EntityFramework.SqlServer;
+using IdentityServer.IdentityAdminWeb.Constants;
+using IdentityServer.IdentityAdminWeb.Extensions;
+using IdentityServer.IdentityAdminWeb.Localization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,13 +34,14 @@ namespace IdentityServer.IdentityAdminWeb
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             RegisterDbContexts(services);
 
-            services.AddControllersWithViews();
+            RegisterAuthentication(services);
+
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -44,10 +54,13 @@ namespace IdentityServer.IdentityAdminWeb
             }
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+
+            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(options.Value);
+
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -60,7 +73,7 @@ namespace IdentityServer.IdentityAdminWeb
         /// <summary>
         /// 注册数据库上下文
         /// </summary>
-        public virtual void RegisterDbContexts(IServiceCollection services)
+        public void RegisterDbContexts(IServiceCollection services)
         {
             //var databaseProvider = Config.GetSection(nameof(DatabaseProviderConfiguration)).Get<DatabaseProviderConfiguration>();
             var databaseProvider = Config.Get<DatabaseProviderConfiguration>("DatabaseProviderConfiguration");
@@ -80,6 +93,52 @@ namespace IdentityServer.IdentityAdminWeb
                 default:
                     throw new ArgumentOutOfRangeException(nameof(databaseProvider.ProviderType), $@"The value needs to be one of {string.Join(", ", Enum.GetNames(typeof(DatabaseProviderType)))}.");
             }
+        }
+
+        /// <summary>
+        /// 注册身份验证
+        /// </summary>
+        public void RegisterAuthentication(IServiceCollection services)
+        {
+            services.AddAuthentication(AuthorizationConsts.AdministrationScheme)
+            .AddCookie(AuthorizationConsts.AdministrationScheme, options =>
+            {
+                options.Cookie.Name = AuthorizationConsts.AdministrationScheme;
+                options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+
+                options.AccessDeniedPath = "/Account/Login";
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+            });
+        }
+
+        /// <summary>
+        /// 注册MVC、多语言
+        /// </summary>
+        public void AddMvcWithLocalization(IServiceCollection services)
+        {
+            var resourcesPath = "Resources";
+
+            services.AddLocalization(opts => { opts.ResourcesPath = resourcesPath; });
+
+            services.TryAddTransient(typeof(IGenericControllerLocalizer<>), typeof(GenericControllerLocalizer<>));
+
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation()
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = resourcesPath; })
+            .AddDataAnnotationsLocalization();
+
+            var cultureConfiguration = new CultureConfiguration();
+            services.Configure<RequestLocalizationOptions>(opts =>
+            {
+                var supportedCultureCodes = CultureConfiguration.AvailableCultures;
+                var supportedCultures = supportedCultureCodes.Select(c => new CultureInfo(c)).ToList();
+
+                opts.DefaultRequestCulture = new RequestCulture(CultureConfiguration.DefaultRequestCulture);
+                opts.SupportedCultures = supportedCultures;
+                opts.SupportedUICultures = supportedCultures;
+            });
         }
     }
 }

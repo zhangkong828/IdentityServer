@@ -20,4 +20,8 @@
     <ProjectReference Include="..\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\images\" />
+  </ItemGroup>
+
 </Project>
