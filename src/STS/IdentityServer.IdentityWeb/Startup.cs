@@ -39,7 +39,8 @@ namespace IdentityServer.IdentityWeb
 
             AddIdentityServer4(services);
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
 
             services.AddCors(options =>
             {

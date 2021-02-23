@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer.IdentityServer4Extension\IdentityServer.IdentityServer4Extension.csproj" />
-    <ProjectReference Include="..\IdentityServer.Model\IdentityServer.Model.csproj" />
     <ProjectReference Include="..\IdentityServer.Service\IdentityServer.Service.csproj" />
   </ItemGroup>
 

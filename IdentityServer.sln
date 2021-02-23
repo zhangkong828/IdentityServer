@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Service", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.IdentityServer4Extension", "src\IdentityServer.IdentityServer4Extension\IdentityServer.IdentityServer4Extension.csproj", "{C5ABD697-1198-43AD-825C-BAE06906C17B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Model", "src\IdentityServer.Model\IdentityServer.Model.csproj", "{5FB58358-14CF-4998-9EF0-37CD595B8F5A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Web", "src\IdentityServer.Web\IdentityServer.Web.csproj", "{F007FC0C-394F-465C-A3AD-5B3959B88161}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{7C22ADDF-5F1C-4E0C-AA93-AD413E3AA9B8}"
@@ -57,10 +55,6 @@ Global
 		{C5ABD697-1198-43AD-825C-BAE06906C17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5ABD697-1198-43AD-825C-BAE06906C17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5ABD697-1198-43AD-825C-BAE06906C17B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FB58358-14CF-4998-9EF0-37CD595B8F5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Release|Any CPU.ActiveCfg = Release|Any CPU
