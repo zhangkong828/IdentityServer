@@ -1,0 +1,208 @@
+﻿using IdentityServer.IdentityWeb.Models;
+using IdentityServer.Service.Interfaces;
+using IdentityServer4;
+using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using IdentityServer.EntityFramework.Entities.Identity;
+using System.Security.Claims;
+using IdentityModel;
+
+namespace IdentityServer.IdentityWeb.Controllers
+{
+    [TypeFilter(typeof(GlobalExceptionFilter))]
+    public class AccountController : Controller
+    {
+        private readonly IIdentityServerInteractionService _idsInteraction;
+        private readonly IAuthenticationSchemeProvider _schemeProvider;
+
+        private readonly IIdentityService _identityService;
+        public AccountController(IIdentityServerInteractionService idsInteraction, IAuthenticationSchemeProvider schemeProvider, IIdentityService identityService)
+        {
+            _idsInteraction = idsInteraction;
+            _schemeProvider = schemeProvider;
+
+            _identityService = identityService;
+        }
+
+        [HttpGet]
+        [Route("/login")]
+        public async Task<IActionResult> Login(string returnUrl)
+        {
+            var model = new LoginViewModel(null)
+            {
+                ReturnUrl = returnUrl,
+                //default username and password
+                //UserName = "test",
+                //Password = "123456",
+                ExternalLoginList = await GetExternalLoginViewModels(returnUrl)
+            };
+
+            return View(model);
+        }
+
+        private async Task<List<ExternalLoginViewModel>> GetExternalLoginViewModels(string returnUrl)
+        {
+            var schemes = await _schemeProvider.GetAllSchemesAsync();
+
+            var externals = schemes
+                .Where(x => x.DisplayName != null)
+                .Select(x => new ExternalLoginViewModel
+                {
+                    DisplayName = x.DisplayName,
+                    LoginUrl = Url.Action(nameof(ExternalLogin), new
+                    {
+                        provider = x.Name,
+                        returnUrl
+                    })
+                }).ToList();
+            return externals;
+        }
+
+        [HttpPost]
+        [Route("/login")]
+        public async Task<IActionResult> Login(LoginFormModel form)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return View(new LoginViewModel(form)
+                {
+                    ExternalLoginList = await GetExternalLoginViewModels(form.ReturnUrl)
+                });
+            }
+
+            if (_identityService.ValidateUsername(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserIdentity user))
+            {
+                var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
+                if (form.Remember)
+                    expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(7));
+
+                var properties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = expires
+                };
+                var isuser = new IdentityServerUser(user.UserId)
+                {
+                    DisplayName = user.NickName,
+                    AdditionalClaims = new Claim[]
+                                        {
+                                        new Claim(JwtClaimTypes.Id, user.UserId),
+                                        new Claim(JwtClaimTypes.NickName,user.NickName),
+                                        new Claim(JwtClaimTypes.GivenName, "222"),
+                                        new Claim(JwtClaimTypes.FamilyName, "333"),
+                                        new Claim(JwtClaimTypes.Email, "444")
+                                        }
+                };
+                await HttpContext.SignInAsync(isuser, properties);
+
+                if (_idsInteraction.IsValidReturnUrl(form.ReturnUrl) || Url.IsLocalUrl(form.ReturnUrl))
+                {
+                    return Redirect(form.ReturnUrl);
+                }
+
+                return Redirect("~/");
+            }
+            else
+            {
+                ViewBag.Error = "账号或密码无效";
+                return View(new LoginViewModel(form)
+                {
+                    ExternalLoginList = await GetExternalLoginViewModels(form.ReturnUrl)
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("/logout")]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            var logout = await _idsInteraction.GetLogoutContextAsync(logoutId);
+
+            await HttpContext.SignOutAsync();
+
+            ViewBag.SignOutIframeUrl = logout.SignOutIFrameUrl;
+            ViewBag.RedirectUri = new Uri(logout.PostLogoutRedirectUri).GetLeftPart(UriPartial.Authority);
+
+            return View("LoggedOut");
+        }
+
+        [HttpGet]
+        [Route("/external-login")]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), new { returnUrl });
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = redirectUrl,
+                Items = { { "loginProvider", provider } }
+            };
+
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        [Route("/external-login/callback")]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl, string remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, remoteError);
+
+                return View(nameof(Login));
+            }
+
+            var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+            var claims = externalLogin?.Principal.Claims.ToList();
+            //var externalId = GetUserExternalId(claims);
+            var scheme = externalLogin.Properties.Items["loginProvider"];
+            var user = _identityService.QueryUserByExternal(scheme, "q");
+            if (user != null)
+            {
+                await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+                var isuser = new IdentityServerUser(user.UserId)
+                {
+                    DisplayName = user.NickName,
+                    IdentityProvider = scheme,
+                    AdditionalClaims = claims
+                };
+                await HttpContext.SignInAsync(isuser);
+                return Redirect(returnUrl);
+            }
+            ViewBag.ReturnUrl = returnUrl;
+            //ViewBag.NickName = GetUserNickName(claims);
+            //ViewBag.AvatarUrl = GetUserAvatar(claims);
+            return View("ExternalLoginNewUser");
+        }
+
+        [HttpPost]
+        [Route("external-login/callback")]
+        public async Task<ActionResult> ExternalLoginConfirmation(string returnUrl, ExternalLoginConfirmationViewModel viewModel)
+        {
+            var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+            var claims = externalLogin?.Principal.Claims.ToList();
+            //var externalId = GetUserExternalId(claims);
+            var scheme = externalLogin.Properties.Items["loginProvider"];
+            var nickName = viewModel.NickName;
+            var avatar = viewModel.Avatar;
+            var user = _identityService.AutoRegisterByExternal(scheme, "q", HttpContext.GetIpAddress(), nickName, avatar);
+
+            await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+
+            var isuser = new IdentityServerUser(user.UserId)
+            {
+                DisplayName = user.NickName,
+                IdentityProvider = scheme,
+                AdditionalClaims = claims
+            };
+            await HttpContext.SignInAsync(isuser);
+
+            return Redirect(returnUrl);
+        }
+    }
+}

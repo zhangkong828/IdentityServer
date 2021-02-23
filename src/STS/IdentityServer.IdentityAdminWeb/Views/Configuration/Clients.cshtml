@@ -2,7 +2,17 @@
 @{
     ViewData["Title"] = "客户端";
 }
+@section CSS{
+    <style>
+        .el-radio-group label {
+            display: block;
+        }
 
+        .el-radio.is-bordered {
+            margin-left: 0px !important;
+        }
+    </style>
+}
 <div id="clientsApp">
 
     <div class="row">
@@ -40,14 +50,14 @@
                                              label="创建时间">
                             </el-table-column>
                             <el-table-column fixed="right"
-                                                 label="操作">
-                                    <template slot-scope="scope">
+                                             label="操作">
+                                <template slot-scope="scope">
 
-                                        <el-button size="mini" @@click="editClient(scope.row)" plain>编辑</el-button>
-                                        <el-button type="danger" size="mini" @@click="deleteClient(scope.row)" plain>删除</el-button>
+                                    <el-button size="mini" @@click="editClient(scope.row)" plain>编辑</el-button>
+                                    <el-button type="danger" size="mini" @@click="deleteClient(scope.row)" plain>删除</el-button>
 
-                                    </template>
-                                </el-table-column>
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </div>
                     <el-pagination background @@size-change="handleSizeChange"
@@ -62,6 +72,32 @@
             </div>
         </div>
     </div>
+
+
+    <el-dialog title="添加客户端" :visible="dialogForAddClient" :close-on-press-escape="false" :show-close="false">
+        <el-form label-position="right" label-width="120px">
+            <el-form-item label="客户端标识">
+                <el-input v-model="client.clientId"></el-input>
+            </el-form-item>
+            <el-form-item label="客户端名称">
+                <el-input v-model="client.clientName"></el-input>
+            </el-form-item>
+            <el-form-item label="客户端类型">
+                <el-radio-group v-model="client.clientType">
+                    <el-radio border :label="0">空 - 默认</el-radio>
+                    <el-radio border :label="2">单页应用程序 - Javascript Spa（授权码）</el-radio>
+                    <el-radio border :label="1">Web应用程序 - 服务器端 WebHybrid（混合）</el-radio>
+                    <el-radio border :label="5">电视和限制输入设备应用程序 Device（设备流程）</el-radio>
+                    <el-radio border :label="3">原生应用程序 - 移动/桌面 Native（混合）</el-radio>
+                    <el-radio border :label="4">机械/机器人 Machine（资源所有者密码和客户端凭据）</el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="dialogForAddClient = false;">取消</el-button>
+            <el-button type="primary" @@click="addClientSubmit">保存</el-button>
+        </div>
+    </el-dialog>
 
 
 </div>
@@ -79,7 +115,9 @@
                     pageSize: 10
                 },
                 totalCount: 0,
-                list: []
+                list: [],
+                dialogForAddClient: false,
+                client: {}
             },
             methods: {
                 handleSizeChange(val) {
@@ -126,12 +164,40 @@
                     var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
                     return Y + M + D + h + m + s;
                 },
-                addClient() { },
-                editClient() {
-                    this.content = "";
-                    this.dialogForSendMsg = true;
+                addClient() {
+                    this.client = { clientType: 0 };
+                    this.dialogForAddClient = true;
                 },
-                deleteClient() {
+                addClientSubmit() {
+                    var that = this;
+                    var client = this.client;
+                    if (!client.clientId || client.clientId === "") {
+                        this.$message.error('客户端标识不能为空');
+                        return;
+                    }
+                    if (!client.clientName || client.clientName === "") {
+                        this.$message.error('客户端名称不能为空');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "/Configuration/Client",
+                        type: "post",
+                        data: client,
+                        success: function (response) {
+                            if (response.code === 0) {
+                                that.loadData();
+                                that.dialogForAddClient = false;
+                            } else {
+                                that.$message.error(response.msg);
+                            }
+                        }
+                    });
+                },
+                editClient(item) {
+                    window.location.href = "/Configuration/Client/" + item.id;
+                },
+                deleteClient(item) {
                     var that = this;
                     this.$confirm('确定删除吗?', '提示', {
                         confirmButtonText: '确定',
@@ -140,7 +206,7 @@
                         callback: action => {
                             if (action == 'confirm') {
                                 $.ajax({
-                                    url: "/",
+                                    url: "/Configuration/DeleteClient",
                                     type: "post",
                                     data: { id: item.id },
                                     success: function (response) {

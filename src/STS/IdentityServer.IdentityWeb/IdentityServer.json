@@ -1,18 +1,24 @@
 {
-  "ConnectionStrings": {
-    //"IdentityServerConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServer",
-    //"IdentityUserConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityUser"
-
-    "IdentityServerConnection": "Server=192.168.31.101;User Id=root;Password=123456;Database=IdentityServer",
-    "IdentityUserConnection": "Server=192.168.31.101;User Id=root;Password=123456;Database=IdentityUser"
+  "DatabaseProviderConfiguration": {
+    "ProviderType": "MySql"
   },
-  "AdminUserConfig": {
-    "Users": [
-      {
-        "Id": "1",
-        "UserName": "admin",
-        "Password": "admin123456"
-      }
-    ]
+  "ConnectionStrings": {
+    "IdentityServerConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServer",
+    "AdminIdentityConnection": "Server=192.168.1.203;User Id=root;Password=123456;Database=IdentityServerAdmin"
+
+    //"IdentityServerConnection": "Server=192.168.31.101;User Id=root;Password=123456;Database=IdentityServer",
+    //"AdminIdentityConnection": "Server=192.168.31.101;User Id=root;Password=123456;Database=IdentityServerAdmin"
+  },
+  "ExternalProvidersConfiguration": {
+    "QQ": {
+      "Enabled": true,
+      "ClientId": "You App Id",
+      "ClientSecret": "You App Secret"
+    },
+    "Github": {
+      "Enabled": true,
+      "ClientId": "03c3f213ec1e4b224c72",
+      "ClientSecret": "9e56eae44f59189984aef0fedfea6490af9dc1ee"
+    }
   }
 }

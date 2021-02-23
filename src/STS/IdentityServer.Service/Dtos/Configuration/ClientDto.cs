@@ -105,7 +105,7 @@ namespace IdentityServer.Service.Dtos.Configuration
         public List<ClientSecretDto> ClientSecrets { get; set; }
         public List<ClientPropertyDto> Properties { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public DateTime? LastAccessed { get; set; }
 

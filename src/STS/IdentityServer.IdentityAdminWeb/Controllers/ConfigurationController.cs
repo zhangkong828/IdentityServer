@@ -1,4 +1,5 @@
-﻿using IdentityServer.Service.Interfaces;
+﻿using IdentityServer.Service.Dtos.Configuration;
+using IdentityServer.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,30 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
 
-        public IActionResult Client()
+        [HttpPost]
+        public async Task<IActionResult> Client(ClientDto client)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { code = -1, msg = "参数错误" });
+            }
+
+            //Add new client
+            if (client.Id == 0)
+            {
+                client = _clientService.BuildClientViewModel(client);
+                var clientId = await _clientService.AddClientAsync(client);
+
+                return Json(new { code = clientId > 0 ? 0 : -1, msg = clientId > 0 ? "成功" : "失败" });
+            }
+
+            //Update client
+            var result = await _clientService.UpdateClientAsync(client) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        public IActionResult Client(int id)
         {
             return View();
         }
@@ -53,8 +77,6 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
             if (id == 0) Json(new { code = -1, msg = "不存在" });
 
             var client = await _clientService.GetClientAsync(id);
-            client = _clientService.BuildClientViewModel(client);
-
             return Json(new { code = 0, data = client });
         }
     }
