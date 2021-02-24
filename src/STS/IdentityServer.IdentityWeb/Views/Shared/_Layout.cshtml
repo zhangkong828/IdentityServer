@@ -11,38 +11,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 统一认证授权中心</title>
-    <link href="~/css/bundle.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/web.css" rel="stylesheet" />
     @RenderSection("Styles", required: false)
 </head>
 <body>
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand logo" href="/">IdentityServer</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                @if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(name))
+                {
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@name <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#">个人信息</a></li>
+                <li><a href="#">更改密码</a></li>
+                <li><a href="#">授权</a></li>
+            </ul>
+        </li>
+        <li><a class="menu-item my-2 btn btn-outline-primary" href="/logout">注销</a></li>
+    </ul>}
 
-    <div class="menu d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <!--Site name -->
-        <h3 class="menu-logo my-0 mr-md-auto font-weight-normal"><a class="logo" asp-area="" asp-controller="Home" asp-action="Index">IdentityServer</a></h3>
-        <!--Menu item -->
-        @if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(name))
-        {
-<div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">@name</button>
-    <div class="dropdown-menu">
-        <a class="dropdown-item" asp-controller="Manage" asp-action="Index">个人信息</a>
-        <a class="dropdown-item" asp-controller="Manage" asp-action="ChangePassword">更改密码</a>
-        <a class="dropdown-item" asp-controller="Grants" asp-action="Index">授权</a>
-    </div>
-</div>
-                <a class="menu-item my-2 btn btn-outline-primary" asp-action="Logout" asp-controller="Account">注销</a>}
-
-        <!--Menu button - show in < MD -->
-        <a class="my-2 btn btn-outline-primary menu-button" href="#">
-            <span class="oi oi-menu" title="menu" aria-hidden="true"></span>
-        </a>
-    </div>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
 
     <div class="container">
         @RenderBody()
 
-        <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <footer>
             <div class="row">
                 <div class="col-6 col-md">
                     <small class="d-block mb-3 text-muted">Copyright &copy; @(DateTime.Now.Year) <a href="https://zhangkong.cloud">zhangkong.cloud</a></small>
@@ -54,7 +62,7 @@
         </footer>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/bundle.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

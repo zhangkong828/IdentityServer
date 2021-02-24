@@ -3,10 +3,9 @@ using IdentityServer4.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityServer.IdentityServer4Extension.Validator
+namespace IdentityServer.IdentityWeb.Validator
 {
     public class ProfileService : IProfileService
     {

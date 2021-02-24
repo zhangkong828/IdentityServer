@@ -1,28 +1,27 @@
 ﻿using IdentityModel;
-using IdentityServer.Entity;
-using IdentityServer.Service;
+using IdentityServer.EntityFramework.Entities.Identity;
+using IdentityServer.Service.Interfaces;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityServer.IdentityServer4Extension.Validator
+namespace IdentityServer.IdentityWeb.Validator
 {
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
-        private readonly IUserAccountService _userAccountService;
-        public ResourceOwnerPasswordValidator(IUserAccountService userAccountService)
+        private readonly IIdentityService _identityService;
+        public ResourceOwnerPasswordValidator(IIdentityService identityService)
         {
-            _userAccountService = userAccountService;
+            _identityService = identityService;
         }
 
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            if (_userAccountService.ValidateUsername(context.UserName, context.Password, null, out UserAccount user))
+            if (_identityService.ValidateUsername(context.UserName, context.Password, null, out UserIdentity user))
             {
                 context.Result = new GrantValidationResult(
                  subject: user.UserId,
@@ -36,7 +35,7 @@ namespace IdentityServer.IdentityServer4Extension.Validator
             return Task.CompletedTask;
         }
 
-        private Claim[] GetUserClaims(UserAccount user)
+        private Claim[] GetUserClaims(UserIdentity user)
         {
             return new Claim[]
             {

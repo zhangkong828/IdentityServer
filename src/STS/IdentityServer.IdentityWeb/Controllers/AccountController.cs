@@ -104,7 +104,7 @@ namespace IdentityServer.IdentityWeb.Controllers
                     return Json(new { code = 0, msg = "登录成功", returnUrl = form.ReturnUrl });
                 }
 
-                return Json(new { code = 0, msg = "登录成功",returnUrl="/" });
+                return Json(new { code = 0, msg = "登录成功", returnUrl = "/" });
             }
             else
             {
@@ -152,10 +152,15 @@ namespace IdentityServer.IdentityWeb.Controllers
             }
 
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-            var claims = externalLogin?.Principal.Claims.ToList();
-            //var externalId = GetUserExternalId(claims);
+            var principal = externalLogin?.Principal;
+            if (principal == null)
+            {
+                throw new Exception("External authentication error");
+            }
+            var externalId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
             var scheme = externalLogin.Properties.Items["loginProvider"];
-            var user = _identityService.QueryUserByExternal(scheme, "q");
+
+            var user = _identityService.QueryUserByExternal(scheme, externalId);
             if (user != null)
             {
                 await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
@@ -163,21 +168,25 @@ namespace IdentityServer.IdentityWeb.Controllers
                 {
                     DisplayName = user.NickName,
                     IdentityProvider = scheme,
-                    AdditionalClaims = claims
+                    AdditionalClaims = principal.Claims.ToList()
                 };
                 await HttpContext.SignInAsync(isuser);
                 return Redirect(returnUrl);
             }
+
             ViewBag.ReturnUrl = returnUrl;
-            //ViewBag.NickName = GetUserNickName(claims);
-            //ViewBag.AvatarUrl = GetUserAvatar(claims);
-            return View("ExternalLoginNewUser");
+            ViewBag.NickName = principal.FindFirstValue(ClaimTypes.Name);
+            ViewBag.Email = principal.FindFirstValue(ClaimTypes.Email);
+            ViewBag.LoginProvider = scheme;
+
+            return View(nameof(ExternalLoginConfirmation));
         }
 
         [HttpPost]
-        [Route("external-login/callback")]
+        [Route("external-login/confirmation")]
         public async Task<ActionResult> ExternalLoginConfirmation(string returnUrl, ExternalLoginConfirmationViewModel viewModel)
         {
+           
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
             var claims = externalLogin?.Principal.Claims.ToList();
             //var externalId = GetUserExternalId(claims);
@@ -198,7 +207,6 @@ namespace IdentityServer.IdentityWeb.Controllers
 
             return Redirect(returnUrl);
         }
-
 
         [HttpPost]
         [Route("/register")]

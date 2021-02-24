@@ -5,6 +5,7 @@ using IdentityServer.EntityFramework.Repositories;
 using IdentityServer.EntityFramework.Repositories.Interfaces;
 using IdentityServer.EntityFramework.SqlServer;
 using IdentityServer.IdentityWeb.Extensions;
+using IdentityServer.IdentityWeb.Validator;
 using IdentityServer.Service;
 using IdentityServer.Service.Interfaces;
 using IdentityServer4;
@@ -111,7 +112,7 @@ namespace IdentityServer.IdentityWeb
                 var clientSecret = Config.GetString("ExternalProvidersConfiguration:QQ:ClientSecret");
                 authenticationBuilder.AddQQ("qq", "QQ", options =>
                   {
-                      //options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                      options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                       options.ClientId = clientId;
                       options.ClientSecret = clientSecret;
                   });
@@ -124,7 +125,7 @@ namespace IdentityServer.IdentityWeb
                 var clientSecret = Config.GetString("ExternalProvidersConfiguration:Github:ClientSecret");
                 authenticationBuilder.AddGitHub("github", "Github", options =>
                 {
-                    //options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.ClientId = clientId;
                     options.ClientSecret = clientSecret;
                 });
@@ -151,7 +152,9 @@ namespace IdentityServer.IdentityWeb
             })
             .AddConfigurationStore<IdentityServerConfigurationDbContext>()
             .AddOperationalStore<IdentityServerPersistedGrantDbContext>()
-            .AddDeveloperSigningCredential();
+            .AddDeveloperSigningCredential()
+            .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
+            .AddProfileService<ProfileService>();
         }
     }
 }

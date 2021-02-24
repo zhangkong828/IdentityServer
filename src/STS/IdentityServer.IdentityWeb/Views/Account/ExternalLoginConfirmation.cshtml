@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "ExternalLoginConfirmation";
+
+    var returnUrl = ViewBag.ReturnUrl;
+    var email = ViewBag.Email;
+    var nickName = ViewBag.NickName;
+    var loginProvider = ViewBag.LoginProvider;
+}
+
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@returnUrl" method="post" class="form-horizontal">
+    <hr />
+    <div class="alert alert-info" role="alert">
+        @loginProvider
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">@nickName</label>
+        <div class="col-md-10">
+            <input asp-for="@nickName" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">@email</label>
+        <div class="col-md-10">
+            <input asp-for="@email" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">创建</button>
+        </div>
+    </div>
+</form>
+
