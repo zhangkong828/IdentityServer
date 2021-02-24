@@ -13,6 +13,8 @@ namespace IdentityServer.EntityFramework.Repositories.Interfaces
 
         public UserIdentity QueryUserByExternal(string scheme, string externalId);
 
-        public UserIdentity AutoRegisterByExternal(UserIdentity user);
+        public bool AddUser(UserIdentity user);
+
+        public bool UpdateLastLoginState(long id,string ip,DateTime datetime);
     }
 }

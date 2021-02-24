@@ -20,11 +20,6 @@ namespace IdentityServer.EntityFramework.Repositories
             DbContext = dbContext;
         }
 
-        public UserIdentity AutoRegisterByExternal(UserIdentity user)
-        {
-            throw new NotImplementedException();
-        }
-
         public UserIdentity QueryUserByExternal(string scheme, string externalId)
         {
             var external = DbContext.UserIdentityExternal.AsNoTracking().Where(x => x.Scheme == scheme && x.ExternalId == externalId).SingleOrDefault();
@@ -40,7 +35,23 @@ namespace IdentityServer.EntityFramework.Repositories
 
         public UserIdentity QueryUserByUsername(string username)
         {
-            return DbContext.UserIdentity.AsNoTracking().FirstOrDefault(x => x.Username == username);
+            return DbContext.UserIdentity.AsNoTracking().Where(x => x.Email == username || x.PhoneNumber == username).SingleOrDefault();
+        }
+
+        public bool AddUser(UserIdentity user)
+        {
+            DbContext.UserIdentity.Add(user);
+            return DbContext.SaveChanges() > 0;
+        }
+
+        public bool UpdateLastLoginState(long id, string ip, DateTime datetime)
+        {
+            var user = DbContext.UserIdentity.Find(id);
+            if (user == null) return false;
+
+            user.LastLoginIp = ip;
+            user.LastLoginTime = datetime;
+            return DbContext.SaveChanges() > 0;
         }
     }
 }

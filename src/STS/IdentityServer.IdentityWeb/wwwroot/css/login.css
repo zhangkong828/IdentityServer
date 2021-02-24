@@ -1,10 +1,19 @@
-﻿a:hover{
-    text-decoration-line:none;
+﻿a:hover {
+    text-decoration-line: none;
 }
+
+a {
+    color: #007bff !important;
+}
+
+button {
+    outline: none !important;
+}
+
 .login-logo {
     width: 130px;
     font-size: 130px;
-    color: #4CA6FF;
+    color: #007bff;
     margin-top: 50px;
 }
 
@@ -22,6 +31,7 @@
         font-weight: 700;
         padding: 5px 0;
         margin-bottom: 20px;
+        color: #007bff;
     }
 
     .c-login .form-group {
@@ -65,11 +75,11 @@
         font-size: 17px;
         color: #c8c8c8;
         transition: all 0.5s ease 0s;
-        color: #4CA6FF;
+        color: #007bff;
     }
 
     .c-login .form-control:focus + i {
-        color: #00b4ef;
+        color: #007bff;
     }
 
     .c-login .fa-question-circle {
@@ -136,13 +146,14 @@
         padding-top: 5px;
         text-transform: capitalize;
         cursor: pointer;
+        color: #007bff;
     }
 
     .c-login .btn {
         float: right;
         font-size: 14px;
         color: #fff;
-        background: #00b4ef;
+        background: #007bff;
         border-radius: 30px;
         padding: 8px 50px;
         border: none;
@@ -163,4 +174,11 @@
     -ms-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+}
+
+.preview-password {
+    pointer-events: auto;
+    cursor: pointer;
+    right: 50px;
+    top: 4px;
 }

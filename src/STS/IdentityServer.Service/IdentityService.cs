@@ -1,6 +1,7 @@
 ﻿using IdentityServer.EntityFramework.Entities.Identity;
 using IdentityServer.EntityFramework.Repositories.Interfaces;
 using IdentityServer.Infrastructure.Security;
+using IdentityServer.Infrastructure.Utility;
 using IdentityServer.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,23 @@ namespace IdentityServer.Service
             return _identityRepository.QueryUserByUsername(username);
         }
 
+        public bool EmailRegister(string nickName, string username, string password, string loginIP)
+        {
+            var user = new UserIdentity()
+            {
+                UserId = ObjectId.Default().NextString(),
+                Username = username,
+                Password = Md5Helper.Md5By32(password),
+                NickName = nickName,
+                Avatar = "",
+                Email = username,
+                LastLoginIp = loginIP,
+                LastLoginTime = DateTime.Now,
+                CreateTime = DateTime.Now
+            };
+            return _identityRepository.AddUser(user);
+        }
+
         public bool ValidateUsername(string username, string password, string loginIP, out UserIdentity user)
         {
             user = _identityRepository.QueryUserByUsername(username);
@@ -43,13 +61,7 @@ namespace IdentityServer.Service
             if (user == null) return false;
             if (Md5Helper.Md5By32(password) != user.Password) return false;
 
-            //if (!string.IsNullOrWhiteSpace(loginIP))
-            //{
-            //    user.LastLoginIp = loginIP;
-            //    user.LastLoginTime = DateTime.Now;
-            //    //_identityContext.SaveChanges();
-            //}
-
+            _identityRepository.UpdateLastLoginState(user.Id, loginIP, DateTime.Now);
             return true;
         }
     }

@@ -16,5 +16,7 @@ namespace IdentityServer.Service.Interfaces
         public UserIdentity QueryUserByExternal(string scheme, string externalId);
 
         public UserIdentity AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string avatar);
+
+        public bool EmailRegister(string nickName, string username, string password, string loginIP);
     }
 }

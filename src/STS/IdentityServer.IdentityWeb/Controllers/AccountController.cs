@@ -34,6 +34,7 @@ namespace IdentityServer.IdentityWeb.Controllers
         [Route("/login")]
         public async Task<IActionResult> Login(string returnUrl)
         {
+            if (string.IsNullOrWhiteSpace(returnUrl)) returnUrl = "/";
             var model = new LoginViewModel(null)
             {
                 ReturnUrl = returnUrl,
@@ -68,12 +69,9 @@ namespace IdentityServer.IdentityWeb.Controllers
         [Route("/login")]
         public async Task<IActionResult> Login(LoginFormModel form)
         {
-            if (ModelState.IsValid == false)
+            if (!ModelState.IsValid)
             {
-                return View(new LoginViewModel(form)
-                {
-                    ExternalLoginList = await GetExternalLoginViewModels(form.ReturnUrl)
-                });
+                return Json(new { code = -1, msg = "参数错误" });
             }
 
             if (_identityService.ValidateUsername(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserIdentity user))
@@ -103,18 +101,14 @@ namespace IdentityServer.IdentityWeb.Controllers
 
                 if (_idsInteraction.IsValidReturnUrl(form.ReturnUrl) || Url.IsLocalUrl(form.ReturnUrl))
                 {
-                    return Redirect(form.ReturnUrl);
+                    return Json(new { code = 0, msg = "登录成功", returnUrl = form.ReturnUrl });
                 }
 
-                return Redirect("~/");
+                return Json(new { code = 0, msg = "登录成功",returnUrl="/" });
             }
             else
             {
-                ViewBag.Error = "账号或密码无效";
-                return View(new LoginViewModel(form)
-                {
-                    ExternalLoginList = await GetExternalLoginViewModels(form.ReturnUrl)
-                });
+                return Json(new { code = -1, msg = "账号或密码无效" });
             }
         }
 
@@ -203,6 +197,25 @@ namespace IdentityServer.IdentityWeb.Controllers
             await HttpContext.SignInAsync(isuser);
 
             return Redirect(returnUrl);
+        }
+
+
+        [HttpPost]
+        [Route("/register")]
+        public IActionResult Register(RegisterFormModel form)
+        {
+            if (!ModelState.IsValid) return Json(new { code = -1, msg = "参数错误" });
+
+            var result = _identityService.EmailRegister(form.NickName, form.UserName, form.Password, HttpContext.GetIpAddress());
+
+            if (result)
+            {
+                //自动登录 todo
+
+                return Json(new { code = 0, msg = "注册成功" });
+            }
+
+            return Json(new { code = -1, msg = "注册失败" });
         }
     }
 }
