@@ -80,7 +80,6 @@ namespace IdentityServer.IdentityWeb.Controllers
                                         {
                                         new Claim(JwtClaimTypes.NickName,user.NickName),
                                         new Claim(JwtClaimTypes.Email, user.Email),
-                                        new Claim(JwtClaimTypes.PhoneNumber, user.PhoneNumber),
                                         new Claim(JwtClaimTypes.Picture, user.Avatar)
                                         };
 
@@ -239,7 +238,6 @@ namespace IdentityServer.IdentityWeb.Controllers
                                         {
                                         new Claim(JwtClaimTypes.NickName,user.NickName),
                                         new Claim(JwtClaimTypes.Email, user.Email),
-                                        new Claim(JwtClaimTypes.PhoneNumber, user.PhoneNumber),
                                         new Claim(JwtClaimTypes.Picture, user.Avatar)
                                         };
                 await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider, claims);
