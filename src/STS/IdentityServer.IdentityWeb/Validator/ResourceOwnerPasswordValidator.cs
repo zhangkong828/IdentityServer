@@ -1,5 +1,5 @@
 ﻿using IdentityModel;
-using IdentityServer.EntityFramework.Entities.Identity;
+using IdentityServer.Service.Dtos.Identity;
 using IdentityServer.Service.Interfaces;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
@@ -21,7 +21,7 @@ namespace IdentityServer.IdentityWeb.Validator
 
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            if (_identityService.ValidateUsername(context.UserName, context.Password, null, out UserIdentity user))
+            if (_identityService.ValidateUsername(context.UserName, context.Password, null, out UserIdentityDto user))
             {
                 context.Result = new GrantValidationResult(
                  subject: user.UserId,
@@ -35,7 +35,7 @@ namespace IdentityServer.IdentityWeb.Validator
             return Task.CompletedTask;
         }
 
-        private Claim[] GetUserClaims(UserIdentity user)
+        private Claim[] GetUserClaims(UserIdentityDto user)
         {
             return new Claim[]
             {

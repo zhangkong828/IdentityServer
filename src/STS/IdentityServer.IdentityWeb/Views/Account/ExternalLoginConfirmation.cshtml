@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "ExternalLoginConfirmation";
+    ViewData["Title"] = "关联登录";
 
     var returnUrl = ViewBag.ReturnUrl;
     var email = ViewBag.Email;
@@ -8,27 +8,70 @@
     var loginProvider = ViewBag.LoginProvider;
 }
 
-<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@returnUrl" method="post" class="form-horizontal">
+<h3>关联您的 @loginProvider 帐户</h3>
+
+<div class="form-horizontal">
     <hr />
     <div class="alert alert-info" role="alert">
-        @loginProvider
+        已使用 @loginProvider 成功通过身份验证。
+        请完善下面信息，完成登录
     </div>
     <div class="form-group">
-        <label class="col-md-2 control-label">@nickName</label>
+        <label class="col-md-2 control-label">昵称</label>
         <div class="col-md-10">
-            <input asp-for="@nickName" class="form-control" />
+            <input class="form-control" type="text" id="nickName" name="nickName" value="@nickName">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-2 control-label">@email</label>
+        <label class="col-md-2 control-label">邮箱</label>
         <div class="col-md-10">
-            <input asp-for="@email" class="form-control" />
+            <input class="form-control" type="text" id="email" name="email" value="@email">
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-primary">创建</button>
+            <button id="login" class="btn btn-primary">登录</button>
         </div>
     </div>
-</form>
+</div>
 
+@section Scripts{
+    <script>
+        var returnUrl = '@returnUrl';
+        $(function () {
+            $("#login").click(function () {
+                var mailReg = /^(\w-*\.*)+@@(\w-?)+(\.\w{2,})+$/;
+                var nickname = $("#nickName").val();
+                var email = $("#email").val();
+
+                if (!nickname || nickname.length === 0 || nickname.trim() === "") {
+                    alert("昵称不能为空");
+                    return false;
+                }
+
+                if (!email || email.length === 0 || email.trim() === "") {
+                    alert("请填写邮箱");
+                    return false;
+                }
+
+                if (!mailReg.test(email)) {
+                    alert("邮箱格式不正确");
+                    return false;
+                }
+
+                $.ajax({
+                    url: "/external-login/confirmation",
+                    type: "post",
+                    data: { NickName: nickname, Email: email },
+                    success: function (response) {
+                        if (response.code === 0) {
+                            window.location.href = returnUrl;
+                        } else {
+                            alert(response.msg);
+                        }
+                    }
+                });
+            });
+        })
+    </script>
+}

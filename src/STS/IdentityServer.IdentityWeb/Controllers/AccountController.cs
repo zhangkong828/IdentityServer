@@ -9,9 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer.EntityFramework.Entities.Identity;
 using System.Security.Claims;
 using IdentityModel;
+using IdentityServer.Service.Dtos.Identity;
 
 namespace IdentityServer.IdentityWeb.Controllers
 {
@@ -35,22 +35,8 @@ namespace IdentityServer.IdentityWeb.Controllers
         public async Task<IActionResult> Login(string returnUrl)
         {
             if (string.IsNullOrWhiteSpace(returnUrl)) returnUrl = "/";
-            var model = new LoginViewModel(null)
-            {
-                ReturnUrl = returnUrl,
-                //default username and password
-                //UserName = "test",
-                //Password = "123456",
-                ExternalLoginList = await GetExternalLoginViewModels(returnUrl)
-            };
 
-            return View(model);
-        }
-
-        private async Task<List<ExternalLoginViewModel>> GetExternalLoginViewModels(string returnUrl)
-        {
             var schemes = await _schemeProvider.GetAllSchemesAsync();
-
             var externals = schemes
                 .Where(x => x.DisplayName != null)
                 .Select(x => new ExternalLoginViewModel
@@ -62,7 +48,17 @@ namespace IdentityServer.IdentityWeb.Controllers
                         returnUrl
                     })
                 }).ToList();
-            return externals;
+
+            var model = new LoginViewModel(null)
+            {
+                ReturnUrl = returnUrl,
+                //default username and password
+                //UserName = "test",
+                //Password = "123456",
+                ExternalLoginList = externals
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -74,30 +70,21 @@ namespace IdentityServer.IdentityWeb.Controllers
                 return Json(new { code = -1, msg = "参数错误" });
             }
 
-            if (_identityService.ValidateUsername(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserIdentity user))
+            if (_identityService.ValidateUsername(form.UserName, form.Password, HttpContext.GetIpAddress(), out UserIdentityDto user))
             {
                 var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
                 if (form.Remember)
                     expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(7));
 
-                var properties = new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = expires
-                };
-                var isuser = new IdentityServerUser(user.UserId)
-                {
-                    DisplayName = user.NickName,
-                    AdditionalClaims = new Claim[]
+                var claims = new Claim[]
                                         {
-                                        new Claim(JwtClaimTypes.Id, user.UserId),
                                         new Claim(JwtClaimTypes.NickName,user.NickName),
-                                        new Claim(JwtClaimTypes.GivenName, "222"),
-                                        new Claim(JwtClaimTypes.FamilyName, "333"),
-                                        new Claim(JwtClaimTypes.Email, "444")
-                                        }
-                };
-                await HttpContext.SignInAsync(isuser, properties);
+                                        new Claim(JwtClaimTypes.Email, user.Email),
+                                        new Claim(JwtClaimTypes.PhoneNumber, user.PhoneNumber),
+                                        new Claim(JwtClaimTypes.Picture, user.Avatar)
+                                        };
+
+                await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider, claims);
 
                 if (_idsInteraction.IsValidReturnUrl(form.ReturnUrl) || Url.IsLocalUrl(form.ReturnUrl))
                 {
@@ -164,13 +151,10 @@ namespace IdentityServer.IdentityWeb.Controllers
             if (user != null)
             {
                 await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-                var isuser = new IdentityServerUser(user.UserId)
-                {
-                    DisplayName = user.NickName,
-                    IdentityProvider = scheme,
-                    AdditionalClaims = principal.Claims.ToList()
-                };
-                await HttpContext.SignInAsync(isuser);
+
+                var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
+                await UserLogin(user, expires, scheme, principal.Claims.ToList());
+
                 return Redirect(returnUrl);
             }
 
@@ -184,11 +168,17 @@ namespace IdentityServer.IdentityWeb.Controllers
 
         [HttpPost]
         [Route("external-login/confirmation")]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel viewModel)
+        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new { code = -1, msg = "参数错误" });
+            }
+
+            var user = _identityService.QueryUserByUsername(viewModel.Email);
+            if (user != null)
+            {
+                return Json(new { code = -1, msg = "邮箱已存在" });
             }
 
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
@@ -201,32 +191,58 @@ namespace IdentityServer.IdentityWeb.Controllers
             var externalId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
             var scheme = externalLogin.Properties.Items["loginProvider"];
 
-            var user = _identityService.AutoRegisterByExternal(scheme, externalId, HttpContext.GetIpAddress(), viewModel.NickName, viewModel.Email);
+            user = _identityService.AutoRegisterByExternal(scheme, externalId, HttpContext.GetIpAddress(), viewModel.NickName, viewModel.Email);
 
             await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
-            var isuser = new IdentityServerUser(user.UserId)
-            {
-                DisplayName = user.NickName,
-                IdentityProvider = scheme,
-                AdditionalClaims = principal.Claims.ToList()
-            };
-            await HttpContext.SignInAsync(isuser);
+            var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
+            await UserLogin(user, expires, scheme, principal.Claims.ToList());
 
             return Json(new { code = 0, msg = "成功" });
         }
 
+        [NonAction]
+        private async Task UserLogin(UserIdentityDto user, DateTimeOffset expires, string scheme, ICollection<Claim> claims)
+        {
+            var properties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = expires
+            };
+            var isuser = new IdentityServerUser(user.UserId)
+            {
+                DisplayName = user.NickName,
+                IdentityProvider = scheme,
+                AdditionalClaims = claims
+            };
+            await HttpContext.SignInAsync(isuser, properties);
+        }
+
         [HttpPost]
         [Route("/register")]
-        public IActionResult Register(RegisterFormModel form)
+        public async Task<IActionResult> Register(RegisterFormModel form)
         {
             if (!ModelState.IsValid) return Json(new { code = -1, msg = "参数错误" });
 
-            var result = _identityService.EmailRegister(form.NickName, form.UserName, form.Password, HttpContext.GetIpAddress());
+            var user = _identityService.QueryUserByUsername(form.UserName);
+            if (user != null)
+            {
+                return Json(new { code = -1, msg = "用户已存在" });
+            }
+
+            var result = _identityService.EmailRegister(form.NickName, form.UserName, form.Password, HttpContext.GetIpAddress(), out user);
 
             if (result)
             {
-                //自动登录 todo
+                var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
+                var claims = new Claim[]
+                                        {
+                                        new Claim(JwtClaimTypes.NickName,user.NickName),
+                                        new Claim(JwtClaimTypes.Email, user.Email),
+                                        new Claim(JwtClaimTypes.PhoneNumber, user.PhoneNumber),
+                                        new Claim(JwtClaimTypes.Picture, user.Avatar)
+                                        };
+                await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider, claims);
 
                 return Json(new { code = 0, msg = "注册成功" });
             }

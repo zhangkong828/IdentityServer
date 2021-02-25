@@ -13,6 +13,9 @@ a {
     color: #007bff !important;
     text-decoration:none !important;
 }
+.btn {
+    outline: none !important;
+}
 .btn-primary {
     color: #fff !important;
     background-color: #007bff !important;
@@ -51,7 +54,6 @@ a {
     padding: .375rem .75rem !important;
     margin-top: 10px;
     margin-right: 15px;
-    outline: none !important;
 }
 
 .dropdown-item {

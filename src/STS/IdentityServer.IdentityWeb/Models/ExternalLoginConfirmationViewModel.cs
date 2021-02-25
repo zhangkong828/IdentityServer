@@ -8,6 +8,7 @@ namespace IdentityServer.IdentityWeb.Models
 {
     public class ExternalLoginConfirmationViewModel
     {
+        [Required]
         public string NickName { get; set; }
 
         [Required]

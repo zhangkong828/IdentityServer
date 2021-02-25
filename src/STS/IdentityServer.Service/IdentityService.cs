@@ -2,7 +2,9 @@
 using IdentityServer.EntityFramework.Repositories.Interfaces;
 using IdentityServer.Infrastructure.Security;
 using IdentityServer.Infrastructure.Utility;
+using IdentityServer.Service.Dtos.Identity;
 using IdentityServer.Service.Interfaces;
+using IdentityServer.Service.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +19,14 @@ namespace IdentityServer.Service
             _identityRepository = identityRepository;
         }
 
-        public UserIdentity AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string email)
+        private string GetAvatarUrl(string email, int size = 150)
+        {
+            var hash = Md5Helper.Md5By32(email);
+            var sizeArg = size > 0 ? $"?s={size}" : "";
+            return $"https://www.gravatar.com/avatar/{hash}{sizeArg}";
+        }
+
+        public UserIdentityDto AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string email)
         {
             var dateTimeNow = DateTime.Now;
             var external = _identityRepository.QueryExternal(scheme, externalId);
@@ -25,7 +34,7 @@ namespace IdentityServer.Service
             {
                 var oldUser = _identityRepository.QueryUserByUserId(external.UserId);
                 _identityRepository.UpdateLastLoginState(oldUser.Id, loginIP, dateTimeNow);
-                return oldUser;
+                return oldUser.ToModel();
             }
 
             var userId = ObjectId.Default().NextString();
@@ -43,53 +52,60 @@ namespace IdentityServer.Service
                 Username = email,
                 Password = "",
                 NickName = nickname,
-                Avatar = "",
+                Avatar = GetAvatarUrl(email),
                 Email = email,
                 LastLoginIp = loginIP,
                 LastLoginTime = dateTimeNow,
                 CreateTime = dateTimeNow
             };
             _identityRepository.AddExternalUser(newExternal, user);
-            return user;
+            return user.ToModel();
         }
 
-        public UserIdentity QueryUserByExternal(string scheme, string externalId)
+        public UserIdentityDto QueryUserByExternal(string scheme, string externalId)
         {
-            return _identityRepository.QueryUserByExternal(scheme, externalId);
+            var entity = _identityRepository.QueryUserByExternal(scheme, externalId);
+            return entity.ToModel();
         }
 
-        public UserIdentity QueryUserByUserId(string userId)
+        public UserIdentityDto QueryUserByUserId(string userId)
         {
-            return _identityRepository.QueryUserByUserId(userId);
+            var entity = _identityRepository.QueryUserByUserId(userId);
+            return entity.ToModel();
         }
 
-        public UserIdentity QueryUserByUsername(string username)
+        public UserIdentityDto QueryUserByUsername(string username)
         {
-            return _identityRepository.QueryUserByUsername(username);
+            var entity = _identityRepository.QueryUserByUsername(username);
+            return entity.ToModel();
         }
 
-        public bool EmailRegister(string nickName, string username, string password, string loginIP)
+        public bool EmailRegister(string nickName, string username, string password, string loginIP, out UserIdentityDto user)
         {
-            var user = new UserIdentity()
+            var userIdentity = new UserIdentity()
             {
                 UserId = ObjectId.Default().NextString(),
                 Username = username,
                 Password = Md5Helper.Md5By32(password),
                 NickName = nickName,
-                Avatar = "",
+                Avatar = GetAvatarUrl(username),
                 Email = username,
                 LastLoginIp = loginIP,
                 LastLoginTime = DateTime.Now,
                 CreateTime = DateTime.Now
             };
-            return _identityRepository.AddUser(user);
+            user = userIdentity.ToModel();
+
+            return _identityRepository.AddUser(userIdentity);
         }
 
-        public bool ValidateUsername(string username, string password, string loginIP, out UserIdentity user)
+        public bool ValidateUsername(string username, string password, string loginIP, out UserIdentityDto user)
         {
-            user = _identityRepository.QueryUserByUsername(username);
+            var userIdentity = _identityRepository.QueryUserByUsername(username);
+            user = userIdentity.ToModel();
 
-            if (user == null) return false;
+            if (userIdentity == null) return false;
+
             if (Md5Helper.Md5By32(password) != user.Password) return false;
 
             _identityRepository.UpdateLastLoginState(user.Id, loginIP, DateTime.Now);
