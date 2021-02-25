@@ -53,5 +53,17 @@ namespace IdentityServer.EntityFramework.Repositories
             user.LastLoginTime = datetime;
             return DbContext.SaveChanges() > 0;
         }
+
+        public UserIdentityExternal QueryExternal(string scheme, string externalId)
+        {
+            return DbContext.UserIdentityExternal.AsNoTracking().Where(x => x.Scheme == scheme && x.ExternalId == externalId).SingleOrDefault();
+        }
+
+        public bool AddExternalUser(UserIdentityExternal external, UserIdentity user)
+        {
+            DbContext.UserIdentity.Add(user);
+            DbContext.UserIdentityExternal.Add(external);
+            return DbContext.SaveChanges() > 0;
+        }
     }
 }

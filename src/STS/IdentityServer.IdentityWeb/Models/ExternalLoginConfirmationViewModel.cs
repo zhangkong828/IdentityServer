@@ -10,8 +10,6 @@ namespace IdentityServer.IdentityWeb.Models
     {
         public string NickName { get; set; }
 
-        public string Avatar { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }

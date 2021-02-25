@@ -184,16 +184,24 @@ namespace IdentityServer.IdentityWeb.Controllers
 
         [HttpPost]
         [Route("external-login/confirmation")]
-        public async Task<ActionResult> ExternalLoginConfirmation(string returnUrl, ExternalLoginConfirmationViewModel viewModel)
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel viewModel)
         {
-           
+            if (!ModelState.IsValid)
+            {
+                return Json(new { code = -1, msg = "参数错误" });
+            }
+
             var externalLogin = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-            var claims = externalLogin?.Principal.Claims.ToList();
-            //var externalId = GetUserExternalId(claims);
+            var principal = externalLogin?.Principal;
+            if (principal == null)
+            {
+                throw new Exception("External authentication error");
+            }
+
+            var externalId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
             var scheme = externalLogin.Properties.Items["loginProvider"];
-            var nickName = viewModel.NickName;
-            var avatar = viewModel.Avatar;
-            var user = _identityService.AutoRegisterByExternal(scheme, "q", HttpContext.GetIpAddress(), nickName, avatar);
+
+            var user = _identityService.AutoRegisterByExternal(scheme, externalId, HttpContext.GetIpAddress(), viewModel.NickName, viewModel.Email);
 
             await HttpContext.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
@@ -201,11 +209,11 @@ namespace IdentityServer.IdentityWeb.Controllers
             {
                 DisplayName = user.NickName,
                 IdentityProvider = scheme,
-                AdditionalClaims = claims
+                AdditionalClaims = principal.Claims.ToList()
             };
             await HttpContext.SignInAsync(isuser);
 
-            return Redirect(returnUrl);
+            return Json(new { code = 0, msg = "成功" });
         }
 
         [HttpPost]

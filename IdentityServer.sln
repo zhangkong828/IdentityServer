@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Service", "src\IdentityServer.Service\IdentityServer.Service.csproj", "{68EC4AAA-5471-4877-83BB-7832C34ADEC6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Web", "src\IdentityServer.Web\IdentityServer.Web.csproj", "{F007FC0C-394F-465C-A3AD-5B3959B88161}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{7C22ADDF-5F1C-4E0C-AA93-AD413E3AA9B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Client.ResourceOwnerPassword", "src\Clients\IdentityServer.Client.ResourceOwnerPassword\IdentityServer.Client.ResourceOwnerPassword.csproj", "{1EB13FFD-8087-40AF-AE9A-A4B9BA8A3A2F}"
@@ -45,14 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68EC4AAA-5471-4877-83BB-7832C34ADEC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F007FC0C-394F-465C-A3AD-5B3959B88161}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1EB13FFD-8087-40AF-AE9A-A4B9BA8A3A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1EB13FFD-8087-40AF-AE9A-A4B9BA8A3A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EB13FFD-8087-40AF-AE9A-A4B9BA8A3A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU

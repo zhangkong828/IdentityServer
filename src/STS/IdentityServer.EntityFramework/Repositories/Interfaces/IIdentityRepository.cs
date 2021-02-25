@@ -7,6 +7,10 @@ namespace IdentityServer.EntityFramework.Repositories.Interfaces
 {
     public interface IIdentityRepository
     {
+        public UserIdentityExternal QueryExternal(string scheme, string externalId);
+
+        public bool AddExternalUser(UserIdentityExternal external, UserIdentity user);
+
         public UserIdentity QueryUserByUserId(string userId);
 
         public UserIdentity QueryUserByUsername(string username);

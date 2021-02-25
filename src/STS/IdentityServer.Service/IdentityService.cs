@@ -17,9 +17,40 @@ namespace IdentityServer.Service
             _identityRepository = identityRepository;
         }
 
-        public UserIdentity AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string avatar)
+        public UserIdentity AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string email)
         {
-            throw new NotImplementedException();
+            var dateTimeNow = DateTime.Now;
+            var external = _identityRepository.QueryExternal(scheme, externalId);
+            if (external != null)
+            {
+                var oldUser = _identityRepository.QueryUserByUserId(external.UserId);
+                _identityRepository.UpdateLastLoginState(oldUser.Id, loginIP, dateTimeNow);
+                return oldUser;
+            }
+
+            var userId = ObjectId.Default().NextString();
+            var newExternal = new UserIdentityExternal()
+            {
+                UserId = userId,
+                Scheme = scheme,
+                ExternalId = externalId,
+                CreateTime = dateTimeNow
+            };
+
+            var user = new UserIdentity()
+            {
+                UserId = userId,
+                Username = email,
+                Password = "",
+                NickName = nickname,
+                Avatar = "",
+                Email = email,
+                LastLoginIp = loginIP,
+                LastLoginTime = dateTimeNow,
+                CreateTime = dateTimeNow
+            };
+            _identityRepository.AddExternalUser(newExternal, user);
+            return user;
         }
 
         public UserIdentity QueryUserByExternal(string scheme, string externalId)
