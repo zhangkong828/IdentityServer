@@ -19,5 +19,7 @@ namespace IdentityServer.Service.Interfaces
         public UserIdentityDto AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string email);
 
         public bool EmailRegister(string nickName, string username, string password, string loginIP, out UserIdentityDto user);
+
+        public bool ChangePassword(string userId, string oldPassword, string newPassword,out string msg);
     }
 }

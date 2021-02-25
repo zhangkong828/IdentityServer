@@ -65,5 +65,14 @@ namespace IdentityServer.EntityFramework.Repositories
             DbContext.UserIdentityExternal.Add(external);
             return DbContext.SaveChanges() > 0;
         }
+
+        public bool UpdateUserPassword(string userId, string newPassword)
+        {
+            var user = DbContext.UserIdentity.SingleOrDefault(x => x.UserId == userId);
+            if (user == null) return false;
+
+            user.Password = newPassword;
+            return DbContext.SaveChanges() > 0;
+        }
     }
 }

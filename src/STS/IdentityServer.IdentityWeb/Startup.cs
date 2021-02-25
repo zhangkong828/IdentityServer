@@ -9,6 +9,7 @@ using IdentityServer.IdentityWeb.Validator;
 using IdentityServer.Service;
 using IdentityServer.Service.Interfaces;
 using IdentityServer4;
+using IdentityServer4.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -149,6 +150,12 @@ namespace IdentityServer.IdentityWeb
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
+
+                options.UserInteraction = new UserInteractionOptions
+                {
+                    LoginUrl = "/login",
+                    LogoutUrl = "/logout"
+                };
             })
             .AddConfigurationStore<IdentityServerConfigurationDbContext>()
             .AddOperationalStore<IdentityServerPersistedGrantDbContext>()

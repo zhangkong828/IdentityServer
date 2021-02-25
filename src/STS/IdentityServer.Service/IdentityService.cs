@@ -111,5 +111,23 @@ namespace IdentityServer.Service
             _identityRepository.UpdateLastLoginState(user.Id, loginIP, DateTime.Now);
             return true;
         }
+
+        public bool ChangePassword(string userId, string oldPassword, string newPassword, out string msg)
+        {
+            msg = "修改密码成功";
+            var user = _identityRepository.QueryUserByUserId(userId);
+            if (user == null)
+            {
+                msg = "用户不存在";
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.Password) && !string.IsNullOrWhiteSpace(oldPassword) && !user.Password.Equals(Md5Helper.Md5By32(oldPassword)))
+            {
+                msg = "旧密码错误";
+                return false;
+            }
+            return _identityRepository.UpdateUserPassword(userId, Md5Helper.Md5By32(newPassword));
+        }
     }
 }
