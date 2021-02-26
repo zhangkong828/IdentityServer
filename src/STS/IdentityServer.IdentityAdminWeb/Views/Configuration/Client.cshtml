@@ -1,7 +1,514 @@
 ﻿
 @{
-    ViewData["Title"] = "Client";
+    ViewData["Title"] = "客户端";
 }
 
-<h2>Client</h2>
+<div id="clientApp">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">客户端</h4></div>
+                </div>
+                <div class="panel-body">
+                    <el-button size="small" type="success" plain icon="el-icon-share" @@click="cloneClient">克隆</el-button>
+                    <el-button size="small" type="danger" plain icon="el-icon-delete" @@click="deleteClient">删除</el-button>
+                    <el-tabs v-model="tabActiveName">
+                        <el-tab-pane label="基本" name="basics">
+                            <el-form ref="basics" :model="client" label-width="250px" size="medium">
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>标识</span><el-tooltip class="item" content="客户端的唯一标识" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.clientId"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>名称</span><el-tooltip class="item" content="客户端显示名称" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.clientName"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>启用</span><el-tooltip class="item" content="是否启用客户端，默认true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.enabled"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>描述</span><el-tooltip class="item" content="客户端描述" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.description"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>需要客户端密钥</span><el-tooltip class="item" content="指定此客户端是否需要密钥才能从令牌端点请求令牌（默认为 true）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.requireClientSecret"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>需要 Pkce</span><el-tooltip class="item" content="指定使用基于授权代码的授权类型的客户端是否必须发送校验密钥" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.requirePkce"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许纯文本 Pkce</span><el-tooltip class="item" content="指定使用 PKCE 的客户端是否可以使用纯文本代码质询（不推荐 - 默认为 false）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.allowPlainTextPkce"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许离线访问</span><el-tooltip class="item" content="指定此客户端是否可以请求刷新令牌（请求 offline_access 作用域）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.allowOfflineAccess"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许通过浏览器访问令牌</span><el-tooltip class="item" content="指定是否允许此客户端通过浏览器接收访问令牌 access_token" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.allowAccessTokensViaBrowser"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许的作用域</span><el-tooltip class="item" content="默认情况下，客户端无权访问任何资源 - 通过添加相应的作用域名称来指定允许的资源" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.allowedScopes" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                                        <el-option v-for="item in allowedScopesOptions"
+                                                   :key="item.value"
+                                                   :label="item.label"
+                                                   :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>重定向Uri</span><el-tooltip class="item" content="指定允许的 URI 以返回令牌或授权码" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.redirectUris" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许的授权类型</span><el-tooltip class="item" content="指定允许客户端使用的授权类型。 默认授权列表：隐式授权 - (implicit)，客户端凭证授权 - (client_credentials)，授权码授权 - (authorization_code)，混合授权 - (hybrid)，资源所有者密码凭证授权 - (password)" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.allowedGrantTypes" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                                        <el-option v-for="item in allowedGrantTypesOptions"
+                                                   :key="item.value"
+                                                   :label="item.label"
+                                                   :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>客户端密钥</span><el-tooltip class="item" content="客户端密钥列表 - 访问令牌 access_token 端点的凭据（勾选 需要客户端密钥）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-button type="primary" size="small">管理客户端密钥</el-button>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>属性</span><el-tooltip class="item" content="字典 可根据需要保存任何自定义客户端特定值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-button type="primary" size="small">管理客户端属性</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+
+                        <el-tab-pane label="认证/退出" name="authentication">
+                            <el-form ref="authentication" :model="client" label-width="250px" size="medium">
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>前端通道退出Uri</span><el-tooltip class="item" content="指定客户端的退出 URI，以用于基于 HTTP 的前端通道退出。 有关详细信息，请参阅 OIDC Front-Channel 规范" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.frontChannelLogoutUri"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>需要前端通道退出会话</span><el-tooltip class="item" content="指定是否应将用户的会话标识发送到 FrontChannelLogoutUri。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.frontChannelLogoutSessionRequired"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>后端通道退出Uri</span><el-tooltip class="item" content="指定客户端的退出 URI，以用于基于 HTTP 的后端通道退出。 有关详细信息，请参阅 OIDC Back-Channel 规范" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.backChannelLogoutUri"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>需要后端通道退出会话</span><el-tooltip class="item" content="指定是否应在请求中将用户的会话 ID 发送到 BackChannelLogoutUri。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.backChannelLogoutSessionRequired"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>启用本地登录</span><el-tooltip class="item" content="指定此客户端是否可以使用本地帐户或仅外部 IdPs。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.enableLocalLogin"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>退出重定向Uri</span><el-tooltip class="item" content="指定在退出后重定向到允许的 URI" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.postLogoutRedirectUris" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>身份提供程序限制</span><el-tooltip class="item" content="指定可以与此客户端一起使用的外部 IdPs（如果列表为空，则允许所有 IdPs）。 默认为空" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.identityProviderRestrictions" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>用户SSO生命周期</span><el-tooltip class="item" content="自上次用户进行身份验证以来的最长持续时间（以秒为单位）。 默认为 null" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.userSsoLifetime"></el-input>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+
+                        <el-tab-pane label="令牌" name="token">
+                            <el-form ref="token" :model="client" label-width="250px" size="medium">
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>身份令牌生命周期</span><el-tooltip class="item" content="身份令牌 id_token 的生命周期（以秒为单位）（默认为 300 秒/5 分钟）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input-number v-model="client.identityTokenLifetime" controls-position="right" :min="0"></el-input-number>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>访问令牌生命周期</span><el-tooltip class="item" content="访问令牌 access_token 的生命周期（以秒为单位）（默认为 3600 秒/1 小时）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input-number v-model="client.accessTokenLifetime" controls-position="right" :min="0"></el-input-number>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>访问令牌类型</span><el-tooltip class="item" content="指定访问令牌 access_token 是引用令牌还是自包含 JWT 令牌（默认为 Jwt）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.accessTokenType" placeholder="请选择" style="width:100%">
+                                        <el-option v-for="item in accessTokenTypesOptions"
+                                                   :key="item.value"
+                                                   :label="item.label"
+                                                   :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>授权码生命周期</span><el-tooltip class="item" content="授权码的生命周期（以秒为单位）（默认为 300 秒/5 分钟）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input-number v-model="client.authorizationCodeLifetime" controls-position="right" :min="0"></el-input-number>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>绝对刷新令牌生命周期</span><el-tooltip class="item" content="刷新令牌的最长生命周期，以秒为单位。 默认为 2592000 秒/30 天" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input-number v-model="client.absoluteRefreshTokenLifetime" controls-position="right" :min="0"></el-input-number>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>滚动刷新令牌生命周期</span><el-tooltip class="item" content="滚动刷新生命周期是多少秒钟刷新令牌。 默认为 1296000 秒/15 天" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input-number v-model="client.slidingRefreshTokenLifetime" controls-position="right" :min="0"></el-input-number>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>刷新令牌使用情况</span><el-tooltip class="item" content="ReUse 刷新令牌时，令牌句柄将保持不变。OneTime 刷新令牌时将更新令牌句柄" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.refreshTokenUsage" placeholder="请选择" style="width:100%">
+                                        <el-option v-for="item in refreshTokenUsagesOptions"
+                                                   :key="item.value"
+                                                   :label="item.label"
+                                                   :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>刷新令牌过期</span><el-tooltip class="item" content="Absolute 绝对刷新令牌将在固定时间点到期（由“绝对刷新令牌生命周期”指定）。Sliding 滚动刷新令牌，刷新令牌时生命周期将被更新（按“滚动刷新令牌生命周期”中指定的量）。生命周期不会超过“绝对刷新令牌生命周期”" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.refreshTokenExpiration" placeholder="请选择" style="width:100%">
+                                        <el-option v-for="item in refreshTokenExpirationOptions"
+                                                   :key="item.value"
+                                                   :label="item.label"
+                                                   :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许跨域来源</span><el-tooltip class="item" content="如果指定，将由默认 CORS 策略服务实现（In-Memory 和 EF）用于为 JavaScript 客户端构建 CORS 策略" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-select v-model="client.allowedCorsOrigins" multiple filterable allow-create default-first-option placeholder="请选择" style="width:100%"></el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>刷新时更新访问令牌声明</span><el-tooltip class="item" content="获取或设置一个值，该值指示是否应在刷新令牌请求上更新访问令牌 access_token（及其声明）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.updateAccessTokenClaimsOnRefresh"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>包括 Jwt 标识</span><el-tooltip class="item" content="指定 JWT 访问令牌 access_token 是否应具有嵌入的唯一标识（通过 jti 声明）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.includeJwtId"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>始终发送客户端声明</span><el-tooltip class="item" content="如果设置，将为每个流发送客户端声明。 如果不是，仅用于客户端凭证流（默认为 false）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.alwaysSendClientClaims"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>始终在身份令牌中包含用户声明</span><el-tooltip class="item" content="指定是否在身份令牌 id_token 中包含用户声明" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.alwaysIncludeUserClaimsInIdToken"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>客户端声明前缀</span><el-tooltip class="item" content="如果设置，客户端声明类型将以此为前缀。 默认为 client_ 目的是确保它们不会意外地与用户声明冲突" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.clientClaimsPrefix"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>配对主体盐</span><el-tooltip class="item" content="对于此客户端的用户，在配对主体标识生成中使用的盐值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.pairWiseSubjectSalt"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>声明</span><el-tooltip class="item" content="允许客户端的设置声明（将包含在访问令牌 access_token 中）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-button type="primary" size="small">管理客户端声明</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+
+                        <el-tab-pane label="同意屏幕" name="consent">
+                            <el-form ref="consent" :model="client" label-width="250px" size="medium">
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>需要同意</span><el-tooltip class="item" content="指定是否需要同意屏幕。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.requireConsent"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>允许记住同意</span><el-tooltip class="item" content="指定用户是否可以选择存储同意决策。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-switch v-model="client.allowRememberConsent"></el-switch>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>客户端 Uri</span><el-tooltip class="item" content="客户端的URI（在同意屏幕上使用）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.clientUri"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>Logo Uri</span><el-tooltip class="item" content="客户端Logo URI（在同意屏幕上使用）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.logoUri"></el-input>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+
+                        <el-tab-pane label="设备流程" name="deviceFlow">
+                            <el-form ref="deviceFlow" :model="client" label-width="250px" size="medium">
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>用户代码类型</span><el-tooltip class="item" content="指定用于客户端的用户代码的类型。 否则回落到默认值。" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input v-model="client.userCodeType"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <label slot="label">
+                                        <span>设备代码生命周期</span><el-tooltip class="item" content="设备代码的生命周期（以秒为单位）（默认为 300 秒/5 分钟）" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                    </label>
+                                    <el-input-number v-model="client.deviceCodeLifetime" controls-position="right" :min="0"></el-input-number>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+
+                    </el-tabs>
+                    <el-button size="small" type="primary" plain icon="el-icon-refresh-right" @@click="editClient">保存</el-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Scripts{
+    <script>
+        var clientApp = new Vue({
+            el: '#clientApp',
+            data: {
+                tabActiveName: "basics",
+                client: {},
+                allowedScopesOptions: [
+                    {
+                        value: 'roles',
+                        label: 'roles'
+                    },
+                    {
+                        value: 'openid',
+                        label: 'openid'
+                    },
+                    {
+                        value: 'profile',
+                        label: 'profile'
+                    },
+                    {
+                        value: 'offline_access',
+                        label: 'offline_access'
+                    }
+                ],
+                allowedGrantTypesOptions: [
+                    {
+                        value: 'authorization_code',
+                        label: 'authorization_code'
+                    },
+                    {
+                        value: 'implicit',
+                        label: 'implicit'
+                    },
+                    {
+                        value: 'client_credentials',
+                        label: 'client_credentials'
+                    },
+                    {
+                        value: 'password',
+                        label: 'password'
+                    },
+                    {
+                        value: 'hybrid',
+                        label: 'hybrid'
+                    },
+                    {
+                        value: 'urn:ietf:params:oauth:grant-type:device_code',
+                        label: 'urn:ietf:params:oauth:grant-type:device_code'
+                    }
+                ],
+                accessTokenTypesOptions: [
+                    {
+                        value: 0,
+                        label: 'Jwt'
+                    },
+                    {
+                        value: 1,
+                        label: 'Reference'
+                    }
+                ],
+                refreshTokenUsagesOptions: [
+                    {
+                        value: 0,
+                        label: 'ReUse'
+                    },
+                    {
+                        value: 1,
+                        label: 'OneTimeOnly'
+                    }
+                ],
+                refreshTokenExpirationOptions: [
+                    {
+                        value: 0,
+                        label: 'Sliding'
+                    },
+                    {
+                        value: 1,
+                        label: 'Absolute'
+                    }
+                ],
+            },
+            methods: {
+                loadData(clientId) {
+                    var that = this;
+                    $.ajax({
+                        url: "/Configuration/QueryClient",
+                        type: "post",
+                        data: {id:clientId},
+                        success: function (response) {
+                            console.log(response);
+                            if (response.code === 0) {
+                                that.client = response.data;
+                            } else {
+                                window.location.href = "/Configuration/Clients";
+                            }
+                        }
+                    });
+                },
+                cloneClient() {
+                   
+                },
+                deleteClient() {
+                    var that = this;
+                    this.$confirm('确定删除吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error',
+                        callback: action => {
+                            if (action == 'confirm') {
+                                $.ajax({
+                                    url: "/Configuration/DeleteClient",
+                                    type: "post",
+                                    data: { id: item.id },
+                                    success: function (response) {
+                                        if (response.code === 0) {
+                                            window.location.href = "/Configuration/Clients";
+                                        } else {
+                                            that.$message.error(response.msg);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                editClient() {
+                    
+                },
+                addClientSubmit() {
+                    var that = this;
+                    var client = this.client;
+                    if (!client.clientId || client.clientId === "") {
+                        this.$message.error('客户端标识不能为空');
+                        return;
+                    }
+                    if (!client.clientName || client.clientName === "") {
+                        this.$message.error('客户端名称不能为空');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "/Configuration/Client",
+                        type: "post",
+                        data: client,
+                        success: function (response) {
+                            if (response.code === 0) {
+                                that.loadData();
+                                that.dialogForAddClient = false;
+                            } else {
+                                that.$message.error(response.msg);
+                            }
+                        }
+                    });
+                }
+            },
+            mounted: function () {
+                var that = this;
+                that.loadData(@ViewBag.ClientId);
+            }
+        });
+    </script>
+}
 

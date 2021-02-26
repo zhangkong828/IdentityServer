@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "客户端";
 }
-@section CSS{
+@section Styles{
     <style>
         .el-radio-group label {
             display: block;
@@ -22,7 +22,7 @@
                     <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">客户端</h4></div>
                 </div>
                 <div class="panel-body">
-                    <el-button type="primary" size="mini" @@click="addClient">添加客户端</el-button>
+                    <el-button type="primary" size="small" plain @@click="addClient">添加客户端</el-button>
                     <el-collapse v-model="activeNames" style="margin-top:20px;">
                         <el-collapse-item title="搜索" name="1">
                             <el-form :inline="true" :model="search" ref="searchForm" class="" size="small">

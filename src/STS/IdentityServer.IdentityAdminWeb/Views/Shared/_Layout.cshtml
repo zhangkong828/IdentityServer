@@ -13,7 +13,7 @@
     <link href="~/assets/css/custom.css" rel="stylesheet" />
 
     <link href="~/lib/element-ui/index.css" rel="stylesheet" />
-    @await RenderSectionAsync("Css", required: false)
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
 
@@ -156,7 +156,7 @@
                                 <li class="dropdown user-dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="http://via.placeholder.com/36x36" alt="" class="img-circle"></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="/Account/Logout">注销</a></li>
+                                        <li><a href="/Account/Logout">退出</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -168,7 +168,7 @@
             <div class="page-inner">
                 @RenderBody()
                 <div class="page-footer">
-                    <p>Copyright &copy; @(DateTime.Now.Year) <a href="https://zhangkong.cloud">zhangkong.cloud</a></p>
+                    <p>Copyright &copy; @(DateTime.Now.Year) <a href="https://github.com/zhangkong828/IdentityServer">IdentityServer</a></p>
                 </div>
             </div><!-- /Page Inner -->
         </div><!-- /Page Content -->

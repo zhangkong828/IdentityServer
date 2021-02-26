@@ -66,8 +66,10 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
 
+        [HttpGet]
         public IActionResult Client(int id)
         {
+            ViewBag.ClientId = id;
             return View();
         }
 

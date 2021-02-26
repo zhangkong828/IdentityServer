@@ -39,12 +39,9 @@ namespace IdentityServer.IdentityWeb.Validator
         {
             return new Claim[]
             {
-            new Claim("UserId", user.UserId),
-            new Claim(JwtClaimTypes.NickName,user.NickName),
-            new Claim(JwtClaimTypes.GivenName, "222"),
-            new Claim(JwtClaimTypes.FamilyName, "333"),
-            new Claim(JwtClaimTypes.Email, "444"),
-            new Claim(JwtClaimTypes.Role,"admin")
+                new Claim(JwtClaimTypes.NickName,user.NickName),
+                new Claim(JwtClaimTypes.Email, user.Email),
+                new Claim(JwtClaimTypes.Picture, user.Avatar)
             };
         }
     }
