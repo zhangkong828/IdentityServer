@@ -475,9 +475,6 @@
                     });
                 },
                 editClient() {
-                    
-                },
-                addClientSubmit() {
                     var that = this;
                     var client = this.client;
                     if (!client.clientId || client.clientId === "") {
@@ -495,8 +492,7 @@
                         data: client,
                         success: function (response) {
                             if (response.code === 0) {
-                                that.loadData();
-                                that.dialogForAddClient = false;
+                                that.loadData(client.clientId);
                             } else {
                                 that.$message.error(response.msg);
                             }
