@@ -63,7 +63,7 @@ namespace IdentityServer.Client.ClientCredentials
                 GrantType = "client_credentials",
                 Parameters =
                 {
-                    ["scope"]="scope1"
+                    ["scope"]="test_scope1"
                 }
             });
         }

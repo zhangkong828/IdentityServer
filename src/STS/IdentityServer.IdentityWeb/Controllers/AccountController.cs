@@ -251,10 +251,11 @@ namespace IdentityServer.IdentityWeb.Controllers
                 foreach (var item in claims)
                 {
                     //去掉重复
-                    if (additionalClaims.Where(x => x.Type == item.Type).Count() == 0)
-                    {
-                        additionalClaims.Add(item);
-                    }
+                    if (item.Type == ClaimTypes.NameIdentifier) continue;
+                    if (item.Type == ClaimTypes.Name) continue;
+                    if (item.Type == ClaimTypes.Email) continue;
+
+                    additionalClaims.Add(item);
                 }
             }
 

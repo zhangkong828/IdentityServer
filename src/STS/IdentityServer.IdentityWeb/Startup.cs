@@ -82,7 +82,6 @@ namespace IdentityServer.IdentityWeb
 
         public void RegisterDbContexts(IServiceCollection services)
         {
-            //var databaseProvider = Config.GetSection(nameof(DatabaseProviderConfiguration)).Get<DatabaseProviderConfiguration>();
             var databaseProvider = Config.Get<DatabaseProviderConfiguration>("DatabaseProviderConfiguration");
 
             var identityConnectionString = Config.GetString("ConnectionStrings:AdminIdentityConnection");
