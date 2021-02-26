@@ -1,6 +1,5 @@
 ﻿using IdentityServer.IdentityWeb.Models;
 using IdentityServer.Service.Interfaces;
-using IdentityServer4;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,8 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using IdentityModel;
 using IdentityServer.Service.Dtos.Identity;
+using IdentityServer4;
+using IdentityServer4.Extensions;
 
 namespace IdentityServer.IdentityWeb.Controllers
 {
@@ -76,14 +77,7 @@ namespace IdentityServer.IdentityWeb.Controllers
                 if (form.Remember)
                     expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(7));
 
-                var claims = new Claim[]
-                                        {
-                                        new Claim(JwtClaimTypes.NickName,user.NickName),
-                                        new Claim(JwtClaimTypes.Email, user.Email),
-                                        new Claim(JwtClaimTypes.Picture, user.Avatar)
-                                        };
-
-                await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider, claims);
+                await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider);
 
                 if (_idsInteraction.IsValidReturnUrl(form.ReturnUrl) || Url.IsLocalUrl(form.ReturnUrl))
                 {
@@ -104,7 +98,44 @@ namespace IdentityServer.IdentityWeb.Controllers
         {
             var logout = await _idsInteraction.GetLogoutContextAsync(logoutId);
 
-            await HttpContext.SignOutAsync();
+            var externalAuthenticationScheme = string.Empty;
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+                if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
+                {
+                    var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                    if (providerSupportsSignout)
+                    {
+                        if (string.IsNullOrWhiteSpace(logoutId))
+                        {
+                            // if there's no current logout context, we need to create one
+                            // this captures necessary info from the current logged in user
+                            // before we signout and redirect away to the external IdP for signout
+                            logoutId = await _idsInteraction.CreateLogoutContextAsync();
+                        }
+
+                        externalAuthenticationScheme = idp;
+                    }
+                }
+            }
+
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                await HttpContext.SignOutAsync();
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(externalAuthenticationScheme))
+            {
+                // build a return URL so the upstream provider will redirect back
+                // to us after the user has logged out. this allows us to then
+                // complete our single sign-out processing.
+                string url = Url.Action("Logout", new { logoutId = logoutId });
+
+                // this triggers a redirect to the external provider for sign-out
+                return SignOut(new AuthenticationProperties { RedirectUri = url }, externalAuthenticationScheme);
+            }
 
             ViewBag.SignOutIframeUrl = logout.SignOutIFrameUrl;
             ViewBag.RedirectUri = new Uri(logout.PostLogoutRedirectUri).GetLeftPart(UriPartial.Authority);
@@ -201,8 +232,32 @@ namespace IdentityServer.IdentityWeb.Controllers
         }
 
         [NonAction]
-        private async Task UserLogin(UserIdentityDto user, DateTimeOffset expires, string scheme, ICollection<Claim> claims)
+        private async Task UserLogin(UserIdentityDto user, DateTimeOffset expires, string scheme, ICollection<Claim> claims = null)
         {
+            var additionalClaims = new List<Claim>();
+
+            //自定义claims
+            var customClaims = new Claim[]
+                                        {
+                                        new Claim(JwtClaimTypes.NickName,user.NickName),
+                                        new Claim(JwtClaimTypes.Email, user.Email),
+                                        new Claim(JwtClaimTypes.Picture, user.Avatar)
+                                        };
+            additionalClaims.AddRange(customClaims);
+
+            //第三方登录claims
+            if (claims != null)
+            {
+                foreach (var item in claims)
+                {
+                    //去掉重复
+                    if (additionalClaims.Where(x => x.Type == item.Type).Count() == 0)
+                    {
+                        additionalClaims.Add(item);
+                    }
+                }
+            }
+
             var properties = new AuthenticationProperties
             {
                 IsPersistent = true,
@@ -212,7 +267,7 @@ namespace IdentityServer.IdentityWeb.Controllers
             {
                 DisplayName = user.NickName,
                 IdentityProvider = scheme,
-                AdditionalClaims = claims
+                AdditionalClaims = additionalClaims
             };
             await HttpContext.SignInAsync(isuser, properties);
         }
@@ -234,13 +289,7 @@ namespace IdentityServer.IdentityWeb.Controllers
             if (result)
             {
                 var expires = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(2));
-                var claims = new Claim[]
-                                        {
-                                        new Claim(JwtClaimTypes.NickName,user.NickName),
-                                        new Claim(JwtClaimTypes.Email, user.Email),
-                                        new Claim(JwtClaimTypes.Picture, user.Avatar)
-                                        };
-                await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider, claims);
+                await UserLogin(user, expires, IdentityServerConstants.LocalIdentityProvider);
 
                 return Json(new { code = 0, msg = "注册成功" });
             }
