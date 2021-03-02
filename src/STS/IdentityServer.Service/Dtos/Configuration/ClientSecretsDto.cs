@@ -6,9 +6,9 @@ using System.Text;
 
 namespace IdentityServer.Service.Dtos.Configuration
 {
-	public class ClientSecretsDto
+	public class ClientSecretsDto1
 	{
-		public ClientSecretsDto()
+		public ClientSecretsDto1()
 		{
 			ClientSecrets = new List<ClientSecretDto>();
 		}

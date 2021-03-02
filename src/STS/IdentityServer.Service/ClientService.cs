@@ -60,14 +60,6 @@ namespace IdentityServer.Service
             return client;
         }
 
-        public ClientSecretsDto BuildClientSecretsViewModel(ClientSecretsDto clientSecrets)
-        {
-            clientSecrets.HashTypes = GetHashTypes();
-            clientSecrets.TypeList = GetSecretTypes();
-
-            return clientSecrets;
-        }
-
         public ClientCloneDto BuildClientCloneViewModel(int id, ClientDto clientDto)
         {
             var client = new ClientCloneDto
@@ -258,28 +250,17 @@ namespace IdentityServer.Service
             return standardClaims;
         }
 
-        public async Task<int> AddClientSecretAsync(ClientSecretsDto clientSecret)
+        public async Task<int> AddClientSecretAsync(int clientId, ClientSecretDto clientSecret)
         {
-            if (clientSecret.Type == SharedSecret)
-            {
-                if (clientSecret.HashType == ((int)HashType.Sha256).ToString())
-                {
-                    clientSecret.Value = clientSecret.Value.Sha256();
-                }
-                else if (clientSecret.HashType == ((int)HashType.Sha512).ToString())
-                {
-                    clientSecret.Value = clientSecret.Value.Sha512();
-                }
-
-            }
+            clientSecret.Value = clientSecret.Value.Sha256();
 
             var clientSecretEntity = clientSecret.ToEntity();
-            var added = await ClientRepository.AddClientSecretAsync(clientSecret.ClientId, clientSecretEntity);
+            var added = await ClientRepository.AddClientSecretAsync(clientId, clientSecretEntity);
 
             return added;
         }
 
-        public async Task<int> DeleteClientSecretAsync(ClientSecretsDto clientSecret)
+        public async Task<int> DeleteClientSecretAsync(ClientSecretDto clientSecret)
         {
             var clientSecretEntity = clientSecret.ToEntity();
 
@@ -288,33 +269,6 @@ namespace IdentityServer.Service
             return deleted;
         }
 
-        public async Task<ClientSecretsDto> GetClientSecretsAsync(int clientId, int page = 1, int pageSize = 10)
-        {
-            var clientInfo = await ClientRepository.GetClientIdAsync(clientId);
-            if (clientInfo.ClientId == null) return null;
-
-            var pagedList = await ClientRepository.GetClientSecretsAsync(clientId, page, pageSize);
-            var clientSecretsDto = pagedList.ToModel();
-            clientSecretsDto.ClientId = clientId;
-            clientSecretsDto.ClientName = GetClientName(clientInfo.ClientId, clientInfo.ClientName);
-
-            return clientSecretsDto;
-        }
-
-        public async Task<ClientSecretsDto> GetClientSecretAsync(int clientSecretId)
-        {
-            var clientSecret = await ClientRepository.GetClientSecretAsync(clientSecretId);
-            if (clientSecret == null) return null;
-
-            var clientInfo = await ClientRepository.GetClientIdAsync(clientSecret.Client.Id);
-            if (clientInfo.ClientId == null) return null;
-
-            var clientSecretsDto = clientSecret.ToModel();
-            clientSecretsDto.ClientId = clientSecret.Client.Id;
-            clientSecretsDto.ClientName = GetClientName(clientInfo.ClientId, clientInfo.ClientName);
-
-            return clientSecretsDto;
-        }
 
         public async Task<ClientClaimsDto> GetClientClaimsAsync(int clientId, int page = 1, int pageSize = 10)
         {

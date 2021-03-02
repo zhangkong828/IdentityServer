@@ -81,5 +81,13 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
             var client = await _clientService.GetClientAsync(id);
             return Json(new { code = 0, data = client });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientSecret(ClientSecretsDto clientSecret)
+        {
+            await _clientService.AddClientSecretAsync(clientSecret);
+
+            return RedirectToAction(nameof(ClientSecrets), new { Id = clientSecret.ClientId });
+        }
     }
 }

@@ -11,8 +11,6 @@ namespace IdentityServer.Service.Interfaces
     {
         ClientDto BuildClientViewModel(ClientDto client = null);
 
-        ClientSecretsDto BuildClientSecretsViewModel(ClientSecretsDto clientSecrets);
-
         ClientCloneDto BuildClientCloneViewModel(int id, ClientDto clientDto);
 
         Task<int> AddClientAsync(ClientDto client);
@@ -45,13 +43,9 @@ namespace IdentityServer.Service.Interfaces
 
         List<string> GetStandardClaims(string claim, int limit = 0);
 
-        Task<int> AddClientSecretAsync(ClientSecretsDto clientSecret);
+        Task<int> AddClientSecretAsync(int clientId, ClientSecretDto clientSecret);
 
-        Task<int> DeleteClientSecretAsync(ClientSecretsDto clientSecret);
-
-        Task<ClientSecretsDto> GetClientSecretsAsync(int clientId, int page = 1, int pageSize = 10);
-
-        Task<ClientSecretsDto> GetClientSecretAsync(int clientSecretId);
+        Task<int> DeleteClientSecretAsync(ClientSecretDto clientSecret);
 
         Task<ClientClaimsDto> GetClientClaimsAsync(int clientId, int page = 1, int pageSize = 10);
 

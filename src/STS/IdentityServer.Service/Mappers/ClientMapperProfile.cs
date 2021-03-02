@@ -58,11 +58,6 @@ namespace IdentityServer.Service.Mappers
             CreateMap<ClientProperty, ClientPropertyDto>(MemberList.Destination)
                 .ReverseMap();
 
-            CreateMap<ClientSecret, ClientSecretsDto>(MemberList.Destination)
-                .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null))
-                .ForMember(x => x.ClientSecretId, opt => opt.MapFrom(x => x.Id))
-                .ForMember(x => x.ClientId, opt => opt.MapFrom(x => x.Client.Id));
-
             CreateMap<ClientClaim, ClientClaimsDto>(MemberList.Destination)
                 .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null))
                 .ForMember(x => x.ClientClaimId, opt => opt.MapFrom(x => x.Id))
@@ -74,9 +69,6 @@ namespace IdentityServer.Service.Mappers
                 .ForMember(x => x.ClientId, opt => opt.MapFrom(x => x.Client.Id));
 
             //PagedLists
-            CreateMap<PageData<ClientSecret>, ClientSecretsDto>(MemberList.Destination)
-                .ForMember(x => x.ClientSecrets, opt => opt.MapFrom(src => src.List));
-
             CreateMap<PageData<ClientClaim>, ClientClaimsDto>(MemberList.Destination)
                 .ForMember(x => x.ClientClaims, opt => opt.MapFrom(src => src.List));
 
@@ -87,10 +79,6 @@ namespace IdentityServer.Service.Mappers
                 .ForMember(x => x.Clients, opt => opt.MapFrom(src => src.List));
 
             // model to entity
-            CreateMap<ClientSecretsDto, ClientSecret>(MemberList.Source)
-                        .ForMember(x => x.Client, dto => dto.MapFrom(src => new Client() { Id = src.ClientId }))
-                        .ForMember(x => x.Id, opt => opt.MapFrom(src => src.ClientSecretId));
-
             CreateMap<ClientClaimsDto, ClientClaim>(MemberList.Source)
                 .ForMember(x => x.Client, dto => dto.MapFrom(src => new Client() { Id = src.ClientId }))
                 .ForMember(x => x.Id, opt => opt.MapFrom(src => src.ClientClaimId));

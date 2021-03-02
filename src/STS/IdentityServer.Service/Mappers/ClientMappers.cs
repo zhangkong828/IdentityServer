@@ -23,11 +23,6 @@ namespace IdentityServer.Service.Mappers
             return Mapper.Map<ClientDto>(client);
         }
 
-        public static ClientSecretsDto ToModel(this PageData<ClientSecret> clientSecret)
-        {
-            return Mapper.Map<ClientSecretsDto>(clientSecret);
-        }
-
         public static ClientClaimsDto ToModel(this PageData<ClientClaim> clientClaims)
         {
             return Mapper.Map<ClientClaimsDto>(clientClaims);
@@ -48,12 +43,7 @@ namespace IdentityServer.Service.Mappers
             return Mapper.Map<Client>(client);
         }
 
-        public static ClientSecretsDto ToModel(this ClientSecret clientSecret)
-        {
-            return Mapper.Map<ClientSecretsDto>(clientSecret);
-        }
-
-        public static ClientSecret ToEntity(this ClientSecretsDto clientSecret)
+        public static ClientSecret ToEntity(this ClientSecretDto clientSecret)
         {
             return Mapper.Map<ClientSecret>(clientSecret);
         }
