@@ -58,14 +58,14 @@ namespace IdentityServer.Service.Mappers
             return Mapper.Map<ClientPropertiesDto>(clientProperty);
         }
 
-        public static ClientClaim ToEntity(this ClientClaimsDto clientClaim)
+        public static ClientClaim ToEntity(this ClientClaimDto clientClaim)
         {
             return Mapper.Map<ClientClaim>(clientClaim);
         }
 
-        public static ClientProperty ToEntity(this ClientPropertiesDto clientProperties)
+        public static ClientProperty ToEntity(this ClientPropertyDto clientProperty)
         {
-            return Mapper.Map<ClientProperty>(clientProperties);
+            return Mapper.Map<ClientProperty>(clientProperty);
         }
 
     }

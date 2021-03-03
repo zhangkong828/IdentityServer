@@ -255,26 +255,26 @@ namespace IdentityServer.EntityFramework.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public virtual async Task<int> DeleteClientSecretAsync(ClientSecret clientSecret)
+        public virtual async Task<int> DeleteClientSecretAsync(int clientSecretId)
         {
-            var secretToDelete = await DbContext.ClientSecrets.Where(x => x.Id == clientSecret.Id).SingleOrDefaultAsync();
+            var secretToDelete = await DbContext.ClientSecrets.Where(x => x.Id == clientSecretId).SingleOrDefaultAsync();
 
             DbContext.ClientSecrets.Remove(secretToDelete);
 
             return await AutoSaveChangesAsync();
         }
 
-        public virtual async Task<int> DeleteClientClaimAsync(ClientClaim clientClaim)
+        public virtual async Task<int> DeleteClientClaimAsync(int clientClaimId)
         {
-            var claimToDelete = await DbContext.ClientClaims.Where(x => x.Id == clientClaim.Id).SingleOrDefaultAsync();
+            var claimToDelete = await DbContext.ClientClaims.Where(x => x.Id == clientClaimId).SingleOrDefaultAsync();
 
             DbContext.ClientClaims.Remove(claimToDelete);
             return await AutoSaveChangesAsync();
         }
 
-        public virtual async Task<int> DeleteClientPropertyAsync(ClientProperty clientProperty)
+        public virtual async Task<int> DeleteClientPropertyAsync(int clientPropertyId)
         {
-            var propertyToDelete = await DbContext.ClientProperties.Where(x => x.Id == clientProperty.Id).SingleOrDefaultAsync();
+            var propertyToDelete = await DbContext.ClientProperties.Where(x => x.Id == clientPropertyId).SingleOrDefaultAsync();
 
             DbContext.ClientProperties.Remove(propertyToDelete);
             return await AutoSaveChangesAsync();

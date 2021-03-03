@@ -260,11 +260,9 @@ namespace IdentityServer.Service
             return added;
         }
 
-        public async Task<int> DeleteClientSecretAsync(ClientSecretDto clientSecret)
+        public async Task<int> DeleteClientSecretAsync(int clientSecretId)
         {
-            var clientSecretEntity = clientSecret.ToEntity();
-
-            var deleted = await ClientRepository.DeleteClientSecretAsync(clientSecretEntity);
+            var deleted = await ClientRepository.DeleteClientSecretAsync(clientSecretId);
 
             return deleted;
         }
@@ -327,38 +325,34 @@ namespace IdentityServer.Service
             return clientPropertiesDto;
         }
 
-        public async Task<int> AddClientClaimAsync(ClientClaimsDto clientClaim)
+        public async Task<int> AddClientClaimAsync(int clientId, ClientClaimDto clientClaim)
         {
             var clientClaimEntity = clientClaim.ToEntity();
 
-            var saved = await ClientRepository.AddClientClaimAsync(clientClaim.ClientId, clientClaimEntity);
+            var saved = await ClientRepository.AddClientClaimAsync(clientId, clientClaimEntity);
 
             return saved;
         }
 
-        public async Task<int> AddClientPropertyAsync(ClientPropertiesDto clientProperties)
+        public async Task<int> AddClientPropertyAsync(int clientId, ClientPropertyDto clientPropertyDto)
         {
-            var clientProperty = clientProperties.ToEntity();
+            var clientProperty = clientPropertyDto.ToEntity();
 
-            var saved = await ClientRepository.AddClientPropertyAsync(clientProperties.ClientId, clientProperty);
+            var saved = await ClientRepository.AddClientPropertyAsync(clientId, clientProperty);
 
             return saved;
         }
 
-        public async Task<int> DeleteClientClaimAsync(ClientClaimsDto clientClaim)
+        public async Task<int> DeleteClientClaimAsync(int clientClaimId)
         {
-            var clientClaimEntity = clientClaim.ToEntity();
-
-            var deleted = await ClientRepository.DeleteClientClaimAsync(clientClaimEntity);
+            var deleted = await ClientRepository.DeleteClientClaimAsync(clientClaimId);
 
             return deleted;
         }
 
-        public async Task<int> DeleteClientPropertyAsync(ClientPropertiesDto clientProperty)
+        public async Task<int> DeleteClientPropertyAsync(int clientPropertyId)
         {
-            var clientPropertyEntity = clientProperty.ToEntity();
-
-            var deleted = await ClientRepository.DeleteClientPropertyAsync(clientPropertyEntity);
+            var deleted = await ClientRepository.DeleteClientPropertyAsync(clientPropertyId);
 
             return deleted;
         }

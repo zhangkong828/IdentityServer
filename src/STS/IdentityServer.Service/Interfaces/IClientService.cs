@@ -45,7 +45,7 @@ namespace IdentityServer.Service.Interfaces
 
         Task<int> AddClientSecretAsync(int clientId, ClientSecretDto clientSecret);
 
-        Task<int> DeleteClientSecretAsync(ClientSecretDto clientSecret);
+        Task<int> DeleteClientSecretAsync(int clientSecretId);
 
         Task<ClientClaimsDto> GetClientClaimsAsync(int clientId, int page = 1, int pageSize = 10);
 
@@ -55,13 +55,13 @@ namespace IdentityServer.Service.Interfaces
 
         Task<ClientPropertiesDto> GetClientPropertyAsync(int clientPropertyId);
 
-        Task<int> AddClientClaimAsync(ClientClaimsDto clientClaim);
+        Task<int> AddClientClaimAsync(int clientId, ClientClaimDto clientClaim);
 
-        Task<int> AddClientPropertyAsync(ClientPropertiesDto clientProperties);
+        Task<int> AddClientPropertyAsync(int clientId, ClientPropertyDto clientProperty);
 
-        Task<int> DeleteClientClaimAsync(ClientClaimsDto clientClaim);
+        Task<int> DeleteClientClaimAsync(int clientClaimId);
 
-        Task<int> DeleteClientPropertyAsync(ClientPropertiesDto clientProperty);
+        Task<int> DeleteClientPropertyAsync(int clientPropertyId);
 
         List<SelectItem> GetProtocolTypes();
     }

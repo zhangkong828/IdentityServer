@@ -19,6 +19,6 @@ namespace IdentityServer.Service.Dtos.Configuration
 
         public DateTime? Expiration { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
     }
 }

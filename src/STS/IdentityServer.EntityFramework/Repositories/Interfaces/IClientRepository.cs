@@ -53,7 +53,7 @@ namespace IdentityServer.EntityFramework.Repositories.Interfaces
 
 		Task<int> AddClientSecretAsync(int clientId, ClientSecret clientSecret);
 
-		Task<int> DeleteClientSecretAsync(ClientSecret clientSecret);
+		Task<int> DeleteClientSecretAsync(int clientSecretId);
 
 		Task<PageData<ClientSecret>> GetClientSecretsAsync(int clientId, int page = 1, int pageSize = 10);
 
@@ -71,9 +71,9 @@ namespace IdentityServer.EntityFramework.Repositories.Interfaces
 
 		Task<int> AddClientPropertyAsync(int clientId, ClientProperty clientProperties);
 
-		Task<int> DeleteClientClaimAsync(ClientClaim clientClaim);
+		Task<int> DeleteClientClaimAsync(int clientClaimId);
 
-		Task<int> DeleteClientPropertyAsync(ClientProperty clientProperty);
+		Task<int> DeleteClientPropertyAsync(int clientPropertyId);
 
 		Task<int> SaveAllChangesAsync();
 	}

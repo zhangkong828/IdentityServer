@@ -1,4 +1,5 @@
-﻿using IdentityServer.Service.Dtos.Configuration;
+﻿using IdentityServer.IdentityAdminWeb.Models;
+using IdentityServer.Service.Dtos.Configuration;
 using IdentityServer.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -83,11 +84,48 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddClientSecret(ClientSecretsDto clientSecret)
+        public async Task<IActionResult> AddClientSecret(AddClientSecretRequest request)
         {
-            await _clientService.AddClientSecretAsync(clientSecret);
+            var result = await _clientService.AddClientSecretAsync(request.ClientId, request.ClientSecret) > 0;
 
-            return RedirectToAction(nameof(ClientSecrets), new { Id = clientSecret.ClientId });
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientSecret(int id)
+        {
+            var result = await _clientService.DeleteClientSecretAsync(id) > 0;
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientProperty(AddClientPropertyRequest request)
+        {
+            var result = await _clientService.AddClientPropertyAsync(request.ClientId, request.ClientProperty) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientProperty(int id)
+        {
+            var result = await _clientService.DeleteClientPropertyAsync(id) > 0;
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientClaim(AddClientClaimRequest request)
+        {
+            var result = await _clientService.AddClientClaimAsync(request.ClientId, request.ClientClaim) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientClaim(int id)
+        {
+            var result = await _clientService.DeleteClientClaimAsync(id) > 0;
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
     }
 }
