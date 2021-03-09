@@ -670,6 +670,7 @@
                         complete: function () { that.screenLoading = false; },
                         success: function (response) {
                             if (response.code === 0) {
+                                that.$message.success(response.msg);
                                 that.loadData(client.id);
                             } else {
                                 that.$message.error(response.msg);

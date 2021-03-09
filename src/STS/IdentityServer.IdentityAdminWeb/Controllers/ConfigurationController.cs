@@ -75,6 +75,18 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> CloneClient(CloneClientRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { code = -1, msg = "参数错误" });
+            }
+
+            var client = await _clientService.GetClientAsync(id);
+            return Json(new { code = 0, data = client });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> QueryClient(int id)
         {
             if (id == 0) Json(new { code = -1, msg = "不存在" });

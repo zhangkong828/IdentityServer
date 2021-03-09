@@ -146,7 +146,7 @@ namespace IdentityServer.Service
             return deleted;
         }
 
-        public async Task<int> CloneClientAsync(ClientCloneDto client)
+        public async Task<int> CloneClientAsync(string originalClientId, string clientId, string clientName)
         {
             var canInsert = await CanInsertClientAsync(client, true);
             if (!canInsert)
