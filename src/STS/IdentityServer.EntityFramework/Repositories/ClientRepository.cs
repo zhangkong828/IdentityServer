@@ -313,16 +313,7 @@ namespace IdentityServer.EntityFramework.Repositories
             return client.Id;
         }
 
-        public virtual async Task<int> CloneClientAsync(Client client,
-            bool cloneClientCorsOrigins = true,
-            bool cloneClientGrantTypes = true,
-            bool cloneClientIdPRestrictions = true,
-            bool cloneClientPostLogoutRedirectUris = true,
-            bool cloneClientScopes = true,
-            bool cloneClientRedirectUris = true,
-            bool cloneClientClaims = true,
-            bool cloneClientProperties = true
-            )
+        public virtual async Task<int> CloneClientAsync(Client client,string clientId , string clientName)
         {
             var clientToClone = await DbContext.Clients
                 .Include(x => x.AllowedGrantTypes)
@@ -337,8 +328,8 @@ namespace IdentityServer.EntityFramework.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == client.Id);
 
-            clientToClone.ClientName = client.ClientName;
-            clientToClone.ClientId = client.ClientId;
+            clientToClone.ClientName = clientName;
+            clientToClone.ClientId = clientId;
 
             //Clean original ids
             clientToClone.Id = 0;
@@ -353,47 +344,7 @@ namespace IdentityServer.EntityFramework.Repositories
             clientToClone.Properties.ForEach(x => x.Id = 0);
 
             //Client secret will be skipped
-            clientToClone.ClientSecrets.Clear();
-
-            if (!cloneClientCorsOrigins)
-            {
-                clientToClone.AllowedCorsOrigins.Clear();
-            }
-
-            if (!cloneClientGrantTypes)
-            {
-                clientToClone.AllowedGrantTypes.Clear();
-            }
-
-            if (!cloneClientIdPRestrictions)
-            {
-                clientToClone.IdentityProviderRestrictions.Clear();
-            }
-
-            if (!cloneClientPostLogoutRedirectUris)
-            {
-                clientToClone.PostLogoutRedirectUris.Clear();
-            }
-
-            if (!cloneClientScopes)
-            {
-                clientToClone.AllowedScopes.Clear();
-            }
-
-            if (!cloneClientRedirectUris)
-            {
-                clientToClone.RedirectUris.Clear();
-            }
-
-            if (!cloneClientClaims)
-            {
-                clientToClone.Claims.Clear();
-            }
-
-            if (!cloneClientProperties)
-            {
-                clientToClone.Properties.Clear();
-            }
+            clientToClone.ClientSecrets.Clear();           
 
             await DbContext.Clients.AddAsync(clientToClone);
 

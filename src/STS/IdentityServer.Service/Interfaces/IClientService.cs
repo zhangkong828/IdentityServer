@@ -19,7 +19,7 @@ namespace IdentityServer.Service.Interfaces
 
         Task<int> RemoveClientAsync(ClientDto client);
 
-        Task<int> CloneClientAsync(string originalClientId, string clientId, string clientName);
+        Task<int> CloneClientAsync(int originalId, string clientId, string clientName);
 
         Task<bool> CanInsertClientAsync(ClientDto client, bool isCloned = false);
 

@@ -146,24 +146,18 @@ namespace IdentityServer.Service
             return deleted;
         }
 
-        public async Task<int> CloneClientAsync(string originalClientId, string clientId, string clientName)
+        public async Task<int> CloneClientAsync(int originalId, string clientId, string clientName)
         {
-            var canInsert = await CanInsertClientAsync(client, true);
+            var client = await ClientRepository.GetClientAsync(originalId);
+            if (client == null) return -1;
+
+            var canInsert = await ClientRepository.CanInsertClientAsync(client, true);
             if (!canInsert)
             {
-                var clientInfo = await ClientRepository.GetClientIdAsync(client.Id);
-                client.ClientIdOriginal = clientInfo.ClientId;
-                client.ClientNameOriginal = clientInfo.ClientName;
-
                 return -1;
             }
 
-            var clientEntity = client.ToEntity();
-
-            var clonedClientId = await ClientRepository.CloneClientAsync(clientEntity, client.CloneClientCorsOrigins,
-                client.CloneClientGrantTypes, client.CloneClientIdPRestrictions,
-                client.CloneClientPostLogoutRedirectUris,
-                client.CloneClientScopes, client.CloneClientRedirectUris, client.CloneClientClaims, client.CloneClientProperties);
+            var clonedClientId = await ClientRepository.CloneClientAsync(client, clientId, clientName);
 
             return clonedClientId;
         }

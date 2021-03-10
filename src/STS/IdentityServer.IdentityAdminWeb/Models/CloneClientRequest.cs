@@ -9,7 +9,7 @@ namespace IdentityServer.IdentityAdminWeb.Models
     public class CloneClientRequest
     {
         [Required]
-        public string OriginalClientId { get; set; }
+        public int OriginalId { get; set; }
         [Required]
         public string ClientId { get; set; }
         [Required]

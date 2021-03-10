@@ -82,8 +82,8 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
                 return Json(new { code = -1, msg = "参数错误" });
             }
 
-            var client = await _clientService.GetClientAsync(id);
-            return Json(new { code = 0, data = client });
+            var clientId = await _clientService.CloneClientAsync(request.OriginalId, request.ClientId, request.ClientName);
+            return Json(new { code = 0, data = clientId });
         }
 
         [HttpPost]
