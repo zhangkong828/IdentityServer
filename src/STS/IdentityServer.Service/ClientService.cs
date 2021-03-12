@@ -151,12 +151,6 @@ namespace IdentityServer.Service
             var client = await ClientRepository.GetClientAsync(originalId);
             if (client == null) return -1;
 
-            var canInsert = await ClientRepository.CanInsertClientAsync(client, true);
-            if (!canInsert)
-            {
-                return -1;
-            }
-
             var clonedClientId = await ClientRepository.CloneClientAsync(client, clientId, clientName);
 
             return clonedClientId;
