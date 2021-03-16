@@ -139,5 +139,32 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
             var result = await _clientService.DeleteClientClaimAsync(id) > 0;
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
+
+
+
+        public IActionResult IdentityResources()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueryIdentityResources(int pageIndex, int pageSize, string key)
+        {
+            var pageData = await _clientService.GetClientsAsync(key, pageIndex, pageSize);
+            return Json(new { code = 0, data = pageData });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteIdentityResource(int id)
+        {
+            if (id == 0) return Json(new { code = -1, msg = "不存在" });
+
+            var client = await _clientService.GetClientAsync(id);
+            if (client == null) return Json(new { code = -1, msg = "不存在" });
+
+            var result = await _clientService.RemoveClientAsync(client) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
     }
 }
