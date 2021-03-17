@@ -27,8 +27,8 @@ namespace IdentityServer.Service.Dtos.Configuration
         public bool Required { get; set; }
 
         public bool Emphasize { get; set; }
+        public List<string> UserClaims { get; set; }
 
-       
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public bool NonEditable { get; set; }
