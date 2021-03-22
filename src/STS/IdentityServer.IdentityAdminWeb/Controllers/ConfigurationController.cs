@@ -12,10 +12,11 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
     public class ConfigurationController : BaseController
     {
         private readonly IClientService _clientService;
-
-        public ConfigurationController(IClientService clientService)
+        private readonly IIdentityResourceService _identityResourceService;
+        public ConfigurationController(IClientService clientService, IIdentityResourceService identityResourceService)
         {
             _clientService = clientService;
+            _identityResourceService = identityResourceService;
         }
 
 
@@ -150,7 +151,7 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> QueryIdentityResources(int pageIndex, int pageSize, string key)
         {
-            var pageData = await _clientService.GetClientsAsync(key, pageIndex, pageSize);
+            var pageData = await _identityResourceService.GetIdentityResourcesAsync(key, pageIndex, pageSize);
             return Json(new { code = 0, data = pageData });
         }
 
@@ -159,10 +160,31 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         {
             if (id == 0) return Json(new { code = -1, msg = "不存在" });
 
-            var client = await _clientService.GetClientAsync(id);
+            var client = await _identityResourceService.GetIdentityResourceAsync(id);
             if (client == null) return Json(new { code = -1, msg = "不存在" });
 
-            var result = await _clientService.RemoveClientAsync(client) > 0;
+            var result = await _identityResourceService.DeleteIdentityResourceAsync(client) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> IdentityResource(IdentityResourceDto identityResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { code = -1, msg = "参数错误" });
+            }
+
+            //Add new
+            if (identityResource.Id == 0)
+            {
+                var identityResourceId =await _identityResourceService.AddIdentityResourceAsync(identityResource);
+                return Json(new { code = identityResourceId > 0 ? 0 : -1, msg = identityResourceId > 0 ? "成功" : "失败" });
+            }
+
+            //Update
+            var result = await _identityResourceService.UpdateIdentityResourceAsync(identityResource) > 0;
 
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
