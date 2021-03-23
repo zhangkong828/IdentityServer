@@ -13,13 +13,17 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
     {
         private readonly IClientService _clientService;
         private readonly IIdentityResourceService _identityResourceService;
-        public ConfigurationController(IClientService clientService, IIdentityResourceService identityResourceService)
+        private readonly IApiResourceService _apiResourceService;
+        public ConfigurationController(IClientService clientService, IIdentityResourceService identityResourceService, IApiResourceService apiResourceService)
         {
             _clientService = clientService;
             _identityResourceService = identityResourceService;
+            _apiResourceService = apiResourceService;
         }
 
-
+        /// <summary>
+        /// 客户端
+        /// </summary>
         public IActionResult Clients()
         {
             return View();
@@ -142,7 +146,9 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         }
 
 
-
+        /// <summary>
+        /// 身份资源
+        /// </summary>
         public IActionResult IdentityResources()
         {
             return View();
@@ -214,6 +220,33 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         public async Task<IActionResult> DeleteIdentityResourceProperty(int id)
         {
             var result = await _identityResourceService.DeleteIdentityResourcePropertyAsync(id) > 0;
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+
+
+        /// <summary>
+        /// API资源
+        /// </summary>
+        public IActionResult ApiResources()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueryApiResources(int pageIndex, int pageSize, string key)
+        {
+            var pageData = await _identityResourceService.GetIdentityResourcesAsync(key, pageIndex, pageSize);
+            return Json(new { code = 0, data = pageData });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiResource(int id)
+        {
+            if (id == 0) return Json(new { code = -1, msg = "不存在" });
+
+            var result = await _identityResourceService.DeleteIdentityResourceAsync(id) > 0;
+
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
     }
