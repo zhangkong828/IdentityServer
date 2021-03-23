@@ -58,5 +58,10 @@ namespace IdentityServer.Service.Mappers
         {
             return Mapper.Map<IdentityResourceProperty>(identityResourceProperties);
         }
+
+        public static IdentityResourceProperty ToEntity(this IdentityResourcePropertyDto identityResourceProperty)
+        {
+            return Mapper.Map<IdentityResourceProperty>(identityResourceProperty);
+        }
     }
 }

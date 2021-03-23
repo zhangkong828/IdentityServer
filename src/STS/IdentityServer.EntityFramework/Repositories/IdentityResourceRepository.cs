@@ -66,17 +66,17 @@ namespace IdentityServer.EntityFramework.Repositories
             return existsWithSameName == null;
         }
 
-        public async Task<int> DeleteIdentityResourceAsync(IdentityResource identityResource)
+        public async Task<int> DeleteIdentityResourceAsync(int identityResourceId)
         {
-            var identityResourceToDelete = await DbContext.IdentityResources.Where(x => x.Id == identityResource.Id).SingleOrDefaultAsync();
+            var identityResourceToDelete = await DbContext.IdentityResources.Where(x => x.Id == identityResourceId).SingleOrDefaultAsync();
 
             DbContext.IdentityResources.Remove(identityResourceToDelete);
             return await AutoSaveChangesAsync();
         }
 
-        public async Task<int> DeleteIdentityResourcePropertyAsync(IdentityResourceProperty identityResourceProperty)
+        public async Task<int> DeleteIdentityResourcePropertyAsync(int identityResourcePropertyId)
         {
-            var propertyToDelete = await DbContext.IdentityResourceProperties.Where(x => x.Id == identityResourceProperty.Id).SingleOrDefaultAsync();
+            var propertyToDelete = await DbContext.IdentityResourceProperties.Where(x => x.Id == identityResourcePropertyId).SingleOrDefaultAsync();
 
             DbContext.IdentityResourceProperties.Remove(propertyToDelete);
             return await AutoSaveChangesAsync();
@@ -86,6 +86,7 @@ namespace IdentityServer.EntityFramework.Repositories
         {
             return DbContext.IdentityResources
                 .Include(x => x.UserClaims)
+                .Include(x=>x.Properties)
                 .Where(x => x.Id == identityResourceId)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();

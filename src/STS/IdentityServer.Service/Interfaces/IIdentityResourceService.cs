@@ -18,7 +18,7 @@ namespace IdentityServer.Service.Interfaces
 
         Task<int> UpdateIdentityResourceAsync(IdentityResourceDto identityResource);
 
-        Task<int> DeleteIdentityResourceAsync(IdentityResourceDto identityResource);
+        Task<int> DeleteIdentityResourceAsync(int identityResourceId);
 
 
         Task<IdentityResourcePropertiesDto> GetIdentityResourcePropertiesAsync(int identityResourceId, int page = 1,
@@ -26,9 +26,9 @@ namespace IdentityServer.Service.Interfaces
 
         Task<IdentityResourcePropertiesDto> GetIdentityResourcePropertyAsync(int identityResourcePropertyId);
 
-        Task<int> AddIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourceProperties);
+        Task<int> AddIdentityResourcePropertyAsync(int identityResourceId, IdentityResourcePropertyDto identityResourcePropertyDto);
 
-        Task<int> DeleteIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourceProperty);
+        Task<int> DeleteIdentityResourcePropertyAsync(int identityResourcePropertyId);
 
         Task<bool> CanInsertIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourcePropertiesDto);
     }

@@ -28,6 +28,7 @@ namespace IdentityServer.Service.Dtos.Configuration
 
         public bool Emphasize { get; set; }
         public List<string> UserClaims { get; set; }
+        public List<IdentityResourcePropertyDto> Properties { get; set; }
 
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }

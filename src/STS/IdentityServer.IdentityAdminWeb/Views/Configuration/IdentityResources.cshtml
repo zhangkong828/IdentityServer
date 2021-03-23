@@ -50,8 +50,8 @@
                                              label="操作">
                                 <template slot-scope="scope">
 
-                                    <el-button size="mini" @@click="editClient(scope.row)" plain>编辑</el-button>
-                                    <el-button type="danger" size="mini" @@click="deleteClient(scope.row)" plain>删除</el-button>
+                                    <el-button size="mini" @@click="editIdentityResource(scope.row)" plain>编辑</el-button>
+                                    <el-button type="danger" size="mini" @@click="deleteIdentityResource(scope.row)" plain>删除</el-button>
 
                                 </template>
                             </el-table-column>
@@ -269,10 +269,10 @@
                         }
                     });
                 },
-                editClient(item) {
-                    window.location.href = "/Configuration/Client/" + item.id;
+                editIdentityResource(item) {
+                    window.location.href = "/Configuration/IdentityResource/" + item.id;
                 },
-                deleteClient(item) {
+                deleteIdentityResource(item) {
                     var that = this;
                     this.$confirm('确定删除吗?', '提示', {
                         confirmButtonText: '确定',

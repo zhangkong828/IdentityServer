@@ -160,10 +160,7 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         {
             if (id == 0) return Json(new { code = -1, msg = "不存在" });
 
-            var client = await _identityResourceService.GetIdentityResourceAsync(id);
-            if (client == null) return Json(new { code = -1, msg = "不存在" });
-
-            var result = await _identityResourceService.DeleteIdentityResourceAsync(client) > 0;
+            var result = await _identityResourceService.DeleteIdentityResourceAsync(id) > 0;
 
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
@@ -186,6 +183,37 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
             //Update
             var result = await _identityResourceService.UpdateIdentityResourceAsync(identityResource) > 0;
 
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpGet]
+        public IActionResult IdentityResource(int id)
+        {
+            ViewBag.IdentityResourceId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueryIdentityResource(int id)
+        {
+            if (id == 0) Json(new { code = -1, msg = "不存在" });
+
+            var client = await _identityResourceService.GetIdentityResourceAsync(id);
+            return Json(new { code = 0, data = client });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddIdentityResourceProperty(AddIdentityResourcePropertyRequest request)
+        {
+            var result = await _identityResourceService.AddIdentityResourcePropertyAsync(request.IdentityResourceId, request.IdentityResourceProperty) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteIdentityResourceProperty(int id)
+        {
+            var result = await _identityResourceService.DeleteIdentityResourcePropertyAsync(id) > 0;
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
     }

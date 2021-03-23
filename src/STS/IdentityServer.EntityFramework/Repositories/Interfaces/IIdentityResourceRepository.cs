@@ -19,7 +19,7 @@ namespace IdentityServer.EntityFramework.Repositories.Interfaces
 
         Task<int> UpdateIdentityResourceAsync(IdentityResource identityResource);
 
-        Task<int> DeleteIdentityResourceAsync(IdentityResource identityResource);
+        Task<int> DeleteIdentityResourceAsync(int identityResourceId);
 
         Task<bool> CanInsertIdentityResourcePropertyAsync(IdentityResourceProperty identityResourceProperty);
 
@@ -31,7 +31,7 @@ namespace IdentityServer.EntityFramework.Repositories.Interfaces
         Task<int> AddIdentityResourcePropertyAsync(int identityResourceId,
             IdentityResourceProperty identityResourceProperty);
 
-        Task<int> DeleteIdentityResourcePropertyAsync(IdentityResourceProperty identityResourceProperty);
+        Task<int> DeleteIdentityResourcePropertyAsync(int identityResourcePropertyId);
 
         Task<int> SaveAllChangesAsync();
     }

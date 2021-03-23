@@ -32,17 +32,11 @@ namespace IdentityServer.Service
             return saved;
         }
 
-        public async Task<int> AddIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourceProperties)
+        public async Task<int> AddIdentityResourcePropertyAsync(int identityResourceId, IdentityResourcePropertyDto identityResourcePropertyDto)
         {
-            var canInsert = await CanInsertIdentityResourcePropertyAsync(identityResourceProperties);
-            if (!canInsert)
-            {
-                return -1;
-            }
+            var identityResourceProperty = identityResourcePropertyDto.ToEntity();
 
-            var identityResourceProperty = identityResourceProperties.ToEntity();
-
-            var added = await IdentityResourceRepository.AddIdentityResourcePropertyAsync(identityResourceProperties.IdentityResourceId, identityResourceProperty);
+            var added = await IdentityResourceRepository.AddIdentityResourcePropertyAsync(identityResourceId, identityResourceProperty);
 
             return added;
         }
@@ -61,20 +55,16 @@ namespace IdentityServer.Service
             return await IdentityResourceRepository.CanInsertIdentityResourcePropertyAsync(resource);
         }
 
-        public async Task<int> DeleteIdentityResourceAsync(IdentityResourceDto identityResource)
+        public async Task<int> DeleteIdentityResourceAsync(int identityResourceId)
         {
-            var resource = identityResource.ToEntity();
-
-            var deleted = await IdentityResourceRepository.DeleteIdentityResourceAsync(resource);
+            var deleted = await IdentityResourceRepository.DeleteIdentityResourceAsync(identityResourceId);
 
             return deleted;
         }
 
-        public async Task<int> DeleteIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourceProperty)
+        public async Task<int> DeleteIdentityResourcePropertyAsync(int identityResourcePropertyId)
         {
-            var propertyEntity = identityResourceProperty.ToEntity();
-
-            var deleted = await IdentityResourceRepository.DeleteIdentityResourcePropertyAsync(propertyEntity);
+            var deleted = await IdentityResourceRepository.DeleteIdentityResourcePropertyAsync(identityResourcePropertyId);
 
             return deleted;
         }
