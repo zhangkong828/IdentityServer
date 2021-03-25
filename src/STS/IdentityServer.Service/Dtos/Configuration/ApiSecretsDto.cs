@@ -39,6 +39,7 @@ namespace IdentityServer.Service.Dtos.Configuration
 
 		public int PageSize { get; set; }
 
-		public List<ApiSecretDto> ApiSecrets { get; set; }
+		public List<ApiSecretDto> ApiSecrets { get; set; } 
+
 	}
 }
