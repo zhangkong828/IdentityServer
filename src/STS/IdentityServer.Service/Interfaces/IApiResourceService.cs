@@ -29,7 +29,7 @@ namespace IdentityServer.Service.Interfaces
 
         Task<int> DeleteApiResourcePropertyAsync(int apiResourcePropertyId);
 
-        Task<bool> CanInsertApiResourcePropertyAsync(ApiResourcePropertiesDto apiResourceProperty);
+        Task<bool> CanInsertApiResourcePropertyAsync(ApiResourcePropertyDto apiResourceProperty);
 
 
 

@@ -125,6 +125,8 @@ namespace IdentityServer.EntityFramework.Repositories
             return await DbContext.ApiResources
               .Include(x => x.UserClaims)
               .Include(x => x.Scopes)
+              .Include(x => x.Properties)
+              .Include(x => x.Secrets)
               .Where(x => x.Id == apiResourceId)
               .AsNoTracking()
               .SingleOrDefaultAsync();

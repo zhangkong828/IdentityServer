@@ -81,7 +81,7 @@
         <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
                 <span>添加属性</span>
-                <el-button style="float: right; padding: 3px 0" type="text" @@click="addIdentityResourceProperty">添加</el-button>
+                <el-button style="float: right; padding: 3px 0" type="text" @@click="addApiResourceProperty">添加</el-button>
             </div>
             <el-form :model="apiResourceProperty" label-width="250px" size="medium">
                 <el-form-item>
@@ -109,7 +109,7 @@
             <el-table-column fixed="right"
                              label="操作">
                 <template slot-scope="scope">
-                    <el-button size="mini" type="danger" plain @@click="deleteIdentityResourceProperty(scope.row)">删除</el-button>
+                    <el-button size="mini" type="danger" plain @@click="deleteApiResourceProperty(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -118,6 +118,73 @@
         </div>
     </el-dialog>
 
+    <el-dialog title="API资源密钥" :visible="dialogForApiResourceSecrets" :close-on-press-escape="false" :show-close="false">
+        <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix">
+                <span>添加密钥</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @@click="addApiResourceSecret">添加</el-button>
+            </div>
+            <el-form :model="apiResourceSecret" label-width="250px" size="medium">
+                <el-form-item>
+                    <label slot="label">
+                        <span>密钥类型</span><el-tooltip class="item" content="密钥类型" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                    </label>
+                    <el-select v-model="apiResourceSecret.type" placeholder="请选择" style="width:100%">
+                        <el-option v-for="item in apiResourceSecretTypesOptions"
+                                   :key="item.value"
+                                   :label="item.label"
+                                   :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <label slot="label">
+                        <span>值</span><el-tooltip class="item" content="密钥值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                    </label>
+                    <el-input v-model="apiResourceSecret.value"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <label slot="label">
+                        <span>到期时间</span><el-tooltip class="item" content="到期时间" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                    </label>
+                    <el-date-picker v-model="apiResourceSecret.expiration" type="datetime" placeholder="选择到期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                    <label slot="label">
+                        <span>描述</span><el-tooltip class="item" content="描述" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                    </label>
+                    <el-input v-model="apiResourceSecret.description"></el-input>
+                </el-form-item>
+            </el-form>
+        </el-card>
+
+        <el-table :data="apiResource.secrets" style="width: 100%">
+            <el-table-column prop="type"
+                             label="类型">
+            </el-table-column>
+            <el-table-column prop="value"
+                             label="值">
+            </el-table-column>
+            <el-table-column prop="description"
+                             label="描述">
+            </el-table-column>
+            <el-table-column prop="expiration" :formatter="formatDate"
+                             label="到期时间">
+            </el-table-column>
+            <el-table-column prop="created" :formatter="formatDate"
+                             label="创建时间">
+            </el-table-column>
+            <el-table-column fixed="right"
+                             label="操作">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="danger" plain @@click="deleteApiResourceSecret(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @@click="dialogForClientSecrets = false;">关闭</el-button>
+        </div>
+    </el-dialog>
 
 </div>
 
@@ -173,6 +240,26 @@
                 ],
                 dialogForApiResourceProperties: false,
                 apiResourceProperty: {},
+                dialogForApiResourceSecrets: false,
+                apiResourceSecret: {},
+                apiResourceSecretTypesOptions: [
+                    {
+                        value: "SharedSecret",
+                        label: "SharedSecret"
+                    },
+                    {
+                        value: "X509Thumbprint",
+                        label: "X509Thumbprint"
+                    },
+                    {
+                        value: "X509Name",
+                        label: "X509Name"
+                    },
+                    {
+                        value: "X509CertificateBase64",
+                        label: "X509CertificateBase64"
+                    }
+                ],
             },
             methods: {
                 loadData(apiResourceId) {
@@ -235,12 +322,60 @@
                     var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
                     return Y + M + D + h + m + s;
                 },
-                dialogApiResourceSecrets() { },
+                dialogApiResourceSecrets() {
+                    this.apiResourceSecret = { type: "SharedSecret"};
+                    this.dialogForApiResourceSecrets = true;
+                },
+                addApiResourceSecret() {
+                    var that = this;
+                    if (!that.apiResourceSecret.value || that.apiResourceSecret.value === "") {
+                        this.$message.error('值不能为空');
+                        return;
+                    }
+                    $.ajax({
+                        url: "/Configuration/AddApiResourceSecret",
+                        type: "post",
+                        data: { apiResourceId: that.apiResource.id, apiResourceSecret: that.apiResourceSecret },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.code === 0) {
+                                that.loadData(that.apiResource.id);
+                                that.apiResourceProperty = {};
+                            } else {
+                                this.$message.error(response.msg);
+                            }
+                        }
+                    });
+                },
+                deleteApiResourceSecret(item) {
+                    var that = this;
+                    this.$confirm('确定删除吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error',
+                        callback: action => {
+                            if (action == 'confirm') {
+                                $.ajax({
+                                    url: "/Configuration/DeleteApiResourceSecret",
+                                    type: "post",
+                                    data: { id: item.id },
+                                    success: function (response) {
+                                        if (response.code === 0) {
+                                            that.loadData(that.apiResource.id);
+                                        } else {
+                                            this.$message.error(response.msg);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
                 dialogApiResourceProperties() {
                     this.apiResourceProperty = { };
                     this.dialogForApiResourceProperties = true;
                 },
-                addIdentityResourceProperty() {
+                addApiResourceProperty() {
                     var that = this;
                     if (!that.apiResourceProperty.key || that.apiResourceProperty.key === "") {
                         this.$message.error('键不能为空');
@@ -251,7 +386,7 @@
                         return;
                     }
                     $.ajax({
-                        url: "/Configuration/AddIdentityResourceProperty",
+                        url: "/Configuration/AddApiResourceProperty",
                         type: "post",
                         data: { apiResourceId: that.apiResource.id, apiResourceProperty: that.apiResourceProperty },
                         success: function (response) {
@@ -265,7 +400,7 @@
                         }
                     });
                 },
-                deleteIdentityResourceProperty(item) {
+                deleteApiResourceProperty(item) {
                     var that = this;
                     this.$confirm('确定删除吗?', '提示', {
                         confirmButtonText: '确定',
@@ -274,7 +409,7 @@
                         callback: action => {
                             if (action == 'confirm') {
                                 $.ajax({
-                                    url: "/Configuration/DeleteIdentityResourceProperty",
+                                    url: "/Configuration/DeleteApiResourceProperty",
                                     type: "post",
                                     data: { id: item.id },
                                     success: function (response) {
