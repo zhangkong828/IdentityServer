@@ -60,9 +60,9 @@ namespace IdentityServer.Service.Mappers
             return secret == null ? null : Mapper.Map<ApiResourceSecret>(secret);
         }
 
-        public static ApiResourceProperty ToEntity(this ApiResourcePropertiesDto apiResourceProperties)
+        public static ApiResourceProperty ToEntity(this ApiResourcePropertyDto apiResourceProperty)
         {
-            return Mapper.Map<ApiResourceProperty>(apiResourceProperties);
+            return Mapper.Map<ApiResourceProperty>(apiResourceProperty);
         }
     }
 }

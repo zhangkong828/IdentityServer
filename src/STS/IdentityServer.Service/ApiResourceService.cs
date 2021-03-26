@@ -35,17 +35,16 @@ namespace IdentityServer.Service
             return added;
         }
 
-        public async Task<int> AddApiResourcePropertyAsync(ApiResourcePropertiesDto apiResourceProperties)
+        public async Task<int> AddApiResourcePropertyAsync(int apiResourceId, ApiResourcePropertyDto apiResourcePropertyDto)
         {
-            var canInsert = await CanInsertApiResourcePropertyAsync(apiResourceProperties);
+            var canInsert =await CanInsertApiResourcePropertyAsync(apiResourcePropertyDto);
             if (!canInsert)
             {
                 return -1;
             }
+            var apiResourceProperty = apiResourcePropertyDto.ToEntity();
 
-            var apiResourceProperty = apiResourceProperties.ToEntity();
-
-            var saved = await ApiResourceRepository.AddApiResourcePropertyAsync(apiResourceProperties.ApiResourceId, apiResourceProperty);
+            var saved = await ApiResourceRepository.AddApiResourcePropertyAsync(apiResourceId, apiResourceProperty);
 
             return saved;
         }
@@ -71,27 +70,23 @@ namespace IdentityServer.Service
             return await ApiResourceRepository.CanInsertApiResourceAsync(resource);
         }
 
-        public async Task<bool> CanInsertApiResourcePropertyAsync(ApiResourcePropertiesDto apiResourceProperty)
+        public async Task<bool> CanInsertApiResourcePropertyAsync(ApiResourcePropertyDto apiResourceProperty)
         {
             var resource = apiResourceProperty.ToEntity();
 
             return await ApiResourceRepository.CanInsertApiResourcePropertyAsync(resource);
         }
 
-        public async Task<int> DeleteApiResourceAsync(ApiResourceDto apiResource)
+        public async Task<int> DeleteApiResourceAsync(int apiResourceId)
         {
-            var resource = apiResource.ToEntity();
-
-            var deleted = await ApiResourceRepository.DeleteApiResourceAsync(resource);
+            var deleted = await ApiResourceRepository.DeleteApiResourceAsync(apiResourceId);
 
             return deleted;
         }
 
-        public async Task<int> DeleteApiResourcePropertyAsync(ApiResourcePropertiesDto apiResourceProperty)
+        public async Task<int> DeleteApiResourcePropertyAsync(int apiResourcePropertyId)
         {
-            var propertyEntity = apiResourceProperty.ToEntity();
-
-            var deleted = await ApiResourceRepository.DeleteApiResourcePropertyAsync(propertyEntity);
+            var deleted = await ApiResourceRepository.DeleteApiResourcePropertyAsync(apiResourcePropertyId);
 
             return deleted;
         }

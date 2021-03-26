@@ -236,7 +236,7 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> QueryApiResources(int pageIndex, int pageSize, string key)
         {
-            var pageData = await _identityResourceService.GetIdentityResourcesAsync(key, pageIndex, pageSize);
+            var pageData = await _apiResourceService.GetApiResourcesAsync(key, pageIndex, pageSize);
             return Json(new { code = 0, data = pageData });
         }
 
@@ -245,8 +245,75 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         {
             if (id == 0) return Json(new { code = -1, msg = "不存在" });
 
-            var result = await _identityResourceService.DeleteIdentityResourceAsync(id) > 0;
+            var result = await _apiResourceService.DeleteApiResourceAsync(id) > 0;
 
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApiResource(ApiResourceDto apiResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { code = -1, msg = "参数错误" });
+            }
+
+            //Add new
+            if (apiResource.Id == 0)
+            {
+                var apiResourceId = await _apiResourceService.AddApiResourceAsync(apiResource);
+                return Json(new { code = apiResourceId > 0 ? 0 : -1, msg = apiResourceId > 0 ? "成功" : "失败" });
+            }
+
+            //Update
+            var result = await _apiResourceService.UpdateApiResourceAsync(apiResource) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpGet]
+        public IActionResult ApiResource(int id)
+        {
+            ViewBag.ApiResourceId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueryApiResource(int id)
+        {
+            if (id == 0) Json(new { code = -1, msg = "不存在" });
+
+            var client = await _apiResourceService.GetApiResourceAsync(id);
+            return Json(new { code = 0, data = client });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddApiResourceProperty(AddApiResourcePropertyRequest request)
+        {
+            var result = await _apiResourceService.AddApiResourcePropertyAsync(request.ApiResourceId, request.ApiResourceProperty) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiResourceProperty(int id)
+        {
+            var result = await _apiResourceService.DeleteApiResourcePropertyAsync(id) > 0;
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddApiResourceSecret(AddApiResourceSecretRequest request)
+        {
+            var result = await _apiResourceService.AddApiResourceSecretAsync(request.ApiResourceId, request.ApiResourceSecret) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiResourceSecret(int id)
+        {
+            var result = await _apiResourceService.DeleteApiResourceSecretAsync(id) > 0;
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
     }

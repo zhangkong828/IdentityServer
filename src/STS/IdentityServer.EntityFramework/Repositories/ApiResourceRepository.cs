@@ -94,18 +94,18 @@ namespace IdentityServer.EntityFramework.Repositories
             }
         }
 
-        public async Task<int> DeleteApiResourceAsync(ApiResource apiResource)
+        public async Task<int> DeleteApiResourceAsync(int apiResourceId)
         {
-            var resource = await DbContext.ApiResources.Where(x => x.Id == apiResource.Id).SingleOrDefaultAsync();
+            var resource = await DbContext.ApiResources.Where(x => x.Id == apiResourceId).SingleOrDefaultAsync();
 
             DbContext.Remove(resource);
 
             return await AutoSaveChangesAsync();
         }
 
-        public async Task<int> DeleteApiResourcePropertyAsync(ApiResourceProperty apiResourceProperty)
+        public async Task<int> DeleteApiResourcePropertyAsync(int apiResourcePropertyId)
         {
-            var propertyToDelete = await DbContext.ApiResourceProperties.Where(x => x.Id == apiResourceProperty.Id).SingleOrDefaultAsync();
+            var propertyToDelete = await DbContext.ApiResourceProperties.Where(x => x.Id == apiResourcePropertyId).SingleOrDefaultAsync();
 
             DbContext.ApiResourceProperties.Remove(propertyToDelete);
             return await AutoSaveChangesAsync();

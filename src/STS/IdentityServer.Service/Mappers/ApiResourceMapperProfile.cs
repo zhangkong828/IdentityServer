@@ -41,14 +41,8 @@ namespace IdentityServer.Service.Mappers
 
             // model to entity
             CreateMap<ApiResourceDto, ApiResource>(MemberList.Source)
-                .ForMember(x => x.UserClaims, opts => opts.MapFrom(src => src.UserClaims.Select(x => new ApiResourceClaim { Type = x })));
-
-            CreateMap<ApiScopesDto, ApiScope>(MemberList.Source)
-                .ForMember(x => x.UserClaims, opts => opts.MapFrom(src => src.UserClaims.Select(x => new ApiScopeClaim { Type = x })))
-                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.ApiScopeId));
-
-            CreateMap<ApiScopeDto, ApiScope>(MemberList.Source)
-                .ForMember(x => x.UserClaims, opts => opts.MapFrom(src => src.UserClaims.Select(x => new ApiScopeClaim { Type = x })));
+                .ForMember(x => x.UserClaims, opts => opts.MapFrom(src => src.UserClaims.Select(x => new ApiResourceClaim { Type = x })))
+                .ForMember(x => x.Scopes, opts => opts.MapFrom(src => src.Scopes.Select(x => new ApiResourceScope { Scope = x })));
 
             CreateMap<ApiResourcePropertiesDto, ApiResourceProperty>(MemberList.Source)
                 .ForMember(x => x.ApiResource, dto => dto.MapFrom(src => new ApiResource() { Id = src.ApiResourceId }))

@@ -24,13 +24,13 @@ namespace IdentityServer.Service.Dtos.Configuration
 		public bool Enabled { get; set; } = true;
 
 		public string AllowedAccessTokenSigningAlgorithms { get; set; }
-		public bool ShowInDiscoveryDocument { get; set; }
+		public bool ShowInDiscoveryDocument { get; set; } = true;
 
 		public List<string> UserClaims { get; set; }
 
 		public string UserClaimsItems { get; set; }
 
-		public DateTime Created { get; set; }
+		public DateTime Created { get; set; } = DateTime.Now;
 		public DateTime? Updated { get; set; }
 		public DateTime? LastAccessed { get; set; }
 		public bool NonEditable { get; set; }

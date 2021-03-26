@@ -1,0 +1,301 @@
+﻿
+@{
+    ViewData["Title"] = "API资源";
+}
+
+<div id="apiResourceApp">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading">
+                    <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">API资源</h4></div>
+                </div>
+                <div class="panel-body">
+                    <el-form label-position="right" label-width="250px">
+                        <el-form-item>
+                            <label slot="label">
+                                <span>名称</span><el-tooltip class="item" content="API 的唯一名称。 此值用于自我认证，并将添加到传给受众的访问令牌 access_token 中" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-input v-model="apiResource.name"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <label slot="label">
+                                <span>显示名称</span><el-tooltip class="item" content="该值将用于例如 在同意屏幕上" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-input v-model="apiResource.displayName"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <label slot="label">
+                                <span>描述</span><el-tooltip class="item" content="该值将用于例如 在同意屏幕上" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-input v-model="apiResource.description"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <label slot="label">
+                                <span>启用</span><el-tooltip class="item" content="指示此资源是否已启用且可以请求。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-switch v-model="apiResource.enabled"></el-switch>
+                        </el-form-item>
+                        <el-form-item>
+                            <label slot="label">
+                                <span>作用域</span><el-tooltip class="item" content="API 必须至少有一个作用域。 每个作用域可以有不同的设置" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-select v-model="apiResource.scopes" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <label slot="label">
+                                <span>用户声明</span><el-tooltip class="item" content="应包含在访问令牌中的关联用户声明类型的列表" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-select v-model="apiResource.userClaims" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                                <el-option v-for="item in userClaimsOptions"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <label slot="label">
+                                <span>密钥</span><el-tooltip class="item" content="API 密钥用于内省端点。 API 可以使用 API 名称和密钥进行内省验证" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-button type="primary" size="small" @@click="dialogApiResourceSecrets">管理API资源属性</el-button>
+                        </el-form-item>
+                        <el-form-item>
+                            <label slot="label">
+                                <span>属性</span><el-tooltip class="item" content="需要保留任何自定义 Api 资源特定值的字典" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                            </label>
+                            <el-button type="primary" size="small" @@click="dialogApiResourceProperties">管理API资源属性</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <el-button size="small" type="primary" plain icon="el-icon-refresh-right" @@click="editApiResource">保存</el-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <el-dialog title="API资源属性" :visible="dialogForApiResourceProperties" :close-on-press-escape="false" :show-close="false">
+        <el-card class="box-card" shadow="never">
+            <div slot="header" class="clearfix">
+                <span>添加属性</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @@click="addIdentityResourceProperty">添加</el-button>
+            </div>
+            <el-form :model="apiResourceProperty" label-width="250px" size="medium">
+                <el-form-item>
+                    <label slot="label">
+                        <span>键</span><el-tooltip class="item" content="属性键" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                    </label>
+                    <el-input v-model="apiResourceProperty.key"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <label slot="label">
+                        <span>值</span><el-tooltip class="item" content="属性值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                    </label>
+                    <el-input v-model="apiResourceProperty.value"></el-input>
+                </el-form-item>
+            </el-form>
+        </el-card>
+
+        <el-table :data="apiResource.properties" style="width: 100%">
+            <el-table-column prop="key"
+                             label="键">
+            </el-table-column>
+            <el-table-column prop="value"
+                             label="值">
+            </el-table-column>
+            <el-table-column fixed="right"
+                             label="操作">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="danger" plain @@click="deleteIdentityResourceProperty(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @@click="dialogForApiResourceProperties = false;">关闭</el-button>
+        </div>
+    </el-dialog>
+
+
+</div>
+
+
+@section Scripts{
+    <script>
+        var apiResourceApp = new Vue({
+            el: '#apiResourceApp',
+            data: {
+                screenLoading: false,
+                apiResource: {},
+                userClaimsOptions: [
+                    {
+                        value: 'profile',
+                        label: 'profile'
+                    },
+                    {
+                        value: 'website',
+                        label: 'website'
+                    },
+                    {
+                        value: 'updated_at',
+                        label: 'updated_at'
+                    },
+                    {
+                        value: 'preferred_username',
+                        label: 'preferred_username'
+                    },
+                    {
+                        value: 'picture',
+                        label: 'picture'
+                    },
+                    {
+                        value: 'nickname',
+                        label: 'nickname'
+                    },
+                    {
+                        value: 'name',
+                        label: 'name'
+                    },
+                    {
+                        value: 'gender',
+                        label: 'gender'
+                    },
+                    {
+                        value: 'birthdate',
+                        label: 'birthdate'
+                    },
+                    {
+                        value: 'address',
+                        label: 'address'
+                    }
+                ],
+                dialogForApiResourceProperties: false,
+                apiResourceProperty: {},
+            },
+            methods: {
+                loadData(apiResourceId) {
+                    var that = this;
+                    $.ajax({
+                        url: "/Configuration/QueryApiResource",
+                        type: "post",
+                        data: { id: apiResourceId },
+                        beforeSend: function () { that.screenLoading = true; },
+                        complete: function () { that.screenLoading = false; },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.code === 0) {
+                                that.apiResource = response.data;
+                            } else {
+                                window.location.href = "/Configuration/ApiResources";
+                            }
+                        }
+                    });
+                },
+                editApiResource() {
+                    var that = this;
+                    var apiResource = this.apiResource;
+                    if (!apiResource.name || apiResource.name === "") {
+                        this.$message.error('API资源名称不能为空');
+                        return;
+                    }
+                    if (!apiResource.scopes || apiResource.scopes.length == 0) {
+                        this.$message.error('API资源作用域至少有一个');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "/Configuration/ApiResource",
+                        type: "post",
+                        data: apiResource,
+                        beforeSend: function () { that.screenLoading = true; },
+                        complete: function () { that.screenLoading = false; },
+                        success: function (response) {
+                            if (response.code === 0) {
+                                that.$message.success(response.msg);
+                                that.loadData(apiResource.id);
+                            } else {
+                                that.$message.error(response.msg);
+                            }
+                        }
+                    });
+                },
+                formatDate(row, column) {
+                    var dt = row[column.property]
+                    if (dt === undefined || dt === null) {
+                        return ''
+                    }
+                    var date = new Date(dt)
+                    var Y = date.getFullYear() + '-';
+                    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                    var D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+                    var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                    var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                    var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                    return Y + M + D + h + m + s;
+                },
+                dialogApiResourceSecrets() { },
+                dialogApiResourceProperties() {
+                    this.apiResourceProperty = { };
+                    this.dialogForApiResourceProperties = true;
+                },
+                addIdentityResourceProperty() {
+                    var that = this;
+                    if (!that.apiResourceProperty.key || that.apiResourceProperty.key === "") {
+                        this.$message.error('键不能为空');
+                        return;
+                    }
+                    if (!that.apiResourceProperty.value || that.apiResourceProperty.value === "") {
+                        this.$message.error('值不能为空');
+                        return;
+                    }
+                    $.ajax({
+                        url: "/Configuration/AddIdentityResourceProperty",
+                        type: "post",
+                        data: { apiResourceId: that.apiResource.id, apiResourceProperty: that.apiResourceProperty },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.code === 0) {
+                                that.loadData(that.apiResource.id);
+                                that.apiResourceProperty = {};
+                            } else {
+                                this.$message.error(response.msg);
+                            }
+                        }
+                    });
+                },
+                deleteIdentityResourceProperty(item) {
+                    var that = this;
+                    this.$confirm('确定删除吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error',
+                        callback: action => {
+                            if (action == 'confirm') {
+                                $.ajax({
+                                    url: "/Configuration/DeleteIdentityResourceProperty",
+                                    type: "post",
+                                    data: { id: item.id },
+                                    success: function (response) {
+                                        if (response.code === 0) {
+                                            that.loadData(that.apiResource.id);
+                                        } else {
+                                            this.$message.error(response.msg);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+
+            },
+            mounted: function () {
+                var that = this;
+                that.loadData(@ViewBag.ApiResourceId);
+            }
+        });
+    </script>
+}
+
