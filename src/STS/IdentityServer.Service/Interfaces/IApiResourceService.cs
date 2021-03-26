@@ -10,6 +10,17 @@ namespace IdentityServer.Service.Interfaces
     {
         Task<ApiResourcesDto> GetApiResourcesAsync(string search, int page = 1, int pageSize = 10);
 
+        Task<ApiResourceDto> GetApiResourceAsync(int apiResourceId); 
+        Task<int> AddApiResourceAsync(ApiResourceDto apiResource);
+
+        Task<int> UpdateApiResourceAsync(ApiResourceDto apiResource);
+
+        Task<int> DeleteApiResourceAsync(ApiResourceDto apiResource);
+
+        Task<bool> CanInsertApiResourceAsync(ApiResourceDto apiResource);
+
+
+
         Task<ApiResourcePropertiesDto> GetApiResourcePropertiesAsync(int apiResourceId, int page = 1, int pageSize = 10);
 
         Task<ApiResourcePropertiesDto> GetApiResourcePropertyAsync(int apiResourcePropertyId);
@@ -20,35 +31,17 @@ namespace IdentityServer.Service.Interfaces
 
         Task<bool> CanInsertApiResourcePropertyAsync(ApiResourcePropertiesDto apiResourceProperty);
 
-        Task<ApiResourceDto> GetApiResourceAsync(int apiResourceId);
 
-        Task<int> AddApiResourceAsync(ApiResourceDto apiResource);
 
-        Task<int> UpdateApiResourceAsync(ApiResourceDto apiResource);
 
-        Task<int> DeleteApiResourceAsync(ApiResourceDto apiResource);
+        Task<ApiResourceSecretsDto> GetApiResourceSecretsAsync(int apiResourceId, int page = 1, int pageSize = 10);
 
-        Task<bool> CanInsertApiResourceAsync(ApiResourceDto apiResource);
+        Task<int> AddApiResourceSecretAsync(int apiResourceId, ApiResourceSecretDto apiSecret);
 
-        Task<ApiScopesDto> GetApiScopesAsync(int apiResourceId, int page = 1, int pageSize = 10);
+        Task<ApiResourceSecretDto> GetApiResourceSecretAsync(int apiSecretId);
 
-        Task<ApiScopesDto> GetApiScopeAsync(int apiResourceId, int apiScopeId);
+        Task<int> DeleteApiResourceSecretAsync(int apiSecretId);
 
-        Task<int> AddApiScopeAsync(ApiScopesDto apiScope);
-
-        Task<int> UpdateApiScopeAsync(ApiScopesDto apiScope);
-
-        Task<int> DeleteApiScopeAsync(ApiScopesDto apiScope);
-
-        Task<ApiSecretsDto> GetApiSecretsAsync(int apiResourceId, int page = 1, int pageSize = 10);
-
-        Task<int> AddApiSecretAsync(ApiSecretsDto apiSecret);
-
-        Task<ApiSecretsDto> GetApiSecretAsync(int apiSecretId);
-
-        Task<int> DeleteApiSecretAsync(ApiSecretsDto apiSecret);
-
-        Task<bool> CanInsertApiScopeAsync(ApiScopesDto apiScopes);
 
         Task<string> GetApiResourceNameAsync(int apiResourceId);
     }

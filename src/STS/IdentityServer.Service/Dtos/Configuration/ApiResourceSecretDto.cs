@@ -13,7 +13,7 @@ namespace IdentityServer.Service.Dtos.Configuration
         public string Value { get; set; }
         public DateTime? Expiration { get; set; }
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = "SharedSecret";
         public DateTime Created { get; set; }
     }
 }

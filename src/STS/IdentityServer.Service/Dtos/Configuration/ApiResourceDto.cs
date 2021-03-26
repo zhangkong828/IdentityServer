@@ -37,7 +37,7 @@ namespace IdentityServer.Service.Dtos.Configuration
 
 
 		public List<ApiResourceSecretDto> Secrets { get; set; }
-		public List<ApiResourceScopeDto> Scopes { get; set; }
+		public List<string> Scopes { get; set; }
 		public List<ApiResourcePropertyDto> Properties { get; set; }
 	}
 }
