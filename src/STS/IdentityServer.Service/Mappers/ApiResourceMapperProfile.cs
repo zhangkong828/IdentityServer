@@ -19,7 +19,8 @@ namespace IdentityServer.Service.Mappers
                 .ForMember(x => x.Scopes, opts => opts.MapFrom(src => src.Scopes.Select(x => x.Scope)));
 
             CreateMap<ApiResourceSecret, ApiResourceSecretDto>(MemberList.Destination)
-                .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null));
+                .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null))
+                .ReverseMap();
 
             CreateMap<ApiResourceProperty, ApiResourcePropertyDto>(MemberList.Destination)
                 .ReverseMap();
@@ -43,10 +44,6 @@ namespace IdentityServer.Service.Mappers
             CreateMap<ApiResourceDto, ApiResource>(MemberList.Source)
                 .ForMember(x => x.UserClaims, opts => opts.MapFrom(src => src.UserClaims.Select(x => new ApiResourceClaim { Type = x })))
                 .ForMember(x => x.Scopes, opts => opts.MapFrom(src => src.Scopes.Select(x => new ApiResourceScope { Scope = x })));
-
-            CreateMap<ApiResourcePropertiesDto, ApiResourceProperty>(MemberList.Source)
-                .ForMember(x => x.ApiResource, dto => dto.MapFrom(src => new ApiResource() { Id = src.ApiResourceId }))
-                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.ApiResourcePropertyId));
         }
     }
 }

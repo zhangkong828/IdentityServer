@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace IdentityServer.Service.Dtos
+namespace IdentityServer.Service.Dtos.Configuration
 {
 	public class ApiSecretDto
 	{

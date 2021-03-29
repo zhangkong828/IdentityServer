@@ -29,11 +29,6 @@ namespace IdentityServer.Service.Mappers
             return resource == null ? null : Mapper.Map<IdentityResourcesDto>(resource);
         }
 
-        public static List<IdentityResourceDto> ToModel(this List<IdentityResource> resource)
-        {
-            return resource == null ? null : Mapper.Map<List<IdentityResourceDto>>(resource);
-        }
-
         public static IdentityResource ToEntity(this IdentityResourceDto resource)
         {
             return resource == null ? null : Mapper.Map<IdentityResource>(resource);
@@ -49,10 +44,6 @@ namespace IdentityServer.Service.Mappers
             return Mapper.Map<IdentityResourcePropertiesDto>(identityResourceProperty);
         }
 
-        public static List<IdentityResource> ToEntity(this List<IdentityResourceDto> resource)
-        {
-            return resource == null ? null : Mapper.Map<List<IdentityResource>>(resource);
-        }
 
         public static IdentityResourceProperty ToEntity(this IdentityResourcePropertiesDto identityResourceProperties)
         {
