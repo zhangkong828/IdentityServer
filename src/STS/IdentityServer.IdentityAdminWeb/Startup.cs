@@ -122,11 +122,13 @@ namespace IdentityServer.IdentityAdminWeb
             services.AddTransient<IClientRepository, ClientRepository<IdentityServerConfigurationDbContext>>();
             services.AddTransient<IIdentityResourceRepository, IdentityResourceRepository<IdentityServerConfigurationDbContext>>();
             services.AddTransient<IApiResourceRepository, ApiResourceRepository<IdentityServerConfigurationDbContext>>();
+            services.AddTransient<IApiScopeRepository, ApiScopeRepository<IdentityServerConfigurationDbContext>>();
 
             //Services
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IIdentityResourceService, IdentityResourceService>();
             services.AddTransient<IApiResourceService, ApiResourceService>();
+            services.AddTransient<IApiScopeService, ApiScopeService>();
         }
     }
 }
