@@ -14,11 +14,13 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         private readonly IClientService _clientService;
         private readonly IIdentityResourceService _identityResourceService;
         private readonly IApiResourceService _apiResourceService;
-        public ConfigurationController(IClientService clientService, IIdentityResourceService identityResourceService, IApiResourceService apiResourceService)
+        private readonly IApiScopeService _apiScopeService;
+        public ConfigurationController(IClientService clientService, IIdentityResourceService identityResourceService, IApiResourceService apiResourceService, IApiScopeService apiScopeService)
         {
             _clientService = clientService;
             _identityResourceService = identityResourceService;
             _apiResourceService = apiResourceService;
+            _apiScopeService = apiScopeService;
         }
 
         /// <summary>
@@ -314,6 +316,84 @@ namespace IdentityServer.IdentityAdminWeb.Controllers
         public async Task<IActionResult> DeleteApiResourceSecret(int id)
         {
             var result = await _apiResourceService.DeleteApiResourceSecretAsync(id) > 0;
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+
+        /// <summary>
+        /// Api范围
+        /// </summary>
+        public IActionResult ApiScopes()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueryApiScopes(int pageIndex, int pageSize, string key)
+        {
+            var pageData = await _apiScopeService.GetApiScopesAsync(key, pageIndex, pageSize);
+            return Json(new { code = 0, data = pageData });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiScope(int id)
+        {
+            if (id == 0) return Json(new { code = -1, msg = "不存在" });
+
+            var result = await _apiScopeService.DeleteApiScopeAsync(id) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApiScope(ApiScopeDto apiScope)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new { code = -1, msg = "参数错误" });
+            }
+
+            //Add new
+            if (apiScope.Id == 0)
+            {
+                var apiScopeId = await _apiScopeService.AddApiScopeAsync(apiScope);
+                return Json(new { code = apiScopeId > 0 ? 0 : -1, msg = apiScopeId > 0 ? "成功" : "失败" });
+            }
+
+            //Update
+            var result = await _apiScopeService.UpdateApiScopeAsync(apiScope) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpGet]
+        public IActionResult ApiScope(int id)
+        {
+            ViewBag.ApiScopeId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QueryApiScope(int id)
+        {
+            if (id == 0) Json(new { code = -1, msg = "不存在" });
+
+            var client = await _apiScopeService.GetApiScopeAsync(id);
+            return Json(new { code = 0, data = client });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddApiScopeProperty(AddApiScopePropertyRequest request)
+        {
+            var result = await _apiScopeService.AddApiScopePropertyAsync(request.ApiScopeId, request.ApiScopeProperty) > 0;
+
+            return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiScopeProperty(int id)
+        {
+            var result = await _apiScopeService.DeleteApiScopePropertyAsync(id) > 0;
             return Json(new { code = result ? 0 : -1, msg = result ? "成功" : "失败" });
         }
     }
