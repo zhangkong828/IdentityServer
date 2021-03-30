@@ -15,6 +15,8 @@ namespace IdentityServer.Service.Dtos.Configuration
 
 		public int TotalCount { get; set; }
 
+		public int PageIndex { get; set; }
+
 		public List<IdentityResourceDto> IdentityResources { get; set; }
 	}
 }

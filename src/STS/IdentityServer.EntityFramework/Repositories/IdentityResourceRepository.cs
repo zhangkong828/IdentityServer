@@ -59,13 +59,6 @@ namespace IdentityServer.EntityFramework.Repositories
             }
         }
 
-        public async Task<bool> CanInsertIdentityResourcePropertyAsync(IdentityResourceProperty identityResourceProperty)
-        {
-            var existsWithSameName = await DbContext.IdentityResourceProperties.Where(x => x.Key == identityResourceProperty.Key
-                                                                                       && x.IdentityResource.Id == identityResourceProperty.IdentityResourceId).SingleOrDefaultAsync();
-            return existsWithSameName == null;
-        }
-
         public async Task<int> DeleteIdentityResourceAsync(int identityResourceId)
         {
             var identityResourceToDelete = await DbContext.IdentityResources.Where(x => x.Id == identityResourceId).SingleOrDefaultAsync();
@@ -82,9 +75,9 @@ namespace IdentityServer.EntityFramework.Repositories
             return await AutoSaveChangesAsync();
         }
 
-        public Task<IdentityResource> GetIdentityResourceAsync(int identityResourceId)
+        public async Task<IdentityResource> GetIdentityResourceAsync(int identityResourceId)
         {
-            return DbContext.IdentityResources
+            return await DbContext.IdentityResources
                 .Include(x => x.UserClaims)
                 .Include(x=>x.Properties)
                 .Where(x => x.Id == identityResourceId)
@@ -92,27 +85,6 @@ namespace IdentityServer.EntityFramework.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<PageData<IdentityResourceProperty>> GetIdentityResourcePropertiesAsync(int identityResourceId, int page = 1, int pageSize = 10)
-        {
-            var pagedList = new PageData<IdentityResourceProperty>();
-
-            var properties = await DbContext.IdentityResourceProperties.Where(x => x.IdentityResource.Id == identityResourceId).PageBy(x => x.Id, page, pageSize)
-                .ToListAsync();
-
-            pagedList.List.AddRange(properties);
-            pagedList.TotalCount = await DbContext.IdentityResourceProperties.Where(x => x.IdentityResource.Id == identityResourceId).CountAsync();
-            pagedList.PageSize = pageSize;
-            pagedList.PageIndex = page;
-            return pagedList;
-        }
-
-        public Task<IdentityResourceProperty> GetIdentityResourcePropertyAsync(int identityResourcePropertyId)
-        {
-            return DbContext.IdentityResourceProperties
-               .Include(x => x.IdentityResource)
-               .Where(x => x.Id == identityResourcePropertyId)
-               .SingleOrDefaultAsync();
-        }
 
         public async Task<PageData<IdentityResource>> GetIdentityResourcesAsync(string search, int page = 1, int pageSize = 10)
         {

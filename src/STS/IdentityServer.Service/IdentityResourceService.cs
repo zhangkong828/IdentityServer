@@ -48,13 +48,6 @@ namespace IdentityServer.Service
             return await IdentityResourceRepository.CanInsertIdentityResourceAsync(resource);
         }
 
-        public async Task<bool> CanInsertIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourcePropertiesDto)
-        {
-            var resource = identityResourcePropertiesDto.ToEntity();
-
-            return await IdentityResourceRepository.CanInsertIdentityResourcePropertyAsync(resource);
-        }
-
         public async Task<int> DeleteIdentityResourceAsync(int identityResourceId)
         {
             var deleted = await IdentityResourceRepository.DeleteIdentityResourceAsync(identityResourceId);
@@ -77,33 +70,6 @@ namespace IdentityServer.Service
             var identityResourceDto = identityResource.ToModel();
 
             return identityResourceDto;
-        }
-
-        public async Task<IdentityResourcePropertiesDto> GetIdentityResourcePropertiesAsync(int identityResourceId, int page = 1, int pageSize = 10)
-        {
-            var identityResource = await IdentityResourceRepository.GetIdentityResourceAsync(identityResourceId);
-            if (identityResource == null) return null;
-
-            var pagedList = await IdentityResourceRepository.GetIdentityResourcePropertiesAsync(identityResourceId, page, pageSize);
-            var identityResourcePropertiesAsync = pagedList.ToModel();
-            identityResourcePropertiesAsync.IdentityResourceId = identityResourceId;
-            identityResourcePropertiesAsync.IdentityResourceName = identityResource.Name;
-
-            return identityResourcePropertiesAsync;
-        }
-
-        public async Task<IdentityResourcePropertiesDto> GetIdentityResourcePropertyAsync(int identityResourcePropertyId)
-        {
-            var identityResourceProperty = await IdentityResourceRepository.GetIdentityResourcePropertyAsync(identityResourcePropertyId);
-            if (identityResourceProperty == null) return null;
-
-            var identityResource = await IdentityResourceRepository.GetIdentityResourceAsync(identityResourceProperty.IdentityResourceId);
-
-            var identityResourcePropertiesDto = identityResourceProperty.ToModel();
-            identityResourcePropertiesDto.IdentityResourceId = identityResourceProperty.IdentityResourceId;
-            identityResourcePropertiesDto.IdentityResourceName = identityResource.Name;
-
-            return identityResourcePropertiesDto;
         }
 
         public async Task<IdentityResourcesDto> GetIdentityResourcesAsync(string search, int page = 1, int pageSize = 10)

@@ -21,15 +21,9 @@ namespace IdentityServer.Service.Interfaces
         Task<int> DeleteIdentityResourceAsync(int identityResourceId);
 
 
-        Task<IdentityResourcePropertiesDto> GetIdentityResourcePropertiesAsync(int identityResourceId, int page = 1,
-           int pageSize = 10);
-
-        Task<IdentityResourcePropertiesDto> GetIdentityResourcePropertyAsync(int identityResourcePropertyId);
-
         Task<int> AddIdentityResourcePropertyAsync(int identityResourceId, IdentityResourcePropertyDto identityResourcePropertyDto);
 
         Task<int> DeleteIdentityResourcePropertyAsync(int identityResourcePropertyId);
 
-        Task<bool> CanInsertIdentityResourcePropertyAsync(IdentityResourcePropertiesDto identityResourcePropertiesDto);
     }
 }

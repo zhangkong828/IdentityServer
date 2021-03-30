@@ -34,22 +34,6 @@ namespace IdentityServer.Service.Mappers
             return resource == null ? null : Mapper.Map<IdentityResource>(resource);
         }
 
-        public static IdentityResourcePropertiesDto ToModel(this PageData<IdentityResourceProperty> identityResourceProperties)
-        {
-            return Mapper.Map<IdentityResourcePropertiesDto>(identityResourceProperties);
-        }
-
-        public static IdentityResourcePropertiesDto ToModel(this IdentityResourceProperty identityResourceProperty)
-        {
-            return Mapper.Map<IdentityResourcePropertiesDto>(identityResourceProperty);
-        }
-
-
-        public static IdentityResourceProperty ToEntity(this IdentityResourcePropertiesDto identityResourceProperties)
-        {
-            return Mapper.Map<IdentityResourceProperty>(identityResourceProperties);
-        }
-
         public static IdentityResourceProperty ToEntity(this IdentityResourcePropertyDto identityResourceProperty)
         {
             return Mapper.Map<IdentityResourceProperty>(identityResourceProperty);
