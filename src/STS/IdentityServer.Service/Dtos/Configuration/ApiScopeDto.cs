@@ -12,6 +12,7 @@ namespace IdentityServer.Service.Dtos.Configuration
 			UserClaims = new List<string>();
 		}
 
+		public bool Enabled { get; set; } = true;
 		public bool ShowInDiscoveryDocument { get; set; } = true;
 
 		public int Id { get; set; }
@@ -28,5 +29,7 @@ namespace IdentityServer.Service.Dtos.Configuration
 		public bool Emphasize { get; set; }
 
 		public List<string> UserClaims { get; set; }
+
+		public List<ApiScopePropertyDto> Properties { get; set; }
 	}
 }

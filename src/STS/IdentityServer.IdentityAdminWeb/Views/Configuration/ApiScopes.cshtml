@@ -1,7 +1,294 @@
 ﻿
 @{
-    ViewData["Title"] = "ApiScopes";
+    ViewData["Title"] = "API范围";
+}
+@section Styles{
+    <style>
+        .el-radio-group label {
+            display: block;
+        }
+
+        .el-radio.is-bordered {
+            margin-left: 0px !important;
+        }
+    </style>
+}
+<div id="apiScopesApp">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white" v-loading="screenLoading">
+                <div class="panel-heading">
+                    <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">API范围</h4></div>
+                </div>
+                <div class="panel-body">
+                    <el-button type="primary" size="small" plain @@click="addApiScope">添加API范围</el-button>
+                    <el-collapse v-model="activeNames" style="margin-top:20px;">
+                        <el-collapse-item title="搜索" name="1">
+                            <el-form :inline="true" :model="search" ref="searchForm" class="" size="small">
+                                <el-form-item label="客户端">
+                                    <el-input v-model="search.key" placeholder="名称"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" @@click="searchList">查询</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-collapse-item>
+                    </el-collapse>
+                    <div class="table-responsive">
+                        <el-table :data="list" style="width: 100%">
+                            <el-table-column type="index"
+                                             label="#">
+                            </el-table-column>
+                            <el-table-column prop="name"
+                                             label="名称">
+                            </el-table-column>
+                            <el-table-column prop="displayName"
+                                             label="显示名称">
+                            </el-table-column>
+                            <el-table-column fixed="right"
+                                             label="操作">
+                                <template slot-scope="scope">
+
+                                    <el-button size="mini" @@click="editApiScope(scope.row)" plain>编辑</el-button>
+                                    <el-button type="danger" size="mini" @@click="deleteApiScope(scope.row)" plain>删除</el-button>
+
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <el-pagination background @@size-change="handleSizeChange"
+                                   @@current-change="handleCurrentChange"
+                                   :current-page="search.pageIndex"
+                                   :page-sizes="[10, 20, 50, 100]"
+                                   :page-size="search.pageSize"
+                                   layout="total, sizes, prev, pager, next"
+                                   :total="totalCount" style="text-align:right;margin-top:10px;">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <el-dialog title="添加API范围" :visible="dialogForAddApiScope" :close-on-press-escape="false" :show-close="false">
+        <el-form label-position="right" label-width="250px">
+            <el-form-item>
+                <label slot="label">
+                    <span>名称</span><el-tooltip class="item" content="API范围的唯一名称。 这是客户端将用于授权请求中的作用域参数的值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-input v-model="apiScope.name"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>显示名称</span><el-tooltip class="item" content="该值将用于例如 在同意屏幕上" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-input v-model="apiScope.displayName"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>描述</span><el-tooltip class="item" content="该值将用于例如 在同意屏幕上" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-input v-model="apiScope.description"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>启用</span><el-tooltip class="item" content="指示此资源是否已启用且可以请求。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-switch v-model="apiScope.enabled"></el-switch>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>在发现文档中显示</span><el-tooltip class="item" content="指定此作用域是否显示在发现文档中。 默认为 true" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-switch v-model="apiScope.showInDiscoveryDocument"></el-switch>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>必须</span><el-tooltip class="item" content="指定用户是否可以在同意屏幕上取消选择作用域（如果同意屏幕要实现此类功能）。 默认为 false" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-switch v-model="apiScope.required"></el-switch>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>强调</span><el-tooltip class="item" content="指定同意屏幕是否会强调此作用域（如果同意屏幕要实现此类功能）。 将此设置用于敏感或重要作用域。 默认为 false" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-switch v-model="apiScope.emphasize"></el-switch>
+            </el-form-item>
+            <el-form-item>
+                <label slot="label">
+                    <span>用户声明</span><el-tooltip class="item" content="应包含在身份令牌 id_token 中的关联用户声明类型的列表" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                </label>
+                <el-select v-model="apiScope.userClaims" multiple filterable allow-create default-first-option placeholder="2个以上字符" style="width:100%">
+                    <el-option v-for="item in userClaimsOptions"
+                               :key="item.value"
+                               :label="item.label"
+                               :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @@click="dialogForAddApiScope = false;">取消</el-button>
+            <el-button type="primary" @@click="addApiScopeSubmit">保存</el-button>
+        </div>
+    </el-dialog>
+
+
+</div>
+
+
+@section Scripts{
+    <script>
+        var apiScopesApp = new Vue({
+            el: '#apiScopesApp',
+            data: {
+                screenLoading: false,
+                activeNames: ['-1'],
+                search: {
+                    key: "",
+                    pageIndex: 1,
+                    pageSize: 10
+                },
+                totalCount: 0,
+                list: [],
+                dialogForAddApiScope: false,
+                apiScope: {},
+                userClaimsOptions: [
+                    {
+                        value: 'profile',
+                        label: 'profile'
+                    },
+                    {
+                        value: 'website',
+                        label: 'website'
+                    },
+                    {
+                        value: 'updated_at',
+                        label: 'updated_at'
+                    },
+                    {
+                        value: 'preferred_username',
+                        label: 'preferred_username'
+                    },
+                    {
+                        value: 'picture',
+                        label: 'picture'
+                    },
+                    {
+                        value: 'nickname',
+                        label: 'nickname'
+                    },
+                    {
+                        value: 'name',
+                        label: 'name'
+                    },
+                    {
+                        value: 'gender',
+                        label: 'gender'
+                    },
+                    {
+                        value: 'birthdate',
+                        label: 'birthdate'
+                    },
+                    {
+                        value: 'address',
+                        label: 'address'
+                    }
+                ]
+            },
+            methods: {
+                handleSizeChange(val) {
+                    this.search.pageSize = val;
+                    this.loadData();
+                },
+                handleCurrentChange(val) {
+                    this.search.pageIndex = val;
+                    this.loadData();
+                },
+                loadData() {
+                    var that = this;
+                    $.ajax({
+                        url: "/Configuration/QueryApiScopes",
+                        type: "post",
+                        data: that.search,
+                        beforeSend: function () { that.screenLoading = true; },
+                        complete: function () { that.screenLoading = false; },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.code === 0) {
+                                that.list = response.data.scopes;
+                                that.search.pageIndex = response.data.pageIndex;
+                                that.search.pageSize = response.data.pageSize;
+                                that.totalCount = response.data.totalCount;
+                            } else {
+
+                            }
+                        }
+                    });
+                },
+                searchList() {
+                    this.loadData();
+                },
+                addApiScope() {
+                    this.apiScope = { enabled: true, showInDiscoveryDocument: true };
+                    this.dialogForAddApiScope = true;
+                },
+                addApiScopeSubmit() {
+                    var that = this;
+                    var apiScope = this.apiScope;
+                    if (!apiScope.name || apiScope.name === "") {
+                        this.$message.error('API范围名称不能为空');
+                        return;
+                    }
+                    $.ajax({
+                        url: "/Configuration/ApiScope",
+                        type: "post",
+                        data: apiScope,
+                        success: function (response) {
+                            if (response.code === 0) {
+                                that.loadData();
+                                that.dialogForAddApiScope = false;
+                            } else {
+                                that.$message.error(response.msg);
+                            }
+                        }
+                    });
+                },
+                editApiScope(item) {
+                    window.location.href = "/Configuration/ApiScope/" + item.id;
+                },
+                deleteApiScope(item) {
+                    var that = this;
+                    this.$confirm('确定删除吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'error',
+                        callback: action => {
+                            if (action == 'confirm') {
+                                $.ajax({
+                                    url: "/Configuration/DeleteApiScope",
+                                    type: "post",
+                                    data: { id: item.id },
+                                    success: function (response) {
+                                        if (response.code === 0) {
+                                            that.loadData();
+                                        } else {
+
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            },
+            mounted: function () {
+                var that = this;
+                that.loadData();
+            }
+        });
+    </script>
 }
 
-<h2>ApiScopes</h2>
 
