@@ -19,13 +19,6 @@ namespace IdentityServer.Service
             _identityRepository = identityRepository;
         }
 
-        private string GetAvatarUrl(string email, int size = 150)
-        {
-            var hash = Md5Helper.Md5By32(email);
-            var sizeArg = size > 0 ? $"?s={size}" : "";
-            return $"https://www.gravatar.com/avatar/{hash}{sizeArg}";
-        }
-
         public UserIdentityDto AutoRegisterByExternal(string scheme, string externalId, string loginIP, string nickname, string email)
         {
             var dateTimeNow = DateTime.Now;
@@ -52,7 +45,7 @@ namespace IdentityServer.Service
                 Username = email,
                 Password = "",
                 NickName = nickname,
-                Avatar = GetAvatarUrl(email),
+                Avatar = AvatarHelper.GenerateAvatarUrl(email),
                 Email = email,
                 LastLoginIp = loginIP,
                 LastLoginTime = dateTimeNow,
@@ -88,7 +81,7 @@ namespace IdentityServer.Service
                 Username = username,
                 Password = Md5Helper.Md5By32(password),
                 NickName = nickName,
-                Avatar = GetAvatarUrl(username),
+                Avatar = AvatarHelper.GenerateAvatarUrl(username),
                 Email = username,
                 LastLoginIp = loginIP,
                 LastLoginTime = DateTime.Now,

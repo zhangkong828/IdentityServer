@@ -1,6 +1,9 @@
 ﻿using IdentityModel;
 using IdentityServer.EntityFramework.Configuration;
+using IdentityServer.EntityFramework.Entities.Identity;
 using IdentityServer.EntityFramework.Interfaces;
+using IdentityServer.Infrastructure.Security;
+using IdentityServer.Infrastructure.Utility;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,10 +34,12 @@ namespace IdentityServer.EntityFramework
 
                 //if (seed)
                 {
-                    await EnsureSeedDataAsync<TConfigurationDbContext>(services);
+                    await EnsureSeedIdentityServerDataAsync<TConfigurationDbContext>(services);
+                    await EnsureSeedIdentityServerAdminDataAsync<TIdentityDbContext>(services);
                 }
             }
         }
+
 
         /// <summary>
         /// 确保数据迁移
@@ -64,9 +69,9 @@ namespace IdentityServer.EntityFramework
         }
 
         /// <summary>
-        /// 生成Seed数据
+        /// 生成IdentityServer种子数据
         /// </summary>
-        public static async Task EnsureSeedDataAsync<TConfigurationDbContext>(IServiceProvider serviceProvider)
+        public static async Task EnsureSeedIdentityServerDataAsync<TConfigurationDbContext>(IServiceProvider serviceProvider)
             where TConfigurationDbContext : DbContext, IAdminConfigurationDbContext
         {
             var identityServerDataConfiguration = Config.Get<IdentityServerDataConfiguration>("IdentityServerData");
@@ -80,6 +85,16 @@ namespace IdentityServer.EntityFramework
                     foreach (var resource in identityServerDataConfiguration.IdentityResources)
                     {
                         await context.IdentityResources.AddAsync(resource.ToEntity());
+                    }
+
+                    await context.SaveChangesAsync();
+                }
+
+                if (!await context.ApiScopes.AnyAsync())
+                {
+                    foreach (var resource in identityServerDataConfiguration.ApiScopes)
+                    {
+                        await context.ApiScopes.AddAsync(resource.ToEntity());
                     }
 
                     await context.SaveChangesAsync();
@@ -117,7 +132,35 @@ namespace IdentityServer.EntityFramework
             }
         }
 
+        /// <summary>
+        /// 生成IdentityServerAdmin种子数据
+        /// </summary>
+        public static async Task EnsureSeedIdentityServerAdminDataAsync<TIdentityDbContext>(IServiceProvider serviceProvider)
+            where TIdentityDbContext : DbContext, IIdentityDbContext
+        {
+            using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<TIdentityDbContext>();
 
+                if (!await context.UserIdentity.AnyAsync())
+                {
+                    var user = new UserIdentity()
+                    {
+                        UserId = ObjectId.Default().NextString(),
+                        Username="test",
+                        Password= Md5Helper.Md5By32("123456"),
+                        NickName = "测试用户",
+                        Avatar = AvatarHelper.GenerateAvatarUrl("test"),
+                        Email = "test",
+                        LastLoginTime = DateTime.Now,
+                        CreateTime = DateTime.Now
+                    };
+                    await context.UserIdentity.AddAsync(user);
+                    await context.SaveChangesAsync();
+                }
+
+            }
+        }
 
     }
 }

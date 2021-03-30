@@ -59,10 +59,10 @@ namespace IdentityServer.Client.ResourceOwnerPassword
             {
                 Address = discoveryResponse.TokenEndpoint,
                 ClientId = "Test.ResourceOwnerPassword",
-                ClientSecret = "123456",
+                //ClientSecret = "123456",
                 UserName = "test",
                 Password = "123456",
-                Scope = "scope1 offline_access openid profile"
+                Scope = "test_scope1"
             });
         }
     }

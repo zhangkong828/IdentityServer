@@ -93,12 +93,12 @@
         ]
       }
     ],
-    //"ApiScope": [
-    //  {
-    //    "Name": "test_scope1",
-    //    "DisplayName": "test_scope1"
-    //  }
-    //],
+    "ApiScopes": [
+      {
+        "Name": "test_scope1",
+        "DisplayName": "test_scope1"
+      }
+    ],
     "Clients": [
       //¿Í»§¶ËÆ¾¾Ý
       {
@@ -164,10 +164,12 @@
         "RequireClientSecret": false,
         "RequirePkce": true,
         "RedirectUris": [
-          "http://localhost:8621/code-identityserver-sample.html"
+          "http://localhost:8621/callback.html",
+          "http://localhost:8621/popup.html",
+          "http://localhost:8621/silent.html"
         ],
         "PostLogoutRedirectUris": [
-          "http://localhost:8621/code-identityserver-sample.html"
+          "http://localhost:8621/index.html"
         ],
         "AllowedScopes": [
           "test_scope1",
