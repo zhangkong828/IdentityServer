@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "API范围";
+    ViewData["Title"] = "Api作用域";
 }
 
 <div id="apiScopeApp">
@@ -9,13 +9,13 @@
         <div class="col-md-12">
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">API范围</h4></div>
+                    <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">Api作用域</h4></div>
                 </div>
                 <div class="panel-body">
                     <el-form label-position="right" label-width="250px">
                         <el-form-item>
                             <label slot="label">
-                                <span>名称</span><el-tooltip class="item" content="API范围的唯一名称。 这是客户端将用于授权请求中的作用域参数的值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                <span>名称</span><el-tooltip class="item" content="Api作用域的唯一名称。 这是客户端将用于授权请求中的作用域参数的值" placement="top"><i class="el-icon-warning"></i></el-tooltip>
                             </label>
                             <el-input v-model="apiScope.name"></el-input>
                         </el-form-item>
@@ -69,9 +69,9 @@
                         </el-form-item>
                         <el-form-item>
                             <label slot="label">
-                                <span>属性</span><el-tooltip class="item" content="需要保留任何自定义API范围特定值的字典" placement="top"><i class="el-icon-warning"></i></el-tooltip>
+                                <span>属性</span><el-tooltip class="item" content="需要保留任何自定义Api作用域特定值的字典" placement="top"><i class="el-icon-warning"></i></el-tooltip>
                             </label>
-                            <el-button type="primary" size="small" @@click="dialogApiScopeProperties">管理API范围属性</el-button>
+                            <el-button type="primary" size="small" @@click="dialogApiScopeProperties">管理Api作用域属性</el-button>
                         </el-form-item>
                     </el-form>
                     <el-button size="small" type="primary" plain icon="el-icon-refresh-right" @@click="editApiScope">保存</el-button>
@@ -81,7 +81,7 @@
     </div>
 
 
-    <el-dialog title="API范围属性" :visible="dialogForApiScopeProperties" :close-on-press-escape="false" :show-close="false">
+    <el-dialog title="Api作用域属性" :visible="dialogForApiScopeProperties" :close-on-press-escape="false" :show-close="false">
         <el-card class="box-card" shadow="never">
             <div slot="header" class="clearfix">
                 <span>添加属性</span>
@@ -201,7 +201,7 @@
                     var that = this;
                     var apiScope = this.apiScope;
                     if (!apiScope.name || apiScope.name === "") {
-                        this.$message.error('API范围名称不能为空');
+                        this.$message.error('Api作用域名称不能为空');
                         return;
                     }
 

@@ -23,7 +23,7 @@
       {
         "Name": "roles",
         "Enabled": true,
-        "DisplayName": "Roles",
+        "DisplayName": "角色",
         "UserClaims": [
           "role"
         ]
@@ -32,7 +32,7 @@
         "Name": "openid",
         "Enabled": true,
         "Required": true,
-        "DisplayName": "Your user identifier",
+        "DisplayName": "用户标识符",
         "UserClaims": [
           "sub"
         ]
@@ -40,8 +40,8 @@
       {
         "Name": "profile",
         "Enabled": true,
-        "DisplayName": "User profile",
-        "Description": "Your user profile information (first name, last name, etc.)",
+        "DisplayName": "用户资料",
+        "Description": "用户个人资料信息（名称，头像等）",
         "Emphasize": true,
         "UserClaims": [
           "name",
@@ -63,7 +63,7 @@
       {
         "Name": "email",
         "Enabled": true,
-        "DisplayName": "Your email address",
+        "DisplayName": "邮箱",
         "Emphasize": true,
         "UserClaims": [
           "email",
@@ -73,7 +73,7 @@
       {
         "Name": "address",
         "Enabled": true,
-        "DisplayName": "Your address",
+        "DisplayName": "地址",
         "Emphasize": true,
         "UserClaims": [
           "address"
@@ -96,7 +96,8 @@
     "ApiScopes": [
       {
         "Name": "test_scope1",
-        "DisplayName": "test_scope1"
+        "DisplayName": "test_scope1测试名称",
+        "Description": "test_scope1测试描述"
       }
     ],
     "Clients": [
