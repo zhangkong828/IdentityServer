@@ -59,7 +59,7 @@ namespace IdentityServer.Client.ResourceOwnerPassword
             {
                 Address = discoveryResponse.TokenEndpoint,
                 ClientId = "Test.ResourceOwnerPassword",
-                //ClientSecret = "123456",
+                ClientSecret = "123456",
                 UserName = "test",
                 Password = "123456",
                 Scope = "test_scope1"

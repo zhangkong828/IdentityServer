@@ -126,6 +126,11 @@
         "AllowedGrantTypes": [
           "password"
         ],
+        "ClientSecrets": [
+          {
+            "Value": "123456"
+          }
+        ],
         "AllowedScopes": [
           "test_scope1",
           "openid",
