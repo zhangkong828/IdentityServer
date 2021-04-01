@@ -21,7 +21,6 @@ namespace IdentityServer.IdentityWeb.Controllers
     {
         private readonly IIdentityServerInteractionService _idsInteraction;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
-
         private readonly IIdentityService _identityService;
         public AccountController(IIdentityServerInteractionService idsInteraction, IAuthenticationSchemeProvider schemeProvider, IIdentityService identityService)
         {
