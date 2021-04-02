@@ -1,4 +1,4 @@
-{
+ï»¿{
   "DatabaseProviderConfiguration": {
     "ProviderType": "MySql"
   },
@@ -23,7 +23,7 @@
       {
         "Name": "roles",
         "Enabled": true,
-        "DisplayName": "½ÇÉ«",
+        "DisplayName": "è§’è‰²",
         "UserClaims": [
           "role"
         ]
@@ -32,7 +32,7 @@
         "Name": "openid",
         "Enabled": true,
         "Required": true,
-        "DisplayName": "ÓÃ»§±êÊ¶·û",
+        "DisplayName": "ç”¨æˆ·æ ‡è¯†ç¬¦",
         "UserClaims": [
           "sub"
         ]
@@ -40,8 +40,8 @@
       {
         "Name": "profile",
         "Enabled": true,
-        "DisplayName": "ÓÃ»§×ÊÁÏ",
-        "Description": "ÓÃ»§¸öÈË×ÊÁÏĞÅÏ¢£¨Ãû³Æ£¬Í·ÏñµÈ£©",
+        "DisplayName": "ç”¨æˆ·èµ„æ–™",
+        "Description": "ç”¨æˆ·ä¸ªäººèµ„æ–™ä¿¡æ¯ï¼ˆåç§°ï¼Œå¤´åƒç­‰ï¼‰",
         "Emphasize": true,
         "UserClaims": [
           "name",
@@ -63,7 +63,7 @@
       {
         "Name": "email",
         "Enabled": true,
-        "DisplayName": "ÓÊÏä",
+        "DisplayName": "é‚®ç®±",
         "Emphasize": true,
         "UserClaims": [
           "email",
@@ -73,7 +73,7 @@
       {
         "Name": "address",
         "Enabled": true,
-        "DisplayName": "µØÖ·",
+        "DisplayName": "åœ°å€",
         "Emphasize": true,
         "UserClaims": [
           "address"
@@ -96,12 +96,12 @@
     "ApiScopes": [
       {
         "Name": "test_scope1",
-        "DisplayName": "test_scope1²âÊÔÃû³Æ",
-        "Description": "test_scope1²âÊÔÃèÊö"
+        "DisplayName": "test_scope1æµ‹è¯•åç§°",
+        "Description": "test_scope1æµ‹è¯•æè¿°"
       }
     ],
     "Clients": [
-      //¿Í»§¶ËÆ¾¾İ
+      //å®¢æˆ·ç«¯å‡­æ®
       {
         "ClientId": "Test.ClientCredentials",
         "ClientName": "Test.ClientCredentials",
@@ -120,7 +120,7 @@
           "roles"
         ]
       },
-      //×ÊÔ´ËùÓĞÕßÃÜÂëÆ¾¾İ
+      //èµ„æºæ‰€æœ‰è€…å¯†ç å‡­æ®
       {
         "ClientId": "Test.ResourceOwnerPassword",
         "ClientName": "Test.ResourceOwnerPassword",
@@ -140,7 +140,7 @@
         ],
         "AllowOfflineAccess": true
       },
-      //ÒşÊ½Ğí¿É
+      //éšå¼è®¸å¯
       {
         "ClientId": "Test.Implicit",
         "ClientName": "Test.Implicit",
@@ -160,7 +160,7 @@
           "test_scope1"
         ]
       },
-      //ÊÚÈ¨Âë
+      //æˆæƒç 
       {
         "ClientId": "Test.JsClient",
         "ClientName": "Test.JsClient",
