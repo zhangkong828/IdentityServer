@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IdentityServer.EntityFramework.Entities;
 using IdentityServer.EntityFramework.Entities.Identity;
 using IdentityServer.Service.Dtos.Identity;
 using System;
@@ -12,6 +13,8 @@ namespace IdentityServer.Service.Mappers
         public IdentityMapperProfile()
         {
             CreateMap<UserIdentity, UserIdentityDto>().ReverseMap();
+
+            CreateMap<PageData<UserIdentity>, PageData<UserIdentityDto>>().ReverseMap();
         }
     }
 }

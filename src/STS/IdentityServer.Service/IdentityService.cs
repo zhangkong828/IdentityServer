@@ -1,4 +1,5 @@
-﻿using IdentityServer.EntityFramework.Entities.Identity;
+﻿using IdentityServer.EntityFramework.Entities;
+using IdentityServer.EntityFramework.Entities.Identity;
 using IdentityServer.EntityFramework.Repositories.Interfaces;
 using IdentityServer.Infrastructure.Security;
 using IdentityServer.Infrastructure.Utility;
@@ -8,6 +9,7 @@ using IdentityServer.Service.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace IdentityServer.Service
 {
@@ -121,6 +123,14 @@ namespace IdentityServer.Service
                 return false;
             }
             return _identityRepository.UpdateUserPassword(userId, Md5Helper.Md5By32(newPassword));
+        }
+
+        public async Task<PageData<UserIdentityDto>> QueryUsersAsync(string search, int page = 1, int pageSize = 10)
+        {
+            var pagedList = await _identityRepository.QueryUsersAsync(search, page, pageSize);
+            var identities = pagedList.ToModel();
+
+            return identities;
         }
     }
 }

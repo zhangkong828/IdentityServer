@@ -60,9 +60,6 @@ namespace IdentityServer.IdentityAdminWeb
 
             app.UseAuthentication();
 
-            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(options.Value);
-
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
@@ -119,12 +116,14 @@ namespace IdentityServer.IdentityAdminWeb
         public void RegisterServices(IServiceCollection services)
         {
             //Repositories
+            services.AddTransient<IIdentityRepository, IdentityRepository<IdentityDbContext>>();
             services.AddTransient<IClientRepository, ClientRepository<IdentityServerConfigurationDbContext>>();
             services.AddTransient<IIdentityResourceRepository, IdentityResourceRepository<IdentityServerConfigurationDbContext>>();
             services.AddTransient<IApiResourceRepository, ApiResourceRepository<IdentityServerConfigurationDbContext>>();
             services.AddTransient<IApiScopeRepository, ApiScopeRepository<IdentityServerConfigurationDbContext>>();
 
             //Services
+            services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IIdentityResourceService, IdentityResourceService>();
             services.AddTransient<IApiResourceService, ApiResourceService>();

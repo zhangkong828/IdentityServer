@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IdentityServer.EntityFramework.Entities;
 using IdentityServer.EntityFramework.Entities.Identity;
 using IdentityServer.Service.Dtos.Identity;
 using System;
@@ -20,6 +21,13 @@ namespace IdentityServer.Service.Mappers
         public static UserIdentityDto ToModel(this UserIdentity user)
         {
             return Mapper.Map<UserIdentityDto>(user);
+        }
+
+        public static PageData<UserIdentityDto> ToModel(this PageData<UserIdentity> users)
+        {
+            if (users == null)
+                return null;
+            return Mapper.Map<PageData<UserIdentityDto>>(users);
         }
     }
 }

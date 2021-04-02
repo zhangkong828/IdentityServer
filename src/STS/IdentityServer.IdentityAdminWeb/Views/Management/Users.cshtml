@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewData["Title"] = "用户";
+}
+@section Styles{
+    <style>
+        .el-radio-group label {
+            display: block;
+        }
+
+        .el-radio.is-bordered {
+            margin-left: 0px !important;
+        }
+    </style>
+}
+<div id="usersApp">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-white" v-loading="screenLoading">
+                <div class="panel-heading">
+                    <div class="panel-title" style="padding:0;"><h4 class="breadcrumb-header">用户</h4></div>
+                </div>
+                <div class="panel-body">
+                    @*<el-button type="primary" size="small" plain @@click="addUser">添加用户</el-button>*@
+                    <el-collapse v-model="activeNames" style="margin-top:20px;">
+                        <el-collapse-item title="搜索" name="1">
+                            <el-form :inline="true" :model="search" ref="searchForm" class="" size="small">
+                                <el-form-item>
+                                    <el-input v-model="search.key" placeholder="用户Id/用户名/昵称/邮箱"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" @@click="searchList">查询</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-collapse-item>
+                    </el-collapse>
+                    <div class="table-responsive">
+                        <el-table :data="list" style="width: 100%">
+                            <el-table-column type="index"
+                                             label="#">
+                            </el-table-column>
+                            <el-table-column prop="userId"
+                                             label="用户Id">
+                            </el-table-column>
+                            <el-table-column prop="username"
+                                             label="用户名">
+                            </el-table-column>
+                            <el-table-column prop="nickName"
+                                             label="昵称">
+                            </el-table-column>
+                            <el-table-column prop="email"
+                                             label="邮箱">
+                            </el-table-column>
+                            <el-table-column prop="lastLoginIp"
+                                             label="最后登录IP">
+                            </el-table-column>
+                            <el-table-column prop="lastLoginTime" :formatter="formatDate" width="200"
+                                             label="最后登录时间">
+                            </el-table-column>
+                            <el-table-column fixed="right"
+                                             label="操作">
+                                <template slot-scope="scope">
+
+                                    @*<el-button size="mini" @@click="editUser(scope.row)" plain>编辑</el-button>
+                                    <el-button type="danger" size="mini" @@click="deleteUser(scope.row)" plain>删除</el-button>*@
+
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <el-pagination background @@size-change="handleSizeChange"
+                                   @@current-change="handleCurrentChange"
+                                   :current-page="search.pageIndex"
+                                   :page-sizes="[10, 20, 50, 100]"
+                                   :page-size="search.pageSize"
+                                   layout="total, sizes, prev, pager, next"
+                                   :total="totalCount" style="text-align:right;margin-top:10px;">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts{
+    <script>
+        var usersApp = new Vue({
+            el: '#usersApp',
+            data: {
+                screenLoading: false,
+                activeNames: ['-1'],
+                search: {
+                    key: "",
+                    pageIndex: 1,
+                    pageSize: 10
+                },
+                totalCount: 0,
+                list: []
+            },
+            methods: {
+                handleSizeChange(val) {
+                    this.search.pageSize = val;
+                    this.loadData();
+                },
+                handleCurrentChange(val) {
+                    this.search.pageIndex = val;
+                    this.loadData();
+                },
+                loadData() {
+                    var that = this;
+                    $.ajax({
+                        url: "/Management/QueryUsers",
+                        type: "post",
+                        data: that.search,
+                        beforeSend: function () { that.screenLoading = true; },
+                        complete: function () { that.screenLoading = false; },
+                        success: function (response) {
+                            console.log(response);
+                            if (response.code === 0) {
+                                that.list = response.data.list;
+                                that.search.pageIndex = response.data.pageIndex;
+                                that.search.pageSize = response.data.pageSize;
+                                that.totalCount = response.data.totalCount;
+                            } else {
+
+                            }
+                        }
+                    });
+                },
+                searchList() {
+                    this.loadData();
+                },
+                formatDate(row, column) {
+                    var dt = row[column.property]
+                    if (dt === undefined) {
+                        return ''
+                    }
+                    var date = new Date(dt)
+                    var Y = date.getFullYear() + '-';
+                    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                    var D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+                    var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                    var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                    var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                    return Y + M + D + h + m + s;
+                }
+            },
+            mounted: function () {
+                var that = this;
+                that.loadData();
+            }
+        });
+    </script>
+}
+
+

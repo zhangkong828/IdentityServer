@@ -1,11 +1,15 @@
-﻿using IdentityServer.EntityFramework.Entities.Identity;
+﻿using IdentityServer.EntityFramework.Entities;
+using IdentityServer.EntityFramework.Entities.Identity;
+using IdentityServer.EntityFramework.Extensions;
 using IdentityServer.EntityFramework.Interfaces;
 using IdentityServer.EntityFramework.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace IdentityServer.EntityFramework.Repositories
 {
@@ -73,6 +77,21 @@ namespace IdentityServer.EntityFramework.Repositories
 
             user.Password = newPassword;
             return DbContext.SaveChanges() > 0;
+        }
+
+        public async Task<PageData<UserIdentity>> QueryUsersAsync(string search, int page = 1, int pageSize = 10)
+        {
+            var pagedList = new PageData<UserIdentity>();
+
+            Expression<Func<UserIdentity, bool>> searchCondition = x => x.UserId.Contains(search) || x.Username.Contains(search) || x.NickName.Contains(search) || x.Email.Contains(search);
+
+            var identities = await DbContext.UserIdentity.WhereIf(!string.IsNullOrEmpty(search), searchCondition).PageBy(x => x.LastLoginTime, page, pageSize).ToListAsync();
+
+            pagedList.List.AddRange(identities);
+            pagedList.TotalCount = await DbContext.UserIdentity.WhereIf(!string.IsNullOrEmpty(search), searchCondition).CountAsync();
+            pagedList.PageSize = pageSize;
+            pagedList.PageIndex = page;
+            return pagedList;
         }
     }
 }
